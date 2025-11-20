@@ -1,0 +1,125 @@
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background-color: #f9f9f9;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  padding: 12px 24px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: #e53935;
+}
+
+.logo #logo {
+  height: 80px;
+  margin-right: 8px;
+  margin: -10px;
+}
+
+
+.menu {
+  display: flex;
+  gap: 16px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.menu a:hover {
+  color: #e53935;
+}
+.menu {
+  display: flex;
+  gap: 20px;
+  background-color: #fff;
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  padding: 8px 12px;
+  position: relative;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 10px 0;
+  min-width: 150px;
+  z-index: 100;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 8px 16px;
+  color: #333;
+  white-space: nowrap;
+}
+
+.dropdown-content a:hover {
+  background-color: #f2f2f2;
+}
+
+.dropdown {
+  position: relative;
+  top: 9px;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+   position: relative;
+  right: 90px;
+}
+
+.actions .search{
+  padding: 5px;
+}
+.actions a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.login-btn {
+  background-color: #e53935;
+  color: white !important;
+  padding: 6px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  text-decoration: none;
+}
