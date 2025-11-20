@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+    <link rel="stylesheet" href="{% static 'app/css/nav.css' %}" />
+    <link rel="stylesheet" href="{% static 'app/css/home.css' %}" />
+  </head>
+  <body>
+    {% comment %} header {% endcomment %}
+    <header class="navbar">
+      <div class="logo">
+        <img
+          id="logo"
+          src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
+          alt=""
+        />
+        <span>ROP</span>
+      </div>
+      <nav class="menu">
+        <a href="#">Đăng bài</a>
+        <a href="#">Liên hệ</a>
+        <a href="#">Thông báo</a>
+      </nav>
+      <div class="actions">
+        {% comment %}
+        <div class="search">
+          <i class="fas fa-magnifying-glass"></i>
+        </div>
+        {% endcomment %}
+
+        <a href="#" class="login-btn">Log in</a>
+      </div>
+    </header>
+
+    {% comment %} body {% endcomment %}
+    <div class="boday-container">
+      <div class="container1">
+        <!-- Job 1: Data Engineer -->
+        <div class="job-card">
+          <div class="job-header">
+            <div class="logo"></div>
+            <div>
+              <div class="job-title">Data Engineer (HCM/HN)</div>
+              <div>CÔNG TY TNHH GIẢI PHÁP CÔNG NGHỆ APOLLO</div>
+            </div>
+          </div>
+
+          <div class="job-info">
+            <span>📍 Hồ Chí Minh, Hà Nội</span>
+            <span>🕒 2 năm kinh nghiệm</span>
+            <span>🎓 Cao đẳng trở lên</span>
+          </div>
+
+          <div class="job-info">
+            <span>💰 Mức lương: Thỏa thuận</span>
+            <span>📅 Đăng 2 ngày trước</span>
+          </div>
+
+          <div class="search-btn">
+            <button>Xem chi tiết bài đăng</button>
+            <button id="job1-btn">CV đủ điều kiện</button>
+          </div>
+        </div>
+
+        <!-- Job 2: Frontend Developer -->
+        <div class="job-card">
+          <div class="job-header">
+            <div class="logo"></div>
+            <div>
+              <div class="job-title">Frontend Developer (Remote)</div>
+              <div>CÔNG TY CỔ PHẦN CÔNG NGHỆ ALPHA</div>
+            </div>
+          </div>
+
+          <div class="job-info">
+            <span>📍 Làm việc từ xa</span>
+            <span>🕒 1 năm kinh nghiệm</span>
+            <span>🎓 Đại học CNTT</span>
+          </div>
+
+          <div class="job-info">
+            <span>💰 15–20 triệu/tháng</span>
+            <span>📅 Đăng 1 ngày trước</span>
+          </div>
+
+          <div class="search-btn">
+            <button>Xem chi tiết bài đăng</button>
+            <button id="job2-btn">CV đủ điều kiện</button>
+          </div>
+        </div>
+
+        <!-- Job 3: Backend Developer -->
+        <div class="job-card">
+          <div class="job-header">
+            <div class="logo"></div>
+            <div>
+              <div class="job-title">Backend Developer (Java)</div>
+              <div>CÔNG TY TNHH PHẦN MỀM TECHWAVE</div>
+            </div>
+          </div>
+
+          <div class="job-info">
+            <span>📍 Hà Nội</span>
+            <span>🕒 3 năm kinh nghiệm</span>
+            <span>🎓 Đại học trở lên</span>
+          </div>
+
+          <div class="job-info">
+            <span>💰 20–25 triệu/tháng</span>
+            <span>📅 Đăng hôm nay</span>
+          </div>
+
+          <div class="search-btn">
+            <button>Xem chi tiết bài đăng</button>
+            <button id="job2-btn">CV đủ điều kiện</button>
+          </div>
+        </div>
+
+        <!-- Job 4: AI Research Intern -->
+        <div class="job-card">
+          <div class="job-header">
+            <div class="logo"></div>
+            <div>
+              <div class="job-title">AI Research Intern</div>
+              <div>TRUNG TÂM NGHIÊN CỨU TRÍ TUỆ NHÂN TẠO VINA</div>
+            </div>
+          </div>
+
+          <div class="job-info">
+            <span>📍 TP. Hồ Chí Minh</span>
+            <span>🕒 Không yêu cầu kinh nghiệm</span>
+            <span>🎓 Sinh viên năm cuối</span>
+          </div>
+
+          <div class="job-info">
+            <span>💰 5 triệu/tháng + hỗ trợ ăn trưa</span>
+            <span>📅 Đăng 3 ngày trước</span>
+          </div>
+
+          <div class="search-btn">
+            <button>Xem chi tiết bài đăng</button>
+            <button>CV đủ điều kiện</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container2">
+        <!-- Ứng viên 1 -->
+        <div id="cv1" class="cv-box">
+          <h2>Thông tin ứng viên</h2>
+          <div class="cv-item">
+            <span class="cv-label">👤 Tên:</span
+            ><span class="cv-value">Nguyễn Văn A</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">📞 Số điện thoại:</span
+            ><span class="cv-value">0901 234 567</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">📧 Email:</span
+            ><span class="cv-value">nguyenvana@gmail.com</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🎂 Năm sinh:</span
+            ><span class="cv-value">1995</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🏠 Địa chỉ:</span
+            ><span class="cv-value">Quận 3, TP. Hồ Chí Minh</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">💼 Kinh nghiệm:</span
+            ><span class="cv-value">3 năm làm Data Engineer</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🎓 Bằng cấp:</span
+            ><span class="cv-value">Đại học Công nghệ Thông tin</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">📌 Vị trí mong muốn:</span
+            ><span class="cv-value">Senior Data Engineer</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🛠️ Kỹ năng:</span
+            ><span class="cv-value">Python, SQL, Spark, Airflow</span>
+          </div>
+        </div>
+
+        <!-- Ứng viên 2 -->
+        <div id="cv2" class="cv-box">
+          <h2>Thông tin ứng viên</h2>
+          <div class="cv-item">
+            <span class="cv-label">👤 Tên:</span
+            ><span class="cv-value">Trần Thị Bích Ngọc</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">📞 Số điện thoại:</span
+            ><span class="cv-value">0938 456 789</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">📧 Email:</span
+            ><span class="cv-value">bichngoc.tran@gmail.com</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🎂 Năm sinh:</span
+            ><span class="cv-value">1998</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🏠 Địa chỉ:</span
+            ><span class="cv-value">Thủ Đức, TP. Hồ Chí Minh</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">💼 Kinh nghiệm:</span
+            ><span class="cv-value">2 năm làm Frontend Developer</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🎓 Bằng cấp:</span
+            ><span class="cv-value">Đại học Khoa học Tự nhiên</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">📌 Vị trí mong muốn:</span
+            ><span class="cv-value">UI/UX Engineer</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🛠️ Kỹ năng:</span
+            ><span class="cv-value">HTML, CSS, JavaScript, React</span>
+          </div>
+        </div>
+
+        <!-- Ứng viên 3 -->
+        <div id="cv3" class="cv-box">
+          <h2>Thông tin ứng viên</h2>
+          <div class="cv-item">
+            <span class="cv-label">👤 Tên:</span
+            ><span class="cv-value">Lê Minh Tuấn</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">📞 Số điện thoại:</span
+            ><span class="cv-value">0912 789 123</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">📧 Email:</span
+            ><span class="cv-value">leminhtuan.dev@gmail.com</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🎂 Năm sinh:</span
+            ><span class="cv-value">1993</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🏠 Địa chỉ:</span
+            ><span class="cv-value">Quận 10, TP. Hồ Chí Minh</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">💼 Kinh nghiệm:</span
+            ><span class="cv-value">5 năm làm Backend Developer</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🎓 Bằng cấp:</span
+            ><span class="cv-value">Đại học Bách Khoa</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">📌 Vị trí mong muốn:</span
+            ><span class="cv-value">Tech Lead Backend</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">🛠️ Kỹ năng:</span
+            ><span class="cv-value">Java, Spring Boot, MySQL, Docker</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    {% comment %} sau này nhớ chuyển cái này qua folder js {% endcomment %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById("job1-btn");
+        const cvBox = document.getElementById("cv1");
+
+        btn.addEventListener("click", function () {
+          // Nếu đang ẩn thì hiện ra, nếu đang hiện thì ẩn đi
+          if (cvBox.style.display === "none" || cvBox.style.display === "") {
+            cvBox.style.display = "block";
+          } else {
+            cvBox.style.display = "none";
+          }
+        });
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById("job2-btn");
+        const cvBox = document.getElementById("cv2");
+
+        btn.addEventListener("click", function () {
+          // Nếu đang ẩn thì hiện ra, nếu đang hiện thì ẩn đi
+          if (cvBox.style.display === "none" || cvBox.style.display === "") {
+            cvBox.style.display = "block";
+          } else {
+            cvBox.style.display = "none";
+          }
+        });
+      });
+    </script>
+
+
+    {% comment %}
+    <script src="{% static 'app/js/homeAdmin.js' %}" async defer></script>
+    {% endcomment %}
+  </body>
+</html>
