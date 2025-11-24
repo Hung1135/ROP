@@ -1,0 +1,207 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+    color: #333;
+}
+
+/* --- HEADER VÀ NAVIGATION --- */
+.header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.title .loc{
+    width: 8vw;
+    height: 4vh;
+    padding-left: 5px;
+}
+.logo h1 {
+    color: #007bff;
+    font-size: 25px;
+    margin: 0;
+    margin-top: 25px;
+}
+.logo img{
+    width: 5vw;
+}
+.logo{
+    display: flex;
+    flex-direction: row;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    padding: 5px 0;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #007bff;
+}
+
+/* Ô Tìm Kiếm */
+.search-box input[type="text"] {
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px 0 0 4px; /* Góc bo tròn bên trái */
+    outline: none;
+    width: 200px;
+}
+
+.search-box button {
+    padding: 8px 15px;
+    border: none;
+    background-color: #28a745; /* Màu xanh lá cho nút tìm kiếm */
+    color: white;
+    border-radius: 0 4px 4px 0; /* Góc bo tròn bên phải */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-box button:hover {
+    background-color: #218838;
+}
+
+/* Nút Tài Khoản */
+.btn-account {
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-account:hover {
+    background-color: #0056b3;
+}
+
+/* --- NỘI DUNG CHÍNH VÀ BOX BÀI ĐĂNG --- */
+.main-content {
+    padding: 30px 50px;
+}
+
+.main-content h2 {
+    color: #007bff;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.job-listings {
+    display: grid;
+    /* Hiển thị 3 cột với độ rộng bằng nhau */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
+
+.job-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #007bff; /* Điểm nhấn màu xanh */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.job-card:hover {
+    transform: translateY(-5px); /* Hiệu ứng nổi lên khi di chuột */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.job-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.job-salary {
+    color: #28a745; /* Màu xanh lá nổi bật cho lương */
+    font-weight: bold;
+}
+
+.job-company {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.job-location {
+    color: #999;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+
+.job-tags {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.tag {
+    background-color: #e9f7ff;
+    color: #007bff;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8em;
+}
+
+.btn-detail {
+    display: inline-block;
+    background-color: #ffc107; /* Màu vàng cho nút chi tiết */
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-detail:hover {
+    background-color: #e0a800;
+}
+
+/* --- FOOTER (TÙY CHỌN) --- */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+    margin-top: 20px;
+}

@@ -1,0 +1,196 @@
+/* --- TRANG CHI TIẾT BÀI ĐĂNG --- */
+.main-detail-content {
+    padding: 30px 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.job-summary {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+    border-top: 5px solid #007bff;
+}
+
+.job-summary h1 {
+    color: #007bff;
+    margin-top: 0;
+    font-size: 2em;
+}
+
+.detail-company, .detail-location {
+    color: #666;
+    margin: 5px 0;
+    font-size: 1.1em;
+}
+.detail-company i, .detail-location i {
+    margin-right: 8px;
+    color: #007bff;
+}
+
+.summary-info {
+    display: flex;
+    gap: 15px;
+    margin: 15px 0;
+    padding-top: 10px;
+    border-top: 1px dashed #eee;
+}
+
+.info-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.info-tag i {
+    margin-right: 5px;
+}
+
+.salary {
+    background-color: #e6ffed;
+    color: #28a745;
+}
+
+.type {
+    background-color: #fff3e6;
+    color: #ff9800;
+}
+
+.deadline {
+    background-color: #ffe6e6;
+    color: #dc3545;
+}
+
+.btn-apply-top {
+    display: inline-block;
+    background-color: #ffc107;
+    color: #333;
+    padding: 12px 25px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 15px;
+    font-size: 1.1em;
+    transition: background-color 0.3s;
+}
+.btn-apply-top:hover {
+    background-color: #e0a800;
+}
+
+/* Bố cục 2 cột cho Mô tả và Form */
+.detail-body-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Mô tả chiếm 2 phần, Form chiếm 1 phần */
+    gap: 30px;
+}
+
+.job-description {
+    background-color: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.job-description h2 {
+    color: #007bff;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.job-description ul {
+    list-style: disc;
+    margin-left: 20px;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* FORM ỨNG TUYỂN */
+.application-form {
+    background-color: #e9f7ff; /* Màu nền nhẹ cho form */
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: fit-content; /* Giữ form vừa với nội dung */
+}
+
+.application-form h3 {
+    color: #007bff;
+    margin-top: 0;
+    border-bottom: 1px solid #cce5ff;
+    padding-bottom: 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Quan trọng để padding không làm tăng chiều rộng */
+    font-size: 1em;
+    outline: none;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+/* Tải CV */
+.cv-upload input[type="file"] {
+    border: 1px solid #007bff;
+    background-color: white;
+    padding: 8px;
+    border-radius: 4px;
+    width: 100%; /* Cần thiết cho input type=file */
+}
+
+.file-note {
+    font-size: 0.8em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.btn-submit-cv {
+    width: 100%;
+    background-color: #28a745;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1em;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-submit-cv:hover {
+    background-color: #218838;
+}
+
+/* (Tùy chọn) Responsive cho màn hình nhỏ hơn */
+@media (max-width: 900px) {
+    .detail-body-grid {
+        grid-template-columns: 1fr; /* Chuyển sang 1 cột */
+    }
+}
