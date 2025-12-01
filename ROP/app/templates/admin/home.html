@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+
 {% load static %}
 <html>
   <head>
@@ -13,10 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="" />
     <link rel="stylesheet" href="{% static 'app/css/nav.css' %}" />
-    <link rel="stylesheet" href="{% static 'app/css/home.css' %}" />
   </head>
   <body>
-    {% comment %} header {% endcomment %}
     <header class="navbar">
       <div class="logo">
         <img
@@ -280,7 +275,6 @@
       </div>
     </div>
 
-
     {% comment %} sau này nhớ chuyển cái này qua folder js {% endcomment %}
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -311,7 +305,6 @@
         });
       });
     </script>
-
 
     {% comment %}
     <script src="{% static 'app/js/homeAdmin.js' %}" async defer></script>
