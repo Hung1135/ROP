@@ -1,0 +1,238 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f7f6;
+  color: #333;
+}
+
+/* --- NAV BAR CHUNG --- */
+.navbar {
+  display: flex;
+  align-items: center;
+  /* Dùng space-between để Logo và Log in nằm sát hai bên */
+  justify-content: space-between;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  padding: 10px 50px;
+}
+
+/* -------------------------------------- */
+/* --- PHẦN LOGO (LÀM LỚN) --- */
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 24px; /* Tăng cỡ chữ logo ROP */
+  font-weight: bold;
+  color: #007bff;
+}
+
+.logo img {
+  width: 50px; /* LÀM LỚN LOGO */
+  height: 50px;
+  margin-right: 5px;
+}
+/* -------------------------------------- */
+
+/* --- PHẦN MENU CHÍNH (CĂN GIỮA) --- */
+.menu {
+  display: flex;
+  gap: 30px;
+
+  /* 💥 KỸ THUẬT CĂN GIỮA TRONG FLEXBOX */
+  margin-left: auto;
+  margin-right: auto;
+  /* Đặt margin-left và margin-right là auto sẽ buộc menu
+       nằm chính xác giữa Logo và nút Log in. */
+
+  /* Nếu bạn muốn menu nằm gần nút Log in hơn, hãy bỏ 2 dòng margin: auto 
+       và thay bằng margin-right: 50px; flex-grow: 1; justify-content: flex-end; */
+}
+
+.menu a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+  padding: 5px 0;
+  font-weight: normal;
+  transition: color 0.3s;
+}
+
+.menu a:hover {
+  color: #007bff;
+}
+
+/* --- PHẦN HÀNH ĐỘNG (LOG IN - Màu Đỏ) --- */
+.actions {
+  /* Đảm bảo không chiếm thêm không gian */
+}
+
+.login-btn {
+  text-decoration: none;
+  background-color: #e63946; /* MÀU ĐỎ */
+  color: white;
+  padding: 8px 15px;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.login-btn:hover {
+  background-color: #d62f3c;
+}
+/* --- BỐ CỤC CHÍNH CỦA TRANG CHI TIẾT --- */
+.page-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+/* Cột Trái: Chi tiết bài đăng */
+.job-detail-section {
+  flex: 2; /* Chiếm 2/3 màn hình */
+}
+
+.detail-card {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.detail-card h1 {
+  color: #ff5733;
+  margin-top: 0;
+  border-bottom: 2px solid #ff5733;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.company-info {
+  font-style: italic;
+  color: #666;
+  margin-bottom: 20px;
+  border-bottom: 1px dashed #eee;
+  padding-bottom: 15px;
+}
+
+.key-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+  padding: 10px 0;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.key-info div {
+  padding: 5px 15px;
+}
+
+.key-info span {
+  display: block;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.key-info strong {
+  color: #007bff;
+  font-size: 1.1em;
+  display: block;
+  margin-top: 5px;
+}
+
+.content-section h2 {
+  color: #007bff;
+  margin-top: 25px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #e9f7ff;
+}
+
+.content-section ul {
+  padding-left: 20px;
+}
+.content-section li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.apply-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.apply-btn:hover {
+  background-color: #218838;
+}
+
+/* Cột Phải: Danh sách Ứng viên */
+.candidate-section {
+  flex: 1; /* Chiếm 1/3 màn hình */
+}
+
+.candidate-section h2 {
+  color: #ffc107;
+  border-bottom: 2px solid #ffc107;
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+
+.cv-box {
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 15px;
+  border-left: 3px solid #007bff;
+}
+
+.cv-box h3 {
+  color: #007bff;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.cv-item {
+  display: flex;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.cv-label {
+  font-weight: bold;
+  color: #555;
+  min-width: 90px;
+}
+
+.cv-value {
+  flex-grow: 1;
+  color: #333;
+}
+
+/* Responsive cho thiết bị nhỏ */
+@media (max-width: 900px) {
+  .page-container {
+    flex-direction: column;
+  }
+  .job-detail-section {
+    flex: 1;
+  }
+  .candidate-section {
+    flex: 1;
+    width: 100%;
+  }
+}
