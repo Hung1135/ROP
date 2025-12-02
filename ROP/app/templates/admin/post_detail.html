@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="../../static/app/css/post_detail.css" />
+    {% comment %} <link rel="stylesheet" href="../../static/app/css/post_detail.css" /> {% endcomment %}
+        <link rel="stylesheet" href="{% static '../../static/app/css/post_detail.css' %}" />
   </head>
     <body>
      <header class="navbar">
@@ -33,7 +34,7 @@
           <div class="detail-card">
             <h1>
               Data Engineer (HCM/HN)
-              <button class="apply-btn">Ứng tuyển ngay</button>
+              {% comment %} <button class="apply-btn">Ứng tuyển ngay</button> {% endcomment %}
             </h1>
 
             <div class="company-info">
