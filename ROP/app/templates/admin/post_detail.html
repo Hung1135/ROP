@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../../static/app/css/post_detail.css" />
+  </head>
+    <body>
+     <header class="navbar">
+    <div class="logo">
+        <img
+            id="logo"
+            src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
+            alt=""
+        />
+        <span>ROP</span>
+    </div>
+    
+    <nav class="menu">
+        <a href="#">Đăng bài</a>
+        <a href="#">Liên hệ</a>
+        <a href="#">Thông báo</a>
+    </nav>
+    
+    <div class="actions">
+        <a href="#" class="login-btn">Log in</a>
+    </div>
+</header>
+      <div class="page-container">
+        <div class="job-detail-section">
+          <div class="detail-card">
+            <h1>
+              Data Engineer (HCM/HN)
+              <button class="apply-btn">Ứng tuyển ngay</button>
+            </h1>
+
+            <div class="company-info">
+              CÔNG TY TNHH GIẢI PHÁP CÔNG NGHỆ APOLLO
+            </div>
+
+            <div class="key-info">
+              <div>
+                <span>📍 Địa điểm</span>
+                <strong>Hồ Chí Minh, Hà Nội</strong>
+              </div>
+              <div>
+                <span>💰 Mức lương</span>
+                <strong>Thỏa thuận (Cạnh tranh)</strong>
+              </div>
+              <div>
+                <span>🕒 Kinh nghiệm</span>
+                <strong>2 năm trở lên</strong>
+              </div>
+              <div>
+                <span>🎓 Yêu cầu bằng cấp</span>
+                <strong>Cao đẳng trở lên</strong>
+              </div>
+              <div>
+                <span>📅 Ngày đăng</span>
+                <strong>2 ngày trước</strong>
+              </div>
+            </div>
+
+            <div class="content-section">
+              <h2>Mô tả công việc</h2>
+              <ul>
+                <li>
+                  Thiết kế, xây dựng và duy trì các Pipeline dữ liệu (ETL/ELT)
+                  sử dụng Spark/Airflow.
+                </li>
+                <li>
+                  Đảm bảo chất lượng dữ liệu và độ tin cậy của các hệ thống Data
+                  Warehouse.
+                </li>
+                <li>
+                  Làm việc với đội ngũ Data Scientists để hỗ trợ xây dựng mô
+                  hình.
+                </li>
+                <li>
+                  Tối ưu hóa hiệu suất truy vấn SQL trên các nền tảng Big Data.
+                </li>
+              </ul>
+
+              <h2>Yêu cầu bắt buộc</h2>
+              <ul>
+                <li>Có ít nhất **2 năm kinh nghiệm** làm Data Engineer.</li>
+                <li>Thành thạo **Python** và **SQL**.</li>
+                <li>
+                  Kinh nghiệm làm việc với **Spark** hoặc các công cụ xử lý Big
+                  Data.
+                </li>
+                <li>
+                  Tư duy logic tốt, khả năng tự học và giải quyết vấn đề độc
+                  lập.
+                </li>
+              </ul>
+
+              <h2>Quyền lợi</h2>
+              <ul>
+                <li>Lương thưởng hấp dẫn, xét tăng lương 2 lần/năm.</li>
+                <li>Bảo hiểm sức khỏe cao cấp.</li>
+                <li>
+                  Môi trường làm việc năng động, lộ trình phát triển rõ ràng.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="candidate-section">
+          <h2>Danh sách Ứng viên phù hợp (2)</h2>
+
+          <div id="cv1" class="cv-box">
+            <h3>👤 Nguyễn Văn A</h3>
+            <div class="cv-item">
+              <span class="cv-label">Kinh nghiệm:</span
+              ><span class="cv-value">3 năm làm Data Engineer</span>
+            </div>
+            <div class="cv-item">
+              <span class="cv-label">Bằng cấp:</span
+              ><span class="cv-value">Đại học Công nghệ Thông tin</span>
+            </div>
+            <div class="cv-item">
+              <span class="cv-label">Kỹ năng:</span
+              ><span class="cv-value">Python, SQL, Spark, Airflow</span>
+            </div>
+            <button
+              style="
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                margin-top: 10px;
+                border-radius: 4px;
+              "
+            >
+              Xem chi tiết CV
+            </button>
+          </div>
+
+          <div id="cv3" class="cv-box">
+            <h3>👤 Lê Minh Tuấn</h3>
+            <div class="cv-item">
+              <span class="cv-label">Kinh nghiệm:</span
+              ><span class="cv-value">5 năm làm Backend Developer</span>
+            </div>
+            <div class="cv-item">
+              <span class="cv-label">Bằng cấp:</span
+              ><span class="cv-value">Đại học Bách Khoa</span>
+            </div>
+            <div class="cv-item">
+              <span class="cv-label">Kỹ năng:</span
+              ><span class="cv-value"
+                >Java, Spring Boot, MySQL (Có kỹ năng SQL)</span
+              >
+            </div>
+            <button
+              style="
+                background-color: #007bff;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                margin-top: 10px;
+                border-radius: 4px;
+              "
+            >
+              Xem chi tiết CV
+            </button>
+          </div>
+
+          <p style="font-size: 0.9em; color: #888; margin-top: 20px">
+            *Danh sách chỉ hiển thị các ứng viên có kỹ năng và kinh nghiệm phù
+            hợp với yêu cầu.
+          </p>
+        </div>
+      </div>
+    </body>
+  </html>
+</html>
