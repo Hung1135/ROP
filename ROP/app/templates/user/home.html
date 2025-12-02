@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../../static/app/css_user/home.css">
+    <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}">
 </head>
 <body>
 <header class="header">
@@ -18,7 +19,7 @@
 
     <nav class="navbar">
         <ul class="nav-links">
-            <li><a href="#">Trang Chủ</a></li>
+            <li><a href="{% url 'home' %}">Trang Chủ</a></li>
         </ul>
 
         <div class="search-box">
@@ -54,7 +55,7 @@
                 <li><span class="tag">JavaScript</span></li>
                 <li><span class="tag">React</span></li>
             </ul>
-            <a href="#" class="btn-detail">Xem Chi Tiết</a>
+            <a href="{% url 'detailPost' %}" class="btn-detail">Xem Chi Tiết</a>
         </div>
 
         <div class="job-card">
