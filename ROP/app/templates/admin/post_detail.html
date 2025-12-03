@@ -4,29 +4,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    {% comment %} <link rel="stylesheet" href="../../static/app/css/post_detail.css" /> {% endcomment %}
-        <link rel="stylesheet" href="{% static '../../static/app/css/post_detail.css' %}" />
+    <title>Chi tiết bài đăng</title>
+    <link rel="stylesheet" href="{% static 'app/css/post_detail.css' %}" />
   </head>
     <body>
      <header class="navbar">
     <div class="logo">
-        <img
-            id="logo"
-            src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
-            alt=""
-        />
-        <span>ROP</span>
+      <img
+          id="logo"
+          src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
+          alt=""
+      />
+      <span>ROP</span>
     </div>
     
     <nav class="menu">
-        <a href="#">Đăng bài</a>
-        <a href="#">Liên hệ</a>
-        <a href="#">Thông báo</a>
+      <a href="#">Đăng bài</a>
+      <a href="#">Liên hệ</a>
+      <a href="#">Thông báo</a>
     </nav>
     
     <div class="actions">
-        <a href="#" class="login-btn">Log in</a>
+      <a href="#" class="login-btn">Log in</a>
     </div>
 </header>
       <div class="page-container">
@@ -65,118 +64,165 @@
             </div>
 
             <div class="content-section">
-              <h2>Mô tả công việc</h2>
-              <ul>
-                <li>
-                  Thiết kế, xây dựng và duy trì các Pipeline dữ liệu (ETL/ELT)
-                  sử dụng Spark/Airflow.
-                </li>
-                <li>
-                  Đảm bảo chất lượng dữ liệu và độ tin cậy của các hệ thống Data
-                  Warehouse.
-                </li>
-                <li>
-                  Làm việc với đội ngũ Data Scientists để hỗ trợ xây dựng mô
-                  hình.
-                </li>
-                <li>
-                  Tối ưu hóa hiệu suất truy vấn SQL trên các nền tảng Big Data.
-                </li>
-              </ul>
+              <h2>Mô Tả Công Việc</h2>
+            <ul>
+              <li>
+                Tham gia vào quá trình phát triển các tính năng mới cho sản phẩm
+                web.
+              </li>
+              <li>Sửa lỗi và tối ưu hóa hiệu suất ứng dụng hiện tại.</li>
+              <li>Làm việc cùng team Backend để tích hợp API.</li>
+              <li>Viết unit tests và đảm bảo chất lượng mã nguồn.</li>
+            </ul>
 
-              <h2>Yêu cầu bắt buộc</h2>
-              <ul>
-                <li>Có ít nhất **2 năm kinh nghiệm** làm Data Engineer.</li>
-                <li>Thành thạo **Python** và **SQL**.</li>
-                <li>
-                  Kinh nghiệm làm việc với **Spark** hoặc các công cụ xử lý Big
-                  Data.
-                </li>
-                <li>
-                  Tư duy logic tốt, khả năng tự học và giải quyết vấn đề độc
-                  lập.
-                </li>
-              </ul>
+            <h2>Yêu Cầu Công Việc</h2>
+            <ul>
+              <li>Có kiến thức cơ bản về HTML, CSS, JavaScript.</li>
+              <li>
+                Kinh nghiệm làm việc với ReactJS (hoặc các framework khác) là
+                một lợi thế.
+              </li>
+              <li>
+                Tốt nghiệp ngành Công nghệ thông tin hoặc có kinh nghiệm tương
+                đương 1 năm.
+              </li>
+              <li>Khả năng đọc hiểu tài liệu tiếng Anh kỹ thuật.</li>
+            </ul>
 
-              <h2>Quyền lợi</h2>
-              <ul>
-                <li>Lương thưởng hấp dẫn, xét tăng lương 2 lần/năm.</li>
-                <li>Bảo hiểm sức khỏe cao cấp.</li>
-                <li>
-                  Môi trường làm việc năng động, lộ trình phát triển rõ ràng.
-                </li>
-              </ul>
+            <h2>Phúc Lợi</h2>
+            <ul>
+              <li>Lương tháng 13, thưởng hiệu suất công việc.</li>
+              <li>Bảo hiểm đầy đủ theo luật Lao động.</li>
+              <li>
+                Môi trường làm việc trẻ trung, năng động, có khu vực giải trí.
+              </li>
+              <li>Đào tạo chuyên môn miễn phí.</li>
+            </ul>
+          </section>
             </div>
           </div>
         </div>
 
         <div class="candidate-section">
-          <h2>Danh sách Ứng viên phù hợp (2)</h2>
+        <h2>Danh sách Ứng viên ứng tuyển</h2>
 
-          <div id="cv1" class="cv-box">
-            <h3>👤 Nguyễn Văn A</h3>
+        <div class="cv-box">
+          <h3>👤 Nguyễn Văn A</h3>
+          <div class="cv-item">
+            <span class="cv-label">Kinh nghiệm:</span>
+            <span class="cv-value">3 năm (Data Engineer)</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">Bằng cấp:</span>
+            <span class="cv-value">Đại học</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">Kỹ năng:</span>
+            <span class="cv-value">Python, SQL, Apache Spark, Airflow</span>
+          </div>
+          <a href="/cv_detail/1" class="cv-detail-btn">Xem chi tiết CV</a>
+        </div>
+
+        <div class="cv-box">
+          <h3>👤 Trần Thị B</h3>
+          <div class="cv-item">
+            <span class="cv-label">Kinh nghiệm:</span>
+            <span class="cv-value">2.5 năm (Big Data Analyst)</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">Bằng cấp:</span>
+            <span class="cv-value">Cao đẳng</span>
+          </div>
+          <div class="cv-item">
+            <span class="cv-label">Kỹ năng:</span>
+            <span class="cv-value">SQL Server, Power BI, Python cơ bản</span>
+          </div>
+          <a href="/cv_detail/2" class="cv-detail-btn">Xem chi tiết CV</a>
+        </div>
+
+        <div class="cv-box">
+            <h3>👤 Lê Hoàng C</h3>
             <div class="cv-item">
-              <span class="cv-label">Kinh nghiệm:</span
-              ><span class="cv-value">3 năm làm Data Engineer</span>
+              <span class="cv-label">Kinh nghiệm:</span>
+              <span class="cv-value">4 năm (Database Admin/Data Eng)</span>
             </div>
             <div class="cv-item">
-              <span class="cv-label">Bằng cấp:</span
-              ><span class="cv-value">Đại học Công nghệ Thông tin</span>
+              <span class="cv-label">Bằng cấp:</span>
+              <span class="cv-value">Thạc sĩ</span>
             </div>
             <div class="cv-item">
-              <span class="cv-label">Kỹ năng:</span
-              ><span class="cv-value">Python, SQL, Spark, Airflow</span>
+              <span class="cv-label">Kỹ năng:</span>
+              <span class="cv-value">Python, SQL, Hadoop, AWS Glue</span>
             </div>
-            <button
-              style="
-                background-color: #007bff;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                margin-top: 10px;
-                border-radius: 4px;
-              "
-            >
-              Xem chi tiết CV
-            </button>
+            <a href="/cv_detail/3" class="cv-detail-btn">Xem chi tiết CV</a>
           </div>
 
-          <div id="cv3" class="cv-box">
-            <h3>👤 Lê Minh Tuấn</h3>
-            <div class="cv-item">
-              <span class="cv-label">Kinh nghiệm:</span
-              ><span class="cv-value">5 năm làm Backend Developer</span>
-            </div>
-            <div class="cv-item">
-              <span class="cv-label">Bằng cấp:</span
-              ><span class="cv-value">Đại học Bách Khoa</span>
-            </div>
-            <div class="cv-item">
-              <span class="cv-label">Kỹ năng:</span
-              ><span class="cv-value"
-                >Java, Spring Boot, MySQL (Có kỹ năng SQL)</span
-              >
-            </div>
-            <button
-              style="
-                background-color: #007bff;
-                color: white;
-                border: none;
-                padding: 5px 10px;
-                margin-top: 10px;
-                border-radius: 4px;
-              "
-            >
-              Xem chi tiết CV
-            </button>
-          </div>
 
-          <p style="font-size: 0.9em; color: #888; margin-top: 20px">
-            *Danh sách chỉ hiển thị các ứng viên có kỹ năng và kinh nghiệm phù
-            hợp với yêu cầu.
-          </p>
+        <div class="filter-btn-container">
+          <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
+          <a href="#" class="recommend-btn">Đề xuất</a>
         </div>
       </div>
+      </div>
+      
+      <div id="filter-results-modal" class="filter-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            
+            <h2>Kết quả Lọc Nâng Cao & Đánh giá CV</h2>
+            
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="min-experience">Kinh nghiệm tối thiểu (năm):</label>
+                    <input type="number" id="min-experience" min="0" value="0" style="width: 80px; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                </div>
+                <div class="filter-group">
+                    <label for="skill-search">Tìm kiếm theo Kỹ năng (VD: Python, AWS):</label>
+                    <input type="text" id="skill-search" placeholder="Nhập kỹ năng" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 250px;">
+                </div>
+                <button id="apply-filter-btn" style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Áp dụng</button>
+            </div>
+            <div class="sort-options">
+                <label for="sort-by">Sắp xếp theo:</label>
+                <select id="sort-by">
+                    <option value="score_desc">Điểm CV (Giảm dần)</option>
+                    <option value="score_asc">Điểm CV (Tăng dần)</option>
+                </select>
+            </div>
+            
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Ứng viên</th>
+                        <th>Kinh nghiệm</th>
+                        <th>Kỹ năng chính</th>
+                        <th>Điểm CV (Tương thích)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-score="95" data-experience="4">
+                        <td>Lê Hoàng C</td>
+                        <td>4 năm</td>
+                        <td>Python, SQL, Hadoop, AWS</td>
+                        <td><span class="score high">95/100</span></td>
+                    </tr>
+                    <tr data-score="88" data-experience="3">
+                        <td>Nguyễn Văn A</td>
+                        <td>3 năm</td>
+                        <td>Python, SQL, Spark, Airflow</td>
+                        <td><span class="score medium">88/100</span></td>
+                    </tr>
+                    <tr data-score="75" data-experience="2.5">
+                        <td>Trần Thị B</td>
+                        <td>2.5 năm</td>
+                        <td>SQL Server, Power BI, Python</td>
+                        <td><span class="score low">75/100</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+        
+<script src="{% static 'app/js/admin_result_filter.js' %}" ></script>
     </body>
-  </html>
 </html>
