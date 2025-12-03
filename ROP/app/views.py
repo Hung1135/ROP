@@ -9,7 +9,6 @@ def filter(request):
 
 def post_detail(request):
     return render(request, 'admin/post_detail.html')
-
 #login
 def login(request):
     return render(request, 'login/login.html')
@@ -26,3 +25,6 @@ def detailPost(request):
 
 def personalprofile(request):
     return render(request, 'user/personalprofile.html')
+def appliedJobsList(request):
+    return render(request, 'user/appliedJobsList.html')
+

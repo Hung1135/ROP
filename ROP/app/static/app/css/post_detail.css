@@ -43,10 +43,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   /* Đặt margin-left và margin-right là auto sẽ buộc menu
-       nằm chính xác giữa Logo và nút Log in. */
-
-  /* Nếu bạn muốn menu nằm gần nút Log in hơn, hãy bỏ 2 dòng margin: auto 
-       và thay bằng margin-right: 50px; flex-grow: 1; justify-content: flex-end; */
+        nằm chính xác giữa Logo và nút Log in. */
 }
 
 .menu a {
@@ -235,4 +232,38 @@ body {
     flex: 1;
     width: 100%;
   }
+}
+.cv-detail-btn {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  margin-top: 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.cv-detail-btn:hover {
+  background-color: #0056b3;
+}
+
+.filter-btn-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.filter-btn {
+  display: inline-block;
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.filter-btn:hover {
+  background-color: #218838;
 }
