@@ -6,44 +6,34 @@ body {
   color: #333;
 }
 
-/* --- NAV BAR CHUNG --- */
 .navbar {
   display: flex;
   align-items: center;
-  /* Dùng space-between để Logo và Log in nằm sát hai bên */
   justify-content: space-between;
   background-color: #ffffff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   padding: 10px 50px;
 }
 
-/* -------------------------------------- */
-/* --- PHẦN LOGO (LÀM LỚN) --- */
 .logo {
   display: flex;
   align-items: center;
-  font-size: 24px; /* Tăng cỡ chữ logo ROP */
+  font-size: 24px;
   font-weight: bold;
   color: #007bff;
 }
 
 .logo img {
-  width: 50px; /* LÀM LỚN LOGO */
+  width: 50px;
   height: 50px;
   margin-right: 5px;
 }
-/* -------------------------------------- */
 
-/* --- PHẦN MENU CHÍNH (CĂN GIỮA) --- */
 .menu {
   display: flex;
   gap: 30px;
-
-  /* 💥 KỸ THUẬT CĂN GIỮA TRONG FLEXBOX */
   margin-left: auto;
   margin-right: auto;
-  /* Đặt margin-left và margin-right là auto sẽ buộc menu
-        nằm chính xác giữa Logo và nút Log in. */
 }
 
 .menu a {
@@ -59,14 +49,9 @@ body {
   color: #007bff;
 }
 
-/* --- PHẦN HÀNH ĐỘNG (LOG IN - Màu Đỏ) --- */
-.actions {
-  /* Đảm bảo không chiếm thêm không gian */
-}
-
 .login-btn {
   text-decoration: none;
-  background-color: #e63946; /* MÀU ĐỎ */
+  background-color: #e63946;
   color: white;
   padding: 8px 15px;
   border-radius: 4px;
@@ -77,7 +62,7 @@ body {
 .login-btn:hover {
   background-color: #d62f3c;
 }
-/* --- BỐ CỤC CHÍNH CỦA TRANG CHI TIẾT --- */
+
 .page-container {
   max-width: 1200px;
   margin: 30px auto;
@@ -87,9 +72,8 @@ body {
   align-items: flex-start;
 }
 
-/* Cột Trái: Chi tiết bài đăng */
 .job-detail-section {
-  flex: 2; /* Chiếm 2/3 màn hình */
+  flex: 2;
 }
 
 .detail-card {
@@ -176,9 +160,8 @@ body {
   background-color: #218838;
 }
 
-/* Cột Phải: Danh sách Ứng viên */
 .candidate-section {
-  flex: 1; /* Chiếm 1/3 màn hình */
+  flex: 1;
 }
 
 .candidate-section h2 {
@@ -220,19 +203,6 @@ body {
   color: #333;
 }
 
-/* Responsive cho thiết bị nhỏ */
-@media (max-width: 900px) {
-  .page-container {
-    flex-direction: column;
-  }
-  .job-detail-section {
-    flex: 1;
-  }
-  .candidate-section {
-    flex: 1;
-    width: 100%;
-  }
-}
 .cv-detail-btn {
   display: inline-block;
   background-color: #007bff;
@@ -249,7 +219,7 @@ body {
 }
 
 .filter-btn-container {
-  text-align: center;
+  text-align: left;
   margin-top: 20px;
 }
 
@@ -257,13 +227,159 @@ body {
   display: inline-block;
   background-color: #28a745;
   color: white;
-  padding: 10px 20px;
+  padding: 12px 25px;
   border-radius: 5px;
   text-decoration: none;
   font-weight: bold;
+  font-size: 1.1em;
+  margin-right: 20px;
   transition: background-color 0.3s;
 }
 
 .filter-btn:hover {
   background-color: #218838;
+}
+
+.recommend-btn {
+  display: inline-block;
+  background-color: #6a0dad;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1em;
+  transition: background-color 0.3s;
+}
+
+.recommend-btn:hover {
+  background-color: #530a84;
+}
+
+.filter-modal {
+  display: none;
+  position: fixed;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 30px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 900px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  color: #6a0dad;
+  border-bottom: 2px solid #6a0dad;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.close-btn {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+  color: #333;
+  text-decoration: none;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.results-table th,
+.results-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+.results-table th {
+  background-color: #007bff;
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.9em;
+}
+
+.results-table tbody tr:nth-child(even) {
+  background-color: #f4f7f6;
+}
+
+.results-table tbody tr:hover {
+  background-color: #e9f7ff;
+}
+
+.score {
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: white;
+}
+
+.score.high {
+  background-color: #28a745;
+}
+
+.score.medium {
+  background-color: #ffc107;
+}
+
+.score.low {
+  background-color: #dc3545;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px dashed #007bff;
+  border-radius: 5px;
+  background-color: #f7fcff;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.filter-group label {
+  font-weight: bold;
+  color: #333;
+  font-size: 0.9em;
+}
+
+.sort-options {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid #eee;
+}
+
+.sort-options select {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
