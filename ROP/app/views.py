@@ -28,3 +28,7 @@ def personalprofile(request):
 def appliedJobsList(request):
     return render(request, 'user/appliedJobsList.html')
 
+
+
+
+

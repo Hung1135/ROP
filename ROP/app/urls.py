@@ -4,6 +4,7 @@ from app import views
 
 urlpatterns = [
     path('', views.filter, name='admin_filter'),
+   path('admin_filter', views.filter, name='admin_filter'),
     path('admin_post_detail', views.post_detail, name='admin_post_detail'),
     path('login', views.login, name='login'),
     path('home', views.homeUser, name='home'),
