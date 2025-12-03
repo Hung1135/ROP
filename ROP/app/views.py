@@ -26,3 +26,6 @@ def detailPost(request):
 
 def personalprofile(request):
     return render(request, 'user/personalprofile.html')
+
+def appliedJobsList(request):
+    return render(request, 'user/appliedJobsList.html')
