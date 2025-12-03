@@ -10,22 +10,22 @@
     <body>
      <header class="navbar">
     <div class="logo">
-        <img
-            id="logo"
-            src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
-            alt=""
-        />
-        <span>ROP</span>
+      <img
+          id="logo"
+          src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
+          alt=""
+      />
+      <span>ROP</span>
     </div>
     
     <nav class="menu">
-        <a href="#">Đăng bài</a>
-        <a href="#">Liên hệ</a>
-        <a href="#">Thông báo</a>
+      <a href="#">Đăng bài</a>
+      <a href="#">Liên hệ</a>
+      <a href="#">Thông báo</a>
     </nav>
     
     <div class="actions">
-        <a href="#" class="login-btn">Log in</a>
+      <a href="#" class="login-btn">Log in</a>
     </div>
 </header>
       <div class="page-container">
@@ -64,7 +64,7 @@
             </div>
 
             <div class="content-section">
-             <h2>Mô Tả Công Việc</h2>
+              <h2>Mô Tả Công Việc</h2>
             <ul>
               <li>
                 Tham gia vào quá trình phát triển các tính năng mới cho sản phẩm
@@ -159,12 +159,70 @@
 
 
         <div class="filter-btn-container">
-          <a href="#" class="filter-btn">
-            Lọc hồ sơ nâng cao
-          </a>
+          <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
+          <a href="#" class="recommend-btn">Đề xuất</a>
         </div>
       </div>
       </div>
+      
+      <div id="filter-results-modal" class="filter-modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            
+            <h2>Kết quả Lọc Nâng Cao & Đánh giá CV</h2>
+            
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <label for="min-experience">Kinh nghiệm tối thiểu (năm):</label>
+                    <input type="number" id="min-experience" min="0" value="0" style="width: 80px; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                </div>
+                <div class="filter-group">
+                    <label for="skill-search">Tìm kiếm theo Kỹ năng (VD: Python, AWS):</label>
+                    <input type="text" id="skill-search" placeholder="Nhập kỹ năng" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 250px;">
+                </div>
+                <button id="apply-filter-btn" style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Áp dụng</button>
+            </div>
+            <div class="sort-options">
+                <label for="sort-by">Sắp xếp theo:</label>
+                <select id="sort-by">
+                    <option value="score_desc">Điểm CV (Giảm dần)</option>
+                    <option value="score_asc">Điểm CV (Tăng dần)</option>
+                </select>
+            </div>
+            
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Ứng viên</th>
+                        <th>Kinh nghiệm</th>
+                        <th>Kỹ năng chính</th>
+                        <th>Điểm CV (Tương thích)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-score="95" data-experience="4">
+                        <td>Lê Hoàng C</td>
+                        <td>4 năm</td>
+                        <td>Python, SQL, Hadoop, AWS</td>
+                        <td><span class="score high">95/100</span></td>
+                    </tr>
+                    <tr data-score="88" data-experience="3">
+                        <td>Nguyễn Văn A</td>
+                        <td>3 năm</td>
+                        <td>Python, SQL, Spark, Airflow</td>
+                        <td><span class="score medium">88/100</span></td>
+                    </tr>
+                    <tr data-score="75" data-experience="2.5">
+                        <td>Trần Thị B</td>
+                        <td>2.5 năm</td>
+                        <td>SQL Server, Power BI, Python</td>
+                        <td><span class="score low">75/100</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+        
+<script src="{% static 'app/js/admin_result_filter.js' %}" ></script>
     </body>
-  </html>
 </html>
