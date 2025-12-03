@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -19,7 +20,8 @@
 
       <nav class="navbar">
         <ul class="nav-links">
-            <li><a href="{% url 'home' %}">Trang Chủ</a></li>
+            {% comment %} <li><a href="{% url 'home' %}">Trang Chủ</a></li> {% endcomment %}
+            <li><a href="#">Trang Chủ</a></li>
         </ul>
 
         <div class="search-box">
@@ -65,7 +67,8 @@
                 <li><span class="tag">JavaScript</span></li>
                 <li><span class="tag">React</span></li>
             </ul>
-            <a href="{% url 'detailPost' %}" class="btn-detail">Xem Chi Tiết</a>
+            <a href="app/css_user/detailPost.css" class="btn-detail">Xem Chi Tiết</a>
+            {% comment %} <a href="{% url 'detailPost' %}" class="btn-detail">Xem Chi Tiết</a> {% endcomment %}
         </div>
 
         <div class="job-card">
@@ -94,7 +97,9 @@
             <li><span class="tag">Content</span></li>
             <li><span class="tag">Google Ads</span></li>
           </ul>
-          <a href="#" class="btn-detail">Xem Chi Tiết</a>
+          {% comment %} <a href="{% url 'user_detailPost' post.id %}" class="btn-detail">Xem Chi Tiết 1</a> {% endcomment %}
+          <a href="/user_detailPost" class="btn-detail">Xem Chi Tiết 1</a>
+
         </div>
         <div class="job-card">
           <div class="job-header">
