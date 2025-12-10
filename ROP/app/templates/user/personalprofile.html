@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Title</title>
-    <link rel="stylesheet" href="../../static/app/css_user/home.css" />
+    <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}" />
     <link
       rel="stylesheet"
-      href="../../static/app/css_user/personalprofile.css"
+      href="{% static 'app/css_user/personalprofile.css' %}"
     />
   </head>
   <body>
@@ -22,7 +23,7 @@
 
       <nav class="navbar">
         <ul class="nav-links">
-          <li><a href="home.html">Trang Chủ</a></li>
+          <li><a href="{% url 'home' %}">Trang Chủ</a></li>
         </ul>
 
         <div class="search-box">
@@ -32,43 +33,104 @@
 
         <div class="account-wrapper">
           <a href="#" class="btn-account">Tài Khoản</a>
-
           <div class="account-submenu">
-            <a href="personalprofile.html" class="btn-submenu-item"
+            <a href="{% url 'user_personalprofile' %}" class="btn-submenu-item"
               >Hồ sơ cá nhân</a
             >
-            <a href="ChangePassword.html" class="btn-submenu-item"
+            <a href="{% url 'appliedJobsList' %}" class="btn-submenu-item"
+              >Việc làm đã ứng tuyển</a
+            >
+            <a href="{% url 'ChangePassword' %}" class="btn-submenu-item"
               >Đổi mật khẩu</a
             >
-            <a href="../login/login.html" class="btn-submenu-item">Đăng xuất</a>
+            <a href="{% url 'login' %}" class="btn-submenu-item">Đăng xuất</a>
           </div>
         </div>
       </nav>
     </header>
-
     <main class="main-content">
       <div class="profile-container">
-        <h2>HỒ SƠ CÁ NHÂN</h2>
+        <h2 class="section-title"></h2>
 
-        <div class="profile-card">
-          <div class="profile-photo">
-            <div class="avatar-circle">
-              <div class="placeholder-icon"></div>
+        <form class="profile-card" id="profileEditForm">
+          <div class="profile-header">
+            <div class="profile-photo">
+              <div class="avatar-circle">
+                <img
+                  src="https://i.pinimg.com/1200x/20/70/06/207006a284e424f8b4331af883b6215c.jpg"
+                  alt="Ảnh đại diện"
+                  id="user-avatar"
+                />
+              </div>
+              <button class="btn-change-photo" type="button">
+                <i class="fas fa-camera"></i>
+              </button>
+            </div>
+
+            <div class="user-info-brief">
+              <label for="userName" class="label-name-edit">Họ và Tên:</label>
+              <input
+                type="text"
+                class="edit-field-name"
+                id="userName"
+                value="Trần Văn A"
+              />
             </div>
           </div>
 
-          <div class="profile-details">
-            <p>Họ và Tên: <span> Tran Van A</span></p>
-            <p>Ngày sinh:: <span>01/01/1970</span></p>
-            <p>Điện thoại: <span></span></p>
-            <p>Email: <span>tranvana@gmail.com</span></p>
-            <p>Địa chỉ: <span></span></p>
+          <div class="profile-details details-grid-container">
+            <div class="detail-item-edit">
+              <label for="birthDate"
+                ><i class="fas fa-calendar-alt icon-detail"></i> Ngày
+                sinh:</label
+              >
+              <input
+                type="date"
+                id="birthDate"
+                class="edit-input"
+                value="1970-01-01"
+              />
+            </div>
 
-            <button class="btn-edit-profile">
-              <i class="fas fa-pencil-alt"></i> Chỉnh sửa thông tin cá nhân
-            </button>
+            <div class="detail-item-edit">
+              <label for="phone"
+                ><i class="fas fa-phone icon-detail"></i> Điện thoại:</label
+              >
+              <input
+                type="tel"
+                id="phone"
+                class="edit-input"
+                value="090-XXXX-XXXX"
+              />
+            </div>
+
+            <div class="detail-item-edit">
+              <label for="email"
+                ><i class="fas fa-envelope icon-detail"></i> Email:</label
+              >
+              <input
+                type="email"
+                id="email"
+                class="edit-input readonly-input"
+                value="tranvana@gmail.com"
+              />
+            </div>
+
+            <div class="detail-item-edit">
+              <label for="gender"
+                ><i class="fas fa-venus-mars icon-detail"></i> Giới tính:</label
+              >
+              <select id="gender" class="edit-input">
+                <option value="Nam">Nam</option>
+                <option value="Nữ" selected>Nữ</option>
+              </select>
+            </div>
           </div>
-        </div>
+
+          <button class="btn-save-profile" type="submit">
+            <i class="fas fa-save"></i> LƯU THAY ĐỔI
+          </button>
+        </form>
       </div>
     </main>
 
