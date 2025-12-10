@@ -1,6 +1,8 @@
+from django.contrib import messages
 from django.shortcuts import render, reverse
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from .models import *
 
 # Create your views here.
 #admin
@@ -32,6 +34,32 @@ def personalprofile(request):
     return render(request, 'user/personalprofile.html')
 def appliedJobsList(request):
     return render(request, 'user/appliedJobsList.html')
+def functionPost(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        company_name = request.POST.get('company_name')  # bạn ghi trong form là company_name
+        location = request.POST.get('location')
+        salary_min = request.POST.get('salary_min')
+        salary_max = request.POST.get('salary_max')
+        description = request.POST.get('description')
+        requirements = request.POST.get('requirements')
+        benefits = request.POST.get('benefits')
+        Job.objects.create(
+            title=title,
+            company=company_name,
+            location=location,
+            salary_min=int(salary_min) if salary_min else None,
+            salary_max=int(salary_max) if salary_max else None,
+            description=description,
+            requirements=requirements,
+            benefit=benefits,
+        )
+        messages.success(request, 'Đăng tin tuyển dụng thành công!')
+        return redirect('ListJob')
+    return render(request, 'admin/functionPost.html')
+
+
+
 
 
 

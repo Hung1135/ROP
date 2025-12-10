@@ -34,3 +34,22 @@ class Cvs(models.Model):
 
     def __str__(self):
         return self.file_name
+
+class Job(models.Model):
+    id = models.AutoField(primary_key=True)
+    user_id = models.IntegerField(null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
+    company = models.CharField(max_length=255, null=True, blank=True)
+    location = models.CharField(max_length=255, null=True, blank=True)
+    salary_min = models.IntegerField(null=True, blank=True)
+    salary_max = models.IntegerField(null=True, blank=True)
+    work_type = models.CharField(max_length=255, null=True, blank=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    requirements = models.CharField(max_length=255, null=True, blank=True)
+    skills = models.CharField(max_length=255, null=True, blank=True)
+    benefit = models.CharField(max_length=255, null=True, blank=True)
+    create_at = models.DateField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'jobs'
+        managed = False
