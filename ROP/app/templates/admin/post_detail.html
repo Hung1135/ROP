@@ -25,7 +25,7 @@
     </nav>
     
     <div class="actions">
-      <a href="#" class="login-btn">Log in</a>
+      <a href="#" class="login-btn">Log out</a>
     </div>
 </header>
       <div class="page-container">
@@ -99,14 +99,18 @@
               <li>Đào tạo chuyên môn miễn phí.</li>
             </ul>
           </section>
+          <div class="filter-btn-container">
+          <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
+          <a href="#" class="recommend-btn">Đề xuất</a>
+        </div>
             </div>
           </div>
         </div>
 
-        <div class="candidate-section">
-        <h2>Danh sách Ứng viên ứng tuyển</h2>
+        {% comment %} <div class="candidate-section"> {% endcomment %}
+        {% comment %} <h2>Danh sách Ứng viên ứng tuyển</h2> {% endcomment %}
 
-        <div class="cv-box">
+        {% comment %} <div class="cv-box">
           <h3>👤 Nguyễn Văn A</h3>
           <div class="cv-item">
             <span class="cv-label">Kinh nghiệm:</span>
@@ -155,13 +159,13 @@
               <span class="cv-value">Python, SQL, Hadoop, AWS Glue</span>
             </div>
             <a href="/cv_detail/3" class="cv-detail-btn">Xem chi tiết CV</a>
-          </div>
+          </div> {% endcomment %}
 
 
-        <div class="filter-btn-container">
+        {% comment %} <div class="filter-btn-container">
           <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
           <a href="#" class="recommend-btn">Đề xuất</a>
-        </div>
+        </div> {% endcomment %}
       </div>
       </div>
       
