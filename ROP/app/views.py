@@ -4,11 +4,16 @@ from django.http import HttpResponse
 
 # Create your views here.
 #admin
-def filter(request):
-    return render(request, 'admin/ad_filter.html')
+def homeAdmin(request):
+    return render(request, 'admin/home.html')
 
 def post_detail(request):
     return render(request, 'admin/post_detail.html')
+
+def ListJob(request):
+    return render(request, 'admin/ListJob.html')
+
+
 #login
 def login(request):
     return render(request, 'login/login.html')
