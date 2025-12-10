@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static 'app/css/nav.css' %}" />
+    <link rel="stylesheet" href="{% static 'app/css/ListJob.css'%}" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="logo">
+        <img
+          id="logo"
+          src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
+          alt=""
+        />
+        <span>ROP</span>
+      </div>
+      <nav class="menu">
+        <a href="#">Đăng bài</a>
+        <a href="#">Liên hệ</a>
+        <a href="#">Thông báo</a>
+      </nav>
+      <div class="actions">
+        <a href="#" class="login-btn">Logout</a>
+      </div>
+    </header>
+
+    <!-- Tiêu đề trang -->
+    <div class="page-header">
+      <h1>Danh sách công việc đã đăng tin tuyển dụng</h1>
+    </div>
+
+    <!-- Khu vực danh sách job -->
+    <section class="job-section">
+      <h2>Thông tin công việc</h2>
+
+      <!-- Container bao các job-card (dùng flex) -->
+      <div class="container1">
+        <!-- Job 1 -->
+        <div class="job-card">
+          <div class="job-header">
+            <div class="logo"></div>
+            <div>
+              <div class="job-title">Data Engineer (HCM/HN)</div>
+              <div>CÔNG TY TNHH GIẢI PHÁP CÔNG NGHỆ APOLLO</div>
+            </div>
+          </div>
+          <div class="job-info">
+            <span>📍 Hồ Chí Minh, Hà Nội</span>
+            <span>🕒 2 năm kinh nghiệm</span>
+            <span>🎓 Cao đẳng trở lên</span>
+          </div>
+          <div class="job-info">
+            <span>💰 Mức lương: Thỏa thuận</span>
+            <span>📅 Đăng 2 ngày trước</span>
+          </div>
+
+          <div class="btn_detail">
+            <a href="{% url 'admin_post_detail' %}">
+              <button>Xem chi tiết</button>
+            </a>
+          </div>
+        </div>
+
+        <!-- Job 2 -->
+        <div class="job-card">
+          <div class="job-header">
+            <div class="logo"></div>
+            <div>
+              <div class="job-title">Frontend Developer (Remote)</div>
+              <div>CÔNG TY CỔ PHẦN CÔNG NGHỆ ALPHA</div>
+            </div>
+          </div>
+          <div class="job-info">
+            <span>📍 Làm việc từ xa </span>
+            <span>🕒 1 năm kinh nghiệm</span>
+            <span>🎓 Đại học với bằng Công nghệ thông tin</span>
+          </div>
+          <div class="job-info">
+            <span>💰 15–20 triệu/tháng</span>
+            <span>📅 Đăng 1 ngày trước</span>
+          </div>
+          <div class="btn_detail">
+            <a href="#">
+              <button>Xem chi tiết</button>
+            </a>
+          </div>
+        </div>
+
+        <!-- Job 3 -->
+        <div class="job-card">
+          <div class="job-header">
+            <div class="logo"></div>
+            <div>
+              <div class="job-title">Backend Developer (Java)</div>
+              <div>CÔNG TY TNHH PHẦN MỀM TECHWAVE</div>
+            </div>
+          </div>
+          <div class="job-info">
+            <span>📍 Hà Nội</span>
+            <span>🕒 3 năm kinh nghiệm</span>
+            <span>🎓 Đại học trở lên</span>
+          </div>
+          <div class="job-info">
+            <span>💰 20–25 triệu/tháng</span>
+            <span>📅 Đăng hôm nay</span>
+          </div>
+          <div class="btn_detail">
+            <a href="#">
+              <button>Xem chi tiết</button>
+            </a>
+          </div>
+        </div>
+
+        <!-- Job 4 -->
+        <div class="job-card">
+          <div class="job-header">
+            <div class="logo"></div>
+            <div>
+              <div class="job-title">AI Research Intern</div>
+              <div>TRUNG TÂM NGHIÊN CỨU AI VINA</div>
+            </div>
+          </div>
+          <div class="job-info">
+            <span>📍 TP. Hồ Chí Minh</span>
+            <span>🕒 Không yêu cầu kinh nghiệm</span>
+            <span>🎓 Sinh viên năm cuối</span>
+          </div>
+          <div class="job-info">
+            <span>💰 5 triệu/tháng + hỗ trợ ăn trưa</span>
+            <span>📅 Đăng 3 ngày trước</span>
+          </div>
+          <div class="btn_detail">
+            <a href="#">
+              <button>Xem chi tiết</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

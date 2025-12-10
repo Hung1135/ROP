@@ -114,7 +114,7 @@
               method="POST"
               enctype="multipart/form-data"
             >
-              <div class="form-group">
+              {% comment %} <div class="form-group">
                 <label for="name">Họ và Tên (*)</label>
                 <input type="text" id="name" name="name" required />
               </div>
@@ -127,7 +127,7 @@
               <div class="form-group">
                 <label for="phone">Số điện thoại (*)</label>
                 <input type="tel" id="phone" name="phone" required />
-              </div>
+              </div> {% endcomment %}
 
               <div class="form-group cv-upload">
                 <label for="cv_file">Tải CV Lên (*)</label>
@@ -143,7 +143,7 @@
                 </p>
               </div>
 
-              <div class="form-group">
+              {% comment %} <div class="form-group">
                 <label for="note">Lời nhắn</label>
                 <textarea
                   id="note"
@@ -151,7 +151,7 @@
                   rows="4"
                   placeholder="Giới thiệu nhanh về bản thân..."
                 ></textarea>
-              </div>
+              </div> {% endcomment %}
 
               <button type="submit" class="btn-submit-cv">
                 Gửi Hồ Sơ Ứng Tuyển
