@@ -16,4 +16,5 @@ urlpatterns = [
     path('user_detailPost', views.detailPost, name='detailPost'),
     path('user_personalprofile', views.personalprofile, name='user_personalprofile'),
     path('appliedJobsList', views.appliedJobsList, name='appliedJobsList'),
+    path('functionPost', views.functionPost, name='functionPost'),
 ]
