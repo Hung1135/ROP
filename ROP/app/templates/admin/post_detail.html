@@ -19,155 +19,73 @@
     </div>
     
     <nav class="menu">
-      <a href="#">Đăng bài</a>
+        <a href="{% url 'functionPost' %}">Đăng bài</a>
+      <a href="">Đăng bài</a>
       <a href="#">Liên hệ</a>
-      <a href="#">Thông báo</a>
     </nav>
     
     <div class="actions">
       <a href="#" class="login-btn">Log out</a>
     </div>
 </header>
-      <div class="page-container">
-        <div class="job-detail-section">
-          <div class="detail-card">
-            <h1>
-              Data Engineer (HCM/HN)
-              {% comment %} <button class="apply-btn">Ứng tuyển ngay</button> {% endcomment %}
-            </h1>
+<div class="page-container">
+  <div class="job-detail-section">
+    <div class="detail-card">
 
-            <div class="company-info">
-              CÔNG TY TNHH GIẢI PHÁP CÔNG NGHỆ APOLLO
-            </div>
+      <!-- ===== TIÊU ĐỀ (job_title) ===== -->
+      <h1>
+        Data Engineer (HCM/HN)
+      </h1>
 
-            <div class="key-info">
-              <div>
-                <span>📍 Địa điểm</span>
-                <strong>Hồ Chí Minh, Hà Nội</strong>
-              </div>
-              <div>
-                <span>💰 Mức lương</span>
-                <strong>Thỏa thuận (Cạnh tranh)</strong>
-              </div>
-              <div>
-                <span>🕒 Kinh nghiệm</span>
-                <strong>2 năm trở lên</strong>
-              </div>
-              <div>
-                <span>🎓 Yêu cầu bằng cấp</span>
-                <strong>Cao đẳng trở lên</strong>
-              </div>
-              <div>
-                <span>📅 Ngày đăng</span>
-                <strong>2 ngày trước</strong>
-              </div>
-            </div>
-
-            <div class="content-section">
-              <h2>Mô Tả Công Việc</h2>
-            <ul>
-              <li>
-                Tham gia vào quá trình phát triển các tính năng mới cho sản phẩm
-                web.
-              </li>
-              <li>Sửa lỗi và tối ưu hóa hiệu suất ứng dụng hiện tại.</li>
-              <li>Làm việc cùng team Backend để tích hợp API.</li>
-              <li>Viết unit tests và đảm bảo chất lượng mã nguồn.</li>
-            </ul>
-
-            <h2>Yêu Cầu Công Việc</h2>
-            <ul>
-              <li>Có kiến thức cơ bản về HTML, CSS, JavaScript.</li>
-              <li>
-                Kinh nghiệm làm việc với ReactJS (hoặc các framework khác) là
-                một lợi thế.
-              </li>
-              <li>
-                Tốt nghiệp ngành Công nghệ thông tin hoặc có kinh nghiệm tương
-                đương 1 năm.
-              </li>
-              <li>Khả năng đọc hiểu tài liệu tiếng Anh kỹ thuật.</li>
-            </ul>
-
-            <h2>Phúc Lợi</h2>
-            <ul>
-              <li>Lương tháng 13, thưởng hiệu suất công việc.</li>
-              <li>Bảo hiểm đầy đủ theo luật Lao động.</li>
-              <li>
-                Môi trường làm việc trẻ trung, năng động, có khu vực giải trí.
-              </li>
-              <li>Đào tạo chuyên môn miễn phí.</li>
-            </ul>
-          </section>
-          <div class="filter-btn-container">
-          <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
-          <a href="#" class="recommend-btn">Đề xuất</a>
-        </div>
-            </div>
-          </div>
-        </div>
-
-        {% comment %} <div class="candidate-section"> {% endcomment %}
-        {% comment %} <h2>Danh sách Ứng viên ứng tuyển</h2> {% endcomment %}
-
-        {% comment %} <div class="cv-box">
-          <h3>👤 Nguyễn Văn A</h3>
-          <div class="cv-item">
-            <span class="cv-label">Kinh nghiệm:</span>
-            <span class="cv-value">3 năm (Data Engineer)</span>
-          </div>
-          <div class="cv-item">
-            <span class="cv-label">Bằng cấp:</span>
-            <span class="cv-value">Đại học</span>
-          </div>
-          <div class="cv-item">
-            <span class="cv-label">Kỹ năng:</span>
-            <span class="cv-value">Python, SQL, Apache Spark, Airflow</span>
-          </div>
-          <a href="/cv_detail/1" class="cv-detail-btn">Xem chi tiết CV</a>
-        </div>
-
-        <div class="cv-box">
-          <h3>👤 Trần Thị B</h3>
-          <div class="cv-item">
-            <span class="cv-label">Kinh nghiệm:</span>
-            <span class="cv-value">2.5 năm (Big Data Analyst)</span>
-          </div>
-          <div class="cv-item">
-            <span class="cv-label">Bằng cấp:</span>
-            <span class="cv-value">Cao đẳng</span>
-          </div>
-          <div class="cv-item">
-            <span class="cv-label">Kỹ năng:</span>
-            <span class="cv-value">SQL Server, Power BI, Python cơ bản</span>
-          </div>
-          <a href="/cv_detail/2" class="cv-detail-btn">Xem chi tiết CV</a>
-        </div>
-
-        <div class="cv-box">
-            <h3>👤 Lê Hoàng C</h3>
-            <div class="cv-item">
-              <span class="cv-label">Kinh nghiệm:</span>
-              <span class="cv-value">4 năm (Database Admin/Data Eng)</span>
-            </div>
-            <div class="cv-item">
-              <span class="cv-label">Bằng cấp:</span>
-              <span class="cv-value">Thạc sĩ</span>
-            </div>
-            <div class="cv-item">
-              <span class="cv-label">Kỹ năng:</span>
-              <span class="cv-value">Python, SQL, Hadoop, AWS Glue</span>
-            </div>
-            <a href="/cv_detail/3" class="cv-detail-btn">Xem chi tiết CV</a>
-          </div> {% endcomment %}
-
-
-        {% comment %} <div class="filter-btn-container">
-          <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
-          <a href="#" class="recommend-btn">Đề xuất</a>
-        </div> {% endcomment %}
+      <!-- ===== TÊN CÔNG TY (company_name) ===== -->
+      <div class="company-info">
+        CÔNG TY TNHH GIẢI PHÁP CÔNG NGHỆ APOLLO
       </div>
+
+      <!-- ===== THÔNG TIN TÓM TẮT (dataset chỉ có location + salary) ===== -->
+      <div class="key-info">
+        <div>
+          <span>📍 Địa điểm</span>
+          <strong>Hồ Chí Minh, Hà Nội</strong>
+        </div>
+
+        <div>
+          <span>💰 Mức lương</span>
+          <strong>Thỏa thuận</strong>
+        </div>
       </div>
+
+      <div class="content-section">
+
+        <!-- ===== MÔ TẢ CÔNG VIỆC (job_description) ===== -->
+        <h2>Mô Tả Công Việc</h2>
+        <ul>
+          <li>Tham gia phát triển, xử lý dữ liệu Big Data.</li>
+          <li>Xây dựng pipeline dữ liệu và tối ưu hiệu suất.</li>
+          <li>Kết hợp với team phân tích và backend để tích hợp hệ thống.</li>
+          <li>Giám sát, kiểm tra chất lượng dữ liệu.</li>
+        </ul>
+
+        <!-- ===== YÊU CẦU (job_requirements) ===== -->
+        <h2>Yêu Cầu Công Việc</h2>
+        <ul>
+          <li>Kỹ năng SQL tốt.</li>
+          <li>Hiểu về Hadoop/Spark/Airflow là lợi thế.</li>
+          <li>Có tư duy xử lý dữ liệu.</li>
+          <li>Ưu tiên biết Python.</li>
+        </ul>
+
+      </div>
+
+      <!-- ===== NÚT LỌC HỒ SƠ ===== -->
+      <div class="filter-btn-container">
+        <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
+        <a href="#" class="recommend-btn">Đề xuất</a>
+      </div>
+
+    </div>
+  </div>
+</div>
       
       <div id="filter-results-modal" class="filter-modal">
         <div class="modal-content">

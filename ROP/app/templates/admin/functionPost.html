@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Đăng bài tuyển dụng</title>
+    <link rel="stylesheet" href="{% static 'app/css/post_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/post_create.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/functionPost.css' %}">
+</head>
+
+<body>
+<header class="navbar">
+    <div class="logo">
+        <img
+            id="logo"
+            src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
+            alt=""
+        />
+        <span>ROP</span>
+    </div>
+
+    <nav class="menu">
+        <a href="#">Đăng bài</a>
+        <a href="#">Liên hệ</a>
+    </nav>
+
+    <div class="actions">
+        <a href="#" class="login-btn">Log out</a>
+    </div>
+</header>
+
+<div class="page-container">
+    <div class="form-container">
+        <h1>Đăng Bài Tuyển Dụng</h1>
+
+        <form method="POST" action="functionPost">
+            {% csrf_token %}
+
+            <!-- JOB TITLE -->
+            <div class="form-group">
+                <label>Tiêu đề</label>
+                <input type="text" name="title" required placeholder="VD: Data Engineer (HCM/HN)">
+            </div>
+
+            <!-- COMPANY NAME -->
+            <div class="form-group">
+                <label>Tên công ty</label>
+                <input type="text" name="company_name" required placeholder="VD: Công ty TNHH ABC">
+            </div>
+
+            <!-- LOCATION -->
+            <div class="form-group">
+                <label>Địa điểm</label>
+                <input type="text" name="location" required placeholder="VD: Hồ Chí Minh / Hà Nội">
+            </div>
+
+            <!-- SALARY -->
+            <div class="group-row">
+                <div class="form-group half">
+                    <label>Lương tối thiểu</label>
+                    <input type="number" step="0.01" name="salary_min" required placeholder="20000000">
+                </div>
+
+                <div class="form-group half">
+                    <label>Lương tối đa</label>
+                    <input type="number" step="0.01" name="salary_max" required placeholder="30000000">
+                </div>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <h2>Mô tả công việc</h2>
+            <div class="form-group">
+                <textarea name="description" required placeholder="Nhập mô tả công việc..."></textarea>
+            </div>
+
+            <!-- REQUIREMENTS -->
+            <h2>Yêu cầu công việc</h2>
+            <div class="form-group">
+                <textarea name="requirements" required placeholder="Nhập yêu cầu công việc..."></textarea>
+            </div>
+
+            <!-- BENEFITS -->
+            <h2>Phúc lợi</h2>
+            <div class="form-group">
+                <textarea name="benefits" required placeholder="Nhập phúc lợi: thưởng, bảo hiểm, ngày nghỉ..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Đăng Bài</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
