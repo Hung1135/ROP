@@ -15,6 +15,9 @@ def post_detail(request):
 def ListJob(request):
     return render(request, 'admin/ListJob.html')
 
+def manaPostCV(request):
+    return render(request, 'admin/managePostCV.html')
+
 
 #login
 def login(request):
