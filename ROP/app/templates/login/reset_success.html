@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thành công</title>
+    <link rel="stylesheet" href="{% static 'app/css/login.css' %}" />
+  </head>
+
+  <body>
+    <div class="container" style="width: 420px; height: 300px">
+      <div
+        class="form-container"
+        style="width: 100%; position: relative; text-align: center"
+      >
+        <h1 style="margin-bottom: 20px">Thành công!</h1>
+        <p style="font-size: 14px">
+          Mật khẩu của bạn đã được đặt lại thành công.
+        </p>
+
+        <a href="{% url 'login' %}">
+          <button style="margin-top: 25px">Đăng nhập ngay</button>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,15 +1,21 @@
 <!DOCTYPE html>
+
 {% load static %}
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+
     <title>Title</title>
+
     <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}" />
+
     <link
       rel="stylesheet"
       href="{% static 'app/css_user/personalprofile.css' %}"
     />
   </head>
+
   <body>
     <header class="header">
       <div class="logo">
@@ -18,6 +24,7 @@
           src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
           alt=""
         />
+
         <h1>TUYỂN DỤNG NHÂN SỰ</h1>
       </div>
 
@@ -28,52 +35,48 @@
 
         <div class="search-box">
           <input type="text" placeholder="Tìm kiếm công việc..." />
+
           <button type="submit">Tìm</button>
         </div>
 
         <div class="account-wrapper">
           <a href="#" class="btn-account">Tài Khoản</a>
+
           <div class="account-submenu">
             <a href="{% url 'user_personalprofile' %}" class="btn-submenu-item"
               >Hồ sơ cá nhân</a
             >
+
             <a href="{% url 'appliedJobsList' %}" class="btn-submenu-item"
               >Việc làm đã ứng tuyển</a
             >
+
             <a href="{% url 'ChangePassword' %}" class="btn-submenu-item"
               >Đổi mật khẩu</a
             >
-            <a href="{% url 'login' %}" class="btn-submenu-item">Đăng xuất</a>
+
+            <a href="{% url 'logout' %}" class="btn-submenu-item">Đăng xuất</a>
           </div>
         </div>
       </nav>
     </header>
+
     <main class="main-content">
       <div class="profile-container">
-        <h2 class="section-title"></h2>
+        <h2 class="section-title">Hồ Sơ Cá Nhân ({{ user.role|capfirst }})</h2>
 
-        <form class="profile-card" id="profileEditForm">
+        <form class="profile-card" id="profileEditForm" method="POST">
+          {% csrf_token %}
           <div class="profile-header">
-            <div class="profile-photo">
-              <div class="avatar-circle">
-                <img
-                  src="https://i.pinimg.com/1200x/20/70/06/207006a284e424f8b4331af883b6215c.jpg"
-                  alt="Ảnh đại diện"
-                  id="user-avatar"
-                />
-              </div>
-              <button class="btn-change-photo" type="button">
-                <i class="fas fa-camera"></i>
-              </button>
-            </div>
-
             <div class="user-info-brief">
               <label for="userName" class="label-name-edit">Họ và Tên:</label>
               <input
                 type="text"
                 class="edit-field-name"
                 id="userName"
-                value="Trần Văn A"
+                name="full_name"
+                value="{{ user.full_name }}"
+                required
               />
             </div>
           </div>
@@ -88,7 +91,8 @@
                 type="date"
                 id="birthDate"
                 class="edit-input"
-                value="1970-01-01"
+                name="birth_date"
+                value=""
               />
             </div>
 
@@ -99,8 +103,10 @@
               <input
                 type="tel"
                 id="phone"
+                name="phone"
                 class="edit-input"
-                value="090-XXXX-XXXX"
+                value="{{ user.phone }}"
+                required
               />
             </div>
 
@@ -111,8 +117,10 @@
               <input
                 type="email"
                 id="email"
+                name="email"
                 class="edit-input readonly-input"
-                value="tranvana@gmail.com"
+                value="{{ user.email }}"
+                readonly
               />
             </div>
 
@@ -120,9 +128,10 @@
               <label for="gender"
                 ><i class="fas fa-venus-mars icon-detail"></i> Giới tính:</label
               >
-              <select id="gender" class="edit-input">
+              <select id="gender" name="gender" class="edit-input">
+                <option value="Nam">Khác</option>
                 <option value="Nam">Nam</option>
-                <option value="Nữ" selected>Nữ</option>
+                <option value="Nữ">Nữ</option>
               </select>
             </div>
           </div>
