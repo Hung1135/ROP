@@ -21,8 +21,9 @@
       <nav class="navbar">
         <ul class="nav-links">
           <li><a href="{% url 'home' %}">Trang Chủ</a></li>
-          <li><a href="{% url 'appliedJobsList' %}">Lịch sử ứng tuyển</a></li>
+            <li><a href="{% url 'appliedJobsList' %}">Lịch sử ứng tuyển</a></li>
         </ul>
+
 
         <div class="search-box">
           <input type="text" placeholder="Tìm kiếm công việc..." />
@@ -67,7 +68,7 @@
                {% if job.salary_min and job.salary_max %}{{ job.salary_min }} -
               {{ job.salary_max }} Triệu VND{% elif job.salary_min %}{{
               job.salary_min }} Triệu VND{% elif job.salary_max %}{{
-              job.salary_max }} Triệu VND{% else %}{% endif %} 
+              job.salary_max }} Triệu VND{% else %}{% endif %}
             </span>
           </div>
 
