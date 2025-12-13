@@ -37,7 +37,7 @@ def appliedJobsList(request):
 def functionPost(request):
     if request.method == 'POST':
         title = request.POST.get('title')
-        company_name = request.POST.get('company_name')  # bạn ghi trong form là company_name
+        company_name = request.POST.get('company_name')
         location = request.POST.get('location')
         salary_min = request.POST.get('salary_min')
         salary_max = request.POST.get('salary_max')
