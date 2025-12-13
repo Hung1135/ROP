@@ -37,7 +37,11 @@ class Cvs(models.Model):
 
 class Job(models.Model):
     id = models.AutoField(primary_key=True)
-    user_id = models.IntegerField(null=True, blank=True)
+    user = models.ForeignKey(
+        users,
+        on_delete=models.DO_NOTHING,
+        db_column='user_id',
+    )
     title = models.CharField(max_length=255, null=True, blank=True)
     company = models.CharField(max_length=255, null=True, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
