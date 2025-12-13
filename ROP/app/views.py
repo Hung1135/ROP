@@ -41,10 +41,11 @@ def login(request):
 
 # user
 def homeUser(request):
-    if request.method == 'GET':
-        user_id = request.session.get('user_id')
-        if not user_id:
-            return redirect('login')
+    # if request.method == 'GET':
+    #     user_id = request.session.get('user_id')
+    #     if not user_id:
+    #         return redirect('login')
+    # jobs = Job.objects.all()
     return render(request, 'user/home.html')
 
 

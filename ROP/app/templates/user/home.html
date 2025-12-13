@@ -60,66 +60,7 @@
       <div class="job-listings">
         <div class="job-card">
           <div class="job-header">
-            <h3>Kỹ Sư Phần Mềm (Junior)</h3>
-            <span class="job-salary">10 - 15 Triệu VND</span>
-          </div>
-          <p class="job-company">Công ty TNHH Công nghệ Alpha</p>
-          <p class="job-location">Hồ Chí Minh</p>
-          <ul class="job-tags">
-            <li><span class="tag">HTML/CSS</span></li>
-            <li><span class="tag">JavaScript</span></li>
-            <li><span class="tag">React</span></li>
-          </ul>
-          <a href="{% url 'detailPost' %}" class="btn-detail">Xem Chi Tiết</a>
-        </div>
-
-        <div class="job-card">
-          <div class="job-header">
-            <h3>Chuyên Viên Marketing Số</h3>
-            <span class="job-salary">12 - 18 Triệu VND</span>
-          </div>
-          <p class="job-company">Tập đoàn Truyền thông Beta</p>
-          <p class="job-location">Hà Nội</p>
-          <ul class="job-tags">
-            <li><span class="tag">SEO/SEM</span></li>
-            <li><span class="tag">Content</span></li>
-            <li><span class="tag">Google Ads</span></li>
-          </ul>
-          <a href="#" class="btn-detail">Xem Chi Tiết</a>
-        </div>
-        <div class="job-card">
-          <div class="job-header">
-            <h3>Chuyên Viên Marketing Số</h3>
-            <span class="job-salary">12 - 18 Triệu VND</span>
-          </div>
-          <p class="job-company">Tập đoàn Truyền thông Beta</p>
-          <p class="job-location">Hà Nội</p>
-          <ul class="job-tags">
-            <li><span class="tag">SEO/SEM</span></li>
-            <li><span class="tag">Content</span></li>
-            <li><span class="tag">Google Ads</span></li>
-          </ul>
-          {% comment %} <a href="{% url 'user_detailPost' post.id %}" class="btn-detail">Xem Chi Tiết 1</a> {% endcomment %}
-          <a href="/user_detailPost" class="btn-detail">Xem Chi Tiết 1</a>
-
-        </div>
-        <div class="job-card">
-          <div class="job-header">
-            <h3>Chuyên Viên Marketing Số</h3>
-            <span class="job-salary">12 - 18 Triệu VND</span>
-          </div>
-          <p class="job-company">Tập đoàn Truyền thông Beta</p>
-          <p class="job-location">Hà Nội</p>
-          <ul class="job-tags">
-            <li><span class="tag">SEO/SEM</span></li>
-            <li><span class="tag">Content</span></li>
-            <li><span class="tag">Google Ads</span></li>
-          </ul>
-          <a href="#" class="btn-detail">Xem Chi Tiết</a>
-        </div>
-        <div class="job-card">
-          <div class="job-header">
-            <h3>Chuyên Viên Marketing Số</h3>
+            <h3>{{job.title}}</h3>
             <span class="job-salary">12 - 18 Triệu VND</span>
           </div>
           <p class="job-company">Tập đoàn Truyền thông Beta</p>
