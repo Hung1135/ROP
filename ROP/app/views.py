@@ -17,11 +17,11 @@ def post_detail(request, id):
 
 
 def ListJob(request):
+    user_id = request.session.get('user_id')
     if request.method == 'GET':
-        user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
-    jobs = Job.objects.all()
+    jobs = Job.objects.filter(user=user_id)
     return render(request, 'admin/ListJob.html', {'jobs': jobs})
 
 
@@ -78,10 +78,11 @@ def appliedJobsList(request):
 
 # cái này db
 def functionPost(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
+    if request.method == 'POST':
         title = request.POST.get('title')
         company_name = request.POST.get('company_name')
         location = request.POST.get('location')
