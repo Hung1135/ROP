@@ -8,7 +8,7 @@ from .models import *
 # Create your views here.
 # admin
 def post_detail(request, id):
-    if request.method == 'POST':
+    if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
@@ -17,7 +17,7 @@ def post_detail(request, id):
 
 
 def ListJob(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
@@ -26,7 +26,7 @@ def ListJob(request):
 
 
 def manaPostCV(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
@@ -41,7 +41,7 @@ def login(request):
 
 # user
 def homeUser(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
@@ -53,7 +53,7 @@ def ChangePassword(request):
 
 
 def detailPost(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
@@ -61,7 +61,7 @@ def detailPost(request):
 
 
 def personalprofile(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
@@ -69,7 +69,7 @@ def personalprofile(request):
 
 
 def appliedJobsList(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
