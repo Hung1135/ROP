@@ -46,7 +46,7 @@
       </div>
 
       <nav class="menu">
-        <a href="#">Đăng bài</a>
+        <a href="{% url 'functionPost' %}">Đăng bài</a>
         <a href="{% url 'manaPostCV' %}">CV đã ứng tuyển</a>
         <a href="#">Liên hệ</a>
       </nav>
@@ -81,7 +81,7 @@
           </div>
 
           <div class="btn_detail">
-            <a href="{% url 'admin_post_detail' %}">
+            <a href="{% url 'admin_post_detail' job.id %}">
               <button>Xem chi tiết</button>
             </a>
           </div>
@@ -89,7 +89,6 @@
           {% endfor %}
 
 
-        <!-- Job 1 -->
 
 
 
