@@ -21,9 +21,8 @@
       <nav class="navbar">
         <ul class="nav-links">
           <li><a href="{% url 'home' %}">Trang Chủ</a></li>
-            <li><a href="{% url 'appliedJobsList' %}">Lịch sử ứng tuyển</a></li>
+          <li><a href="{% url 'appliedJobsList' %}">Lịch sử ứng tuyển</a></li>
         </ul>
-
 
         <div class="search-box">
           <input type="text" placeholder="Tìm kiếm công việc..." />
@@ -42,7 +41,7 @@
             <a href="{% url 'ChangePassword' %}" class="btn-submenu-item"
               >Đổi mật khẩu</a
             >
-            <a href="{% url 'login' %}" class="btn-submenu-item">Đăng xuất</a>
+            <a href="{% url 'logout' %}" class="btn-submenu-item">Đăng xuất</a>
           </div>
         </div>
       </nav>
@@ -99,9 +98,12 @@
             <li><span class="tag">Content</span></li>
             <li><span class="tag">Google Ads</span></li>
           </ul>
-          {% comment %} <a href="{% url 'user_detailPost' post.id %}" class="btn-detail">Xem Chi Tiết 1</a> {% endcomment %}
+          {% comment %}
+          <a href="{% url 'user_detailPost' post.id %}" class="btn-detail"
+            >Xem Chi Tiết 1</a
+          >
+          {% endcomment %}
           <a href="/user_detailPost" class="btn-detail">Xem Chi Tiết 1</a>
-
         </div>
         <div class="job-card">
           <div class="job-header">
