@@ -17,6 +17,8 @@ def post_detail(request, id):
 
 
 def ListJob(request):
+
+    return render(request, 'admin/ListJob.html')
     if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
@@ -33,6 +35,7 @@ def manaPostCV(request):
     return render(request, 'admin/managePostCV.html')
 
 
+
 # login
 def login(request):
 
@@ -41,11 +44,12 @@ def login(request):
 
 # user
 def homeUser(request):
-    if request.method == 'GET':
-        user_id = request.session.get('user_id')
-        if not user_id:
-            return redirect('login')
-    return render(request, 'user/home.html')
+    # if request.method == 'GET':
+    #     user_id = request.session.get('user_id')
+    #     if not user_id:
+    #         return redirect('login')
+    jobs = Job.objects.all().order_by('-create_at')
+    return render(request, 'user/home.html', {'jobs': jobs})
 
 
 def ChangePassword(request):
@@ -59,6 +63,10 @@ def detailPost(request):
             return redirect('login')
     return render(request, 'user/detailPost.html')
 
+def personalprofile(request):
+    return render(request, 'user/personalprofile.html')
+def appliedJobsList(request):
+    return render(request, 'user/appliedJobsList.html')
 
 def personalprofile(request):
     if request.method == 'GET':
@@ -76,7 +84,6 @@ def appliedJobsList(request):
     return render(request, 'user/appliedJobsList.html')
 
 
-# cái này db
 def functionPost(request):
     if request.method == 'POST':
         user_id = request.session.get('user_id')
@@ -107,3 +114,4 @@ def functionPost(request):
         messages.success(request, 'Đăng tin tuyển dụng thành công!')
         return redirect('ListJob')
     return render(request, 'admin/functionPost.html')
+
