@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password, check_password
+
 
 # Create your models here.
 class users (models.Model):
@@ -8,9 +10,14 @@ class users (models.Model):
     phone=models.CharField(max_length=100)
     password_hash=models.CharField(max_length=100)
     role=models.BooleanField()
-    created_at=models.DateTimeField(auto_now_add=True)
+    created_at=models.DateField(auto_now_add=True)
     def __str__(self):
         return self.fullname
+    def set_password(self, raw_password):
+        self.password_hash = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password_hash)
     class Meta:
         db_table = 'users'
         managed = False
@@ -57,4 +64,8 @@ class Job(models.Model):
     class Meta:
         db_table = 'jobs'
         managed = False
-        
+
+
+    def __str__(self): 
+        return self.title
+    
