@@ -50,12 +50,14 @@
     <main class="main-content">
       <div class="title">
         <h2>Các Bài Đăng Tuyển Dụng</h2>
-        <select name="" id="loc" class="loc">
-          <option value="">Tất cả</option>
-          <option value="">Mới nhất</option>
-          <option value="">Cũ nhất</option>
-        </select>
+       <form id="sortForm" method="get" style="display:inline">
+          <select name="sort" id="loc" class="loc" onchange="this.form.submit()">
+            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Mới nhất</option>
+            <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Cũ nhất</option>
+          </select>
+        </form>
       </div>
+
       <div class="job-listings">
         <!-- Thay các job-card cứng bằng loop -->
         {% for job in jobs %}
@@ -64,16 +66,17 @@
             <h3>{{ job.title }}</h3>
 
             <span class="job-salary">
-               {% if job.salary_min and job.salary_max %}{{ job.salary_min }} -
+              {% if job.salary_min and job.salary_max %}{{ job.salary_min }} -
               {{ job.salary_max }} Triệu VND{% elif job.salary_min %}{{
               job.salary_min }} Triệu VND{% elif job.salary_max %}{{
-              job.salary_max }} Triệu VND{% else %}{% endif %} 
+              job.salary_max }} Triệu VND{% else %}{% endif %}
             </span>
           </div>
 
           <p class="job-company">{{ job.company }}</p>
 
           <p class="job-location">{{ job.location }}</p>
+          <p class="job-date">{{ job.create_at }}</p>
 
           <ul class="job-tags">
             {% if job.skills %}
