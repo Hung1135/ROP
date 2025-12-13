@@ -48,8 +48,10 @@ def homeUser(request):
     #     user_id = request.session.get('user_id')
     #     if not user_id:
     #         return redirect('login')
-    jobs = Job.objects.all().order_by('-create_at')
-    return render(request, 'user/home.html', {'jobs': jobs})
+     sort = request.GET.get('sort', 'newest')
+     order_by = 'create_at' if sort == 'oldest' else '-create_at'
+     jobs = Job.objects.all().order_by(order_by)
+     return render(request, 'user/home.html', {'jobs': jobs, 'sort': sort})
 
 
 def ChangePassword(request):
