@@ -8,6 +8,8 @@ urlpatterns = [
     path('home', views.homeAdmin, name='admin_filter'),
     path('ListJob', views.ListJob, name='ListJob'),
     path('admin_post_detail', views.post_detail, name='admin_post_detail'),
+    path('functionPost', views.functionPost, name='functionPost'),
+    path('manaPostCV', views.manaPostCV, name='manaPostCV'),
 
     path('login', views.login, name='login'),
 
@@ -16,5 +18,4 @@ urlpatterns = [
     path('user_detailPost', views.detailPost, name='detailPost'),
     path('user_personalprofile', views.personalprofile, name='user_personalprofile'),
     path('appliedJobsList', views.appliedJobsList, name='appliedJobsList'),
-    path('functionPost', views.functionPost, name='functionPost'),
 ]

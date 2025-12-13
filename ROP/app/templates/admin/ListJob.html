@@ -1,181 +1,120 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
-<head>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Danh sách công việc</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
     <!-- Icon Bootstrap (nếu muốn dùng icon đẹp hơn) -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">cd
-    <link rel="stylesheet" href="{% static 'app/css/nav.css' %}"/>
-    <link rel="stylesheet" href="{% static 'app/css/ListJob.css'%}"/>
-</head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'app/css/nav.css' %}" />
+    <link rel="stylesheet" href="{% static 'app/css/ListJob.css'%}" />
+  </head>
 
-<body>
-{% if messages %}
-{% for message in messages %}
-<div class="alert alert-success alert-dismissible fade show custom-alert" role="alert">
-    <strong>{{ message }}</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endfor %}
-{% endif %}
-<header class="navbar">
-    <div class="logo">
+  <body>
+    {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-success alert-dismissible fade show custom-alert"
+      role="alert"
+    >
+      <strong>{{ message }}</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
+    <header class="navbar">
+      <div class="logo">
         <img
-                id="logo"
-                src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
-                alt=""
+          id="logo"
+          src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
+          alt=""
         />
         <span>ROP</span>
-    </div>
+      </div>
 
-    <nav class="menu">
+      <nav class="menu">
         <a href="#">Đăng bài</a>
+        <a href="{% url 'manaPostCV' %}">CV đã ứng tuyển</a>
         <a href="#">Liên hệ</a>
-    </nav>
+      </nav>
 
-    <div class="actions">
+      <div class="actions">
         <a href="#" class="login-btn">Log out</a>
+      </div>
+    </header>
+
+    <div class="page-header">
+      <h1>Danh sách công việc đã đăng tuyển</h1>
     </div>
-</header>
 
-<!-- ================= TITLE ================= -->
-<div class="page-header">
-    <h1>Danh sách công việc đã đăng tuyển</h1>
-</div>
+    <section class="job-section">
+      <div class="container1">
+          {% for job in jobs %}
+        <div class="job-card">
+          <div class="job-header">
+            <div class="logo"></div>
+            <div>
+              <div class="job-title">{{ job.title }}</div>
+              <div class="company">{{ job.company }}</div>
+            </div>
+          </div>
 
-<!-- ================= JOB LIST ================= -->
-<section class="job-section">
-    <h2>Thông tin công việc</h2>
+          <div class="job-info">
+            <span>📍 {{ job.location }}</span>
+          </div>
 
-    <div class="container1">
+          <div class="job-info">
+            <span>💰 {{ job.salary_min }} - {{ job.salary_max }}</span>
+          </div>
+
+          <div class="btn_detail">
+            <a href="{% url 'admin_post_detail' %}">
+              <button>Xem chi tiết</button>
+            </a>
+          </div>
+        </div>
+          {% endfor %}
+
 
         <!-- Job 1 -->
-        <div class="job-card">
-            <div class="job-header">
-                <div class="logo"></div>
-                <div>
-                    <div class="job-title">Data Engineer (HCM/HN)</div>
-                    <div class="company">CÔNG TY TNHH GIẢI PHÁP CÔNG NGHỆ APOLLO</div>
-                </div>
-            </div>
 
-            <div class="job-info">
-                <span>📍 Hồ Chí Minh, Hà Nội</span>
-            </div>
 
-            <div class="job-info">
-                <span>💰 Thỏa thuận</span>
-            </div>
 
-            <div class="btn_detail">
-                <a href="{% url 'admin_post_detail' %}">
-                    <button>Xem chi tiết</button>
-                </a>
-            </div>
-        </div>
+      </div>
+    </section>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const alerts = document.querySelectorAll(".custom-alert");
 
-        <!-- Job 2 -->
-        <div class="job-card">
-            <div class="job-header">
-                <div class="logo"></div>
-                <div>
-                    <div class="job-title">Frontend Developer (Remote)</div>
-                    <div class="company">CÔNG TY CỔ PHẦN CÔNG NGHỆ ALPHA</div>
-                </div>
-            </div>
+        alerts.forEach((alert) => {
+          // Hiển thị alert
+          setTimeout(() => {
+            alert.classList.add("show");
+          }, 100);
 
-            <div class="job-info">
-                <span>📍 Remote</span>
-            </div>
-
-            <div class="job-info">
-                <span>💰 15–20 triệu/tháng</span>
-            </div>
-
-            <div class="btn_detail">
-                <a href="#">
-                    <button>Xem chi tiết</button>
-                </a>
-            </div>
-        </div>
-
-        <!-- Job 3 -->
-        <div class="job-card">
-            <div class="job-header">
-                <div class="logo"></div>
-                <div>
-                    <div class="job-title">Backend Developer (Java)</div>
-                    <div class="company">CÔNG TY TNHH PHẦN MỀM TECHWAVE</div>
-                </div>
-            </div>
-
-            <div class="job-info">
-                <span>📍 Hà Nội</span>
-            </div>
-
-            <div class="job-info">
-                <span>💰 20–25 triệu/tháng</span>
-            </div>
-
-            <div class="btn_detail">
-                <a href="#">
-                    <button>Xem chi tiết</button>
-                </a>
-            </div>
-        </div>
-
-        <!-- Job 4 -->
-        <div class="job-card">
-            <div class="job-header">
-                <div class="logo"></div>
-                <div>
-                    <div class="job-title">AI Research Intern</div>
-                    <div class="company">TRUNG TÂM NGHIÊN CỨU AI VINA</div>
-                </div>
-            </div>
-
-            <div class="job-info">
-                <span>📍 TP. Hồ Chí Minh</span>
-            </div>
-
-            <div class="job-info">
-                <span>💰 5 triệu/tháng + hỗ trợ ăn trưa</span>
-            </div>
-
-            <div class="btn_detail">
-                <a href="#">
-                    <button>Xem chi tiết</button>
-                </a>
-            </div>
-        </div>
-
-    </div>
-</section>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const alerts = document.querySelectorAll('.custom-alert');
-
-        alerts.forEach(alert => {
-            // Hiển thị alert
+          // Tự động ẩn sau 4 giây
+          setTimeout(() => {
+            alert.classList.remove("show");
+            // Xóa hoàn toàn khỏi DOM sau khi fade out
             setTimeout(() => {
-                alert.classList.add('show');
-            }, 100);
-
-            // Tự động ẩn sau 4 giây
-            setTimeout(() => {
-                alert.classList.remove('show');
-                // Xóa hoàn toàn khỏi DOM sau khi fade out
-                setTimeout(() => {
-                    alert.remove();
-                }, 500);
-            }, 4000);
+              alert.remove();
+            }, 500);
+          }, 4000);
         });
-    });
-</script>
-</body>
+      });
+    </script>
+  </body>
 </html>
