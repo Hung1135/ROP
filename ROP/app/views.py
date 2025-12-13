@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.db import IntegrityError
 from django.shortcuts import render, reverse
 from django.shortcuts import redirect
 from django.http import HttpResponse
@@ -116,27 +115,26 @@ def login(request):
 
 # user
 def homeUser(request):
-    user_id = request.session.get('user_id')
-    if request.method == 'GET':
-        if not user_id:
-            return redirect('login')
-    jobs = Job.objects.all()
-    return render(request, 'user/home.html', {'jobs': jobs})
+    # if request.method == 'GET':
+    #     user_id = request.session.get('user_id')
+    #     if not user_id:
+    #         return redirect('login')
+     sort = request.GET.get('sort', 'newest')
+     order_by = 'create_at' if sort == 'oldest' else '-create_at'
+     jobs = Job.objects.all().order_by(order_by)
+     return render(request, 'user/home.html', {'jobs': jobs, 'sort': sort})
 
 
 def ChangePassword(request):
     return render(request, 'user/ChangePassword.html')
 
 
-def detailPost(request,id):
+def detailPost(request):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
-    job = Job.objects.get(id=id)
-    return render(request, 'user/detailPost.html',{'job': job})
-
-
+    return render(request, 'user/detailPost.html')
 def personalprofile(request):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
