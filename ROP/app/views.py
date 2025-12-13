@@ -13,7 +13,11 @@ def post_detail(request):
     return render(request, 'admin/post_detail.html')
 
 def ListJob(request):
-    return render(request, 'admin/ListJob.html')
+    jobs = Job.objects.all()
+    return render(request, 'admin/ListJob.html', {'jobs': jobs})
+
+def manaPostCV(request):
+    return render(request, 'admin/managePostCV.html')
 
 
 #login
@@ -34,6 +38,10 @@ def personalprofile(request):
     return render(request, 'user/personalprofile.html')
 def appliedJobsList(request):
     return render(request, 'user/appliedJobsList.html')
+
+
+
+# cái này db
 def functionPost(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -57,7 +65,6 @@ def functionPost(request):
         messages.success(request, 'Đăng tin tuyển dụng thành công!')
         return redirect('ListJob')
     return render(request, 'admin/functionPost.html')
-
 
 
 
