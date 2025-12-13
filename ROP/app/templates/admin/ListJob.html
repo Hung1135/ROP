@@ -52,7 +52,7 @@
       </nav>
 
       <div class="actions">
-        <a href="#" class="login-btn">Log out</a>
+        <a href="{% url 'logout' %}" class="login-btn">Log out</a>
       </div>
     </header>
 
@@ -62,7 +62,7 @@
 
     <section class="job-section">
       <div class="container1">
-          {% for job in jobs %}
+        {% for job in jobs %}
         <div class="job-card">
           <div class="job-header">
             <div class="logo"></div>
@@ -86,12 +86,7 @@
             </a>
           </div>
         </div>
-          {% endfor %}
-
-
-
-
-
+        {% endfor %}
       </div>
     </section>
     <script>
