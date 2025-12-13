@@ -17,13 +17,11 @@ def post_detail(request, id):
 
 
 def ListJob(request):
-
-    return render(request, 'admin/ListJob.html')
+    user_id = request.session.get('user_id')
     if request.method == 'GET':
-        user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
-    jobs = Job.objects.all()
+    jobs = Job.objects.filter(user=user_id)
     return render(request, 'admin/ListJob.html', {'jobs': jobs})
 
 
@@ -33,7 +31,6 @@ def manaPostCV(request):
         if not user_id:
             return redirect('login')
     return render(request, 'admin/managePostCV.html')
-
 
 
 # login
@@ -48,8 +45,8 @@ def homeUser(request):
     #     user_id = request.session.get('user_id')
     #     if not user_id:
     #         return redirect('login')
-    jobs = Job.objects.all().order_by('-create_at')
-    return render(request, 'user/home.html', {'jobs': jobs})
+    # jobs = Job.objects.all()
+    return render(request, 'user/home.html')
 
 
 def ChangePassword(request):
@@ -63,10 +60,6 @@ def detailPost(request):
             return redirect('login')
     return render(request, 'user/detailPost.html')
 
-def personalprofile(request):
-    return render(request, 'user/personalprofile.html')
-def appliedJobsList(request):
-    return render(request, 'user/appliedJobsList.html')
 
 def personalprofile(request):
     if request.method == 'GET':
@@ -84,11 +77,13 @@ def appliedJobsList(request):
     return render(request, 'user/appliedJobsList.html')
 
 
+# cái này db
 def functionPost(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
+    if request.method == 'POST':
         title = request.POST.get('title')
         company_name = request.POST.get('company_name')
         location = request.POST.get('location')
@@ -114,4 +109,3 @@ def functionPost(request):
         messages.success(request, 'Đăng tin tuyển dụng thành công!')
         return redirect('ListJob')
     return render(request, 'admin/functionPost.html')
-
