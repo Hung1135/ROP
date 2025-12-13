@@ -57,8 +57,4 @@ class Job(models.Model):
     class Meta:
         db_table = 'jobs'
         managed = False
-
-
-    def __str__(self): 
-        return self.title
-    
+        
