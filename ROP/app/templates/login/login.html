@@ -18,10 +18,11 @@
   <body>
     <div class="container" id="container">
       <div class="form-container sign-up-container">
-        <form action="#">
+        <form action="{% url 'login' %}" method="POST">
+          {% csrf_token %}
           <h1>Đăng ký</h1>
           <div class="infield">
-            <input type="text" placeholder="Tên" required />
+            <input type="text" placeholder="Tên" name="full_name" required />
             <label></label>
           </div>
           <div class="infield">
@@ -30,41 +31,82 @@
           </div>
           <div class="infield">
             <input
+              type="text"
+              name="phone"
+              placeholder="Số điện thoại"
+              required
+            />
+          </div>
+          <div class="infield">
+            <input
               type="password"
+              name="password"
               placeholder="Mật khẩu"
               required
               minlength="8"
             />
             <label></label>
             <small class="password-note"
-              >Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm một ký tự viết hóa,
-              một ký tự số và một ký tự đặc biệt</small
+              >Mật khẩu phải chứa ít nhất 8 ký tự...</small
             >
           </div>
-
           <div class="infield">
-            <input type="password" placeholder="Xác nhận mât khẩu" required />
+            <input
+              type="password"
+              name="confirm_password"
+              placeholder="Xác nhận mât khẩu"
+              required
+            />
             <label></label>
           </div>
-          <button>Đăng ký</button>
+          <div class="infield">
+            <select name="role" required>
+              <option value="candidate">Ứng viên</option>
+              <option value="employer">Nhà tuyển dụng</option>
+            </select>
+          </div>
+          <button type="submit">Đăng ký</button>
         </form>
       </div>
       <div class="form-container sign-in-container">
-        <form action="#">
+        <form action="{% url 'login' %}" method="POST">
+          {% csrf_token %}
           <h1>Đăng nhập</h1>
           <div class="infield">
-            <input type="email" placeholder="Email" name="email" required />
+            <input
+              type="email"
+              placeholder="Email"
+              name="email_login"
+              required
+            />
             <label></label>
           </div>
           <div class="infield">
-            <input type="password" placeholder="Mật khẩu" required />
+            <input
+              type="password"
+              placeholder="Mật khẩu"
+              name="password_login"
+              required
+            />
             <label></label>
           </div>
+          {% comment %}
           <div class="remember-forgot">
-            <a href="#" class="forgot">Quên mật khẩu?</a>
+            <a href="{% url 'forgot_password' %}" class="forgot"
+              >Quên mật khẩu?</a
+            >
           </div>
-
-          <button>Đăng nhập</button>
+          {% endcomment %}
+          <button type="submit">Đăng nhập</button>
+         {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {{ message }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
         </form>
       </div>
       <div class="overlay-container" id="overlayCon">
