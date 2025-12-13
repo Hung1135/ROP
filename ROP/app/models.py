@@ -8,7 +8,7 @@ class users (models.Model):
     phone=models.CharField(max_length=100)
     password_hash=models.CharField(max_length=100)
     role=models.BooleanField()
-    created_at=models.DateTimeField(auto_now_add=True)
+    created_at=models.DateField(auto_now_add=True)
     def __str__(self):
         return self.fullname
     class Meta:

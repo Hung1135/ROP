@@ -11,6 +11,7 @@ urlpatterns = [
     path('manaPostCV', views.manaPostCV, name='manaPostCV'),
 
     path('', views.login, name='login'),
+    path('logout', views.logout_user, name='logout'),
 
     path('home', views.homeUser, name='home'),
     path('ChangePassword', views.ChangePassword, name='ChangePassword'),
