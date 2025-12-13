@@ -4,16 +4,15 @@ from app import views
 
 urlpatterns = [
     #path('', views.filter, name='admin_filter'),
-    
-    path('home', views.homeAdmin, name='admin_filter'),
+
     path('ListJob', views.ListJob, name='ListJob'),
-    path('admin_post_detail', views.post_detail, name='admin_post_detail'),
+    path('admin_post_detail/<int:id>/', views.post_detail, name='admin_post_detail'),
     path('functionPost', views.functionPost, name='functionPost'),
     path('manaPostCV', views.manaPostCV, name='manaPostCV'),
 
-    path('login', views.login, name='login'),
+    path('', views.login, name='login'),
 
-    path('', views.homeUser, name='home'),
+    path('home', views.homeUser, name='home'),
     path('ChangePassword', views.ChangePassword, name='ChangePassword'),
     path('detail/<int:job_id>/', views.detailPost, name='detailPost'),
     path('user_personalprofile', views.personalprofile, name='user_personalprofile'),
