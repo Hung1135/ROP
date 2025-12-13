@@ -10,9 +10,9 @@ urlpatterns = [
     path('functionPost', views.functionPost, name='functionPost'),
     path('manaPostCV', views.manaPostCV, name='manaPostCV'),
 
-    path('login', views.login, name='login'),
+    path('', views.login, name='login'),
 
-    path('', views.homeUser, name='home'),
+    path('home', views.homeUser, name='home'),
     path('ChangePassword', views.ChangePassword, name='ChangePassword'),
     path('user_detailPost', views.detailPost, name='detailPost'),
     path('user_personalprofile', views.personalprofile, name='user_personalprofile'),
