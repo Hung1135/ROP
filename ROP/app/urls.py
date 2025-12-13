@@ -11,7 +11,8 @@ urlpatterns = [
     path('functionPost', views.functionPost, name='functionPost'),
     path('manaPostCV', views.manaPostCV, name='manaPostCV'),
 
-    path('login', views.login, name='login'),
+    path('login/', views.login, name='login'),
+    path('logout', views.logout_user, name='logout'),
 
     path('', views.homeUser, name='home'),
     path('ChangePassword', views.ChangePassword, name='ChangePassword'),
