@@ -50,12 +50,14 @@
     <main class="main-content">
       <div class="title">
         <h2>Các Bài Đăng Tuyển Dụng</h2>
-        <select name="" id="loc" class="loc">
-          <option value="">Tất cả</option>
-          <option value="">Mới nhất</option>
-          <option value="">Cũ nhất</option>
-        </select>
+       <form id="sortForm" method="get" style="display:inline">
+          <select name="sort" id="loc" class="loc" onchange="this.form.submit()">
+            <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Mới nhất</option>
+            <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Cũ nhất</option>
+          </select>
+        </form>
       </div>
+
       <div class="job-listings">
         <!-- Thay các job-card cứng bằng loop -->
         {% for job in jobs %}
@@ -71,9 +73,19 @@
             </span>
           </div>
 
+
           <p class="job-company">{{ job.company }}</p>
 
           <p class="job-location">{{ job.location }}</p>
+          <p class="job-date">{{ job.create_at }}</p>
+
+         
+          {% comment %}
+          <a href="{% url 'user_detailPost' post.id %}" class="btn-detail"
+            >Xem Chi Tiết 1</a
+          >
+          {% endcomment %}
+          
 
           <ul class="job-tags">
             {% if job.skills %}
