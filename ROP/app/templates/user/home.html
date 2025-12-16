@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}" />
   </head>
   <body>
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
     <header class="header">
       <div class="logo">
         <img
