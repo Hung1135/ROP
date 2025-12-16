@@ -20,26 +20,7 @@
   </head>
 
   <body>
-    <header class="navbar">
-      <div class="logo">
-        <img
-          id="logo"
-          src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
-          alt=""
-        />
-        <span>ROP</span>
-      </div>
-
-      <nav class="menu">
-        <a href="#">Đăng bài</a>
-      <a href="{% url 'manaPostCV' %}">CV đã ứng tuyển</a>
-        <a href="#">Liên hệ</a>
-      </nav>
-
-      <div class="actions">
-        <a href="#" class="login-btn">Log out</a>
-      </div>
-    </header>
+{% include "admin\header.html" %}
     <body>
       <div class="container mt-5">
         <h2 class="mb-4">Danh sách CV đã ứng tuyển</h2>

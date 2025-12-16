@@ -8,44 +8,7 @@
     <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}" />
   </head>
   <body>
-    <header class="header">
-      <div class="logo">
-        <img
-          id="logo"
-          src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
-          alt=""
-        />
-        <h1>ROP</h1>
-      </div>
-
-      <nav class="navbar">
-        <ul class="nav-links">
-          <li><a href="{% url 'home' %}">Trang Chủ</a></li>
-          <li><a href="{% url 'appliedJobsList' %}">Lịch sử ứng tuyển</a></li>
-        </ul>
-
-        <div class="search-box">
-          <input type="text" placeholder="Tìm kiếm công việc..." />
-          <button type="submit">Tìm</button>
-        </div>
-
-        <div class="account-wrapper">
-          <a href="#" class="btn-account">Tài Khoản</a>
-          <div class="account-submenu">
-            <a href="{% url 'user_personalprofile' %}" class="btn-submenu-item"
-              >Hồ sơ cá nhân</a
-            >
-            <a href="{% url 'appliedJobsList' %}" class="btn-submenu-item"
-              >Việc làm đã ứng tuyển</a
-            >
-            <a href="{% url 'ChangePassword' %}" class="btn-submenu-item"
-              >Đổi mật khẩu</a
-            >
-            <a href="{% url 'login' %}" class="btn-submenu-item">Đăng xuất</a>
-          </div>
-        </div>
-      </nav>
-    </header>
+{% include "user\header.html" %}
 
     <main class="main-detail-content">
       <div class="job-detail-container">
