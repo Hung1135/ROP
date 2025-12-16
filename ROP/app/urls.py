@@ -18,4 +18,5 @@ urlpatterns = [
     path('user_detailPost/<int:id>/', views.detailPost, name='detailPost'),
     path('user_personalprofile', views.personalprofile, name='user_personalprofile'),
     path('appliedJobsList', views.appliedJobsList, name='appliedJobsList'),
+    path('search',views.search,name='search'),
 ]
