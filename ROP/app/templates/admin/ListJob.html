@@ -81,17 +81,12 @@
           </div>
 
           <div class="btn_detail">
-            <a href="{% url 'admin_post_detail' %}">
+              <a href="{% url 'admin_post_detail' job.id %}">
               <button>Xem chi tiết</button>
             </a>
           </div>
         </div>
           {% endfor %}
-
-
-        <!-- Job 1 -->
-
-
 
       </div>
     </section>
@@ -112,7 +107,7 @@
             setTimeout(() => {
               alert.remove();
             }, 500);
-          }, 4000);
+          }, 1000);
         });
       });
     </script>

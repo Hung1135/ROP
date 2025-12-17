@@ -7,7 +7,7 @@ urlpatterns = [
     
     path('home', views.homeAdmin, name='admin_filter'),
     path('ListJob', views.ListJob, name='ListJob'),
-    path('admin_post_detail', views.post_detail, name='admin_post_detail'),
+    path('admin_post_detail/<int:job_id>/', views.post_detail, name='admin_post_detail'),
     path('functionPost', views.functionPost, name='functionPost'),
     path('manaPostCV', views.manaPostCV, name='manaPostCV'),
 
