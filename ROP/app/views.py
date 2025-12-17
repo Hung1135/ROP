@@ -1,7 +1,11 @@
 from django.contrib import messages
+from django.db import IntegrityError
 from django.shortcuts import render, reverse
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from django.template.defaultfilters import title
+from django.db.models import Q
+
 from .models import *
 
 from django.contrib.auth.hashers import make_password, check_password
@@ -9,20 +13,45 @@ from django.db import IntegrityError
 # Create your views here.
 # admin
 def post_detail(request, id):
-    if request.method == 'GET':
-        user_id = request.session.get('user_id')
-        if not user_id:
-            return redirect('login')
+    # if request.method == 'GET':
+    #     user_id = request.session.get('user_id')
+    #     if not user_id:
+    #         return redirect('login')
     job = Job.objects.get(id=id)
-    return render(request, 'admin/post_detail.html', {'job': job})
+    jobDescript = [
+        x.strip()
+        for x in job.description.split(". ")
+        if x.strip()
+    ]
+    jobRequire = [
+        x.strip()
+        for x in job.requirements.split(". ")
+        if x.strip()
+    ]
+    jobSkill = [
+        x.strip()
+        for x in job.skills.split(". ")
+        if x.strip()
+    ]
+    jobBenefit = [
+        x.strip()
+        for x in job.benefit.split(". ")
+        if x.strip()
+    ]
+    return render(request, 'admin/post_detail.html', {'job': job,
+                                                      "jobDescript": jobDescript,
+                                                      "jobRequire": jobRequire,
+                                                      "jobSkill": jobSkill,
+                                                      "jobBenefit": jobBenefit
+                                                      })
 
 
 def ListJob(request):
-    user_id = request.session.get('user_id')
-    if request.method == 'GET':
-        if not user_id:
-            return redirect('login')
-    jobs = Job.objects.filter(user=user_id)
+    # user_id = request.session.get('user_id')
+    # if request.method == 'GET':
+    #     if not user_id:
+    #         return redirect('login')
+    jobs = Job.objects.all()
     return render(request, 'admin/ListJob.html', {'jobs': jobs})
 
 
@@ -33,7 +62,8 @@ def manaPostCV(request):
             return redirect('login')
     return render(request, 'admin/managePostCV.html')
 
-#logout
+
+# logout
 def logout_user(request):
     if 'user_id' in request.session:
         del request.session['user_id']
@@ -42,6 +72,8 @@ def logout_user(request):
     if 'user_role' in request.session:
         del request.session['user_role']
     return redirect('login')
+
+
 # login
 def login(request):
     if 'user_id' in request.session:
@@ -120,10 +152,10 @@ def homeUser(request):
     #     user_id = request.session.get('user_id')
     #     if not user_id:
     #         return redirect('login')
-     sort = request.GET.get('sort', 'newest')
-     order_by = 'create_at' if sort == 'oldest' else '-create_at'
-     jobs = Job.objects.all().order_by(order_by)
-     return render(request, 'user/home.html', {'jobs': jobs, 'sort': sort})
+    sort = request.GET.get('sort', 'newest')
+    order_by = 'create_at' if sort == 'oldest' else '-create_at'
+    jobs = Job.objects.all().order_by(order_by)
+    return render(request, 'user/home.html', {'jobs': jobs, 'sort': sort})
 
 def _is_django_hash(value: str) -> bool:
     if not isinstance(value, str):
@@ -174,18 +206,58 @@ def ChangePassword(request):
     return render(request, 'user/ChangePassword.html')
 
 
-def detailPost(request):
+def detailPost(request, id):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
-    return render(request, 'user/detailPost.html')
+
+    job = Job.objects.get(id=id)
+    jobDescript = [
+        x.strip()
+        for x in job.description.split(". ")
+        if x.strip()
+    ]
+    jobRequire = [
+        x.strip()
+        for x in job.requirements.split(". ")
+        if x.strip()
+    ]
+    jobSkill = [
+        x.strip()
+        for x in job.skills.split(". ")
+        if x.strip()
+    ]
+    jobBenefit = [
+        x.strip()
+        for x in job.benefit.split(". ")
+        if x.strip()
+    ]
+    return render(request, 'user/detailPost.html', {'job': job,
+                                                    "jobDescript": jobDescript,
+                                                    "jobRequire": jobRequire,
+                                                    "jobSkill": jobSkill,
+                                                    "jobBenefit": jobBenefit
+                                                    })
+
+
 def personalprofile(request):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
-    return render(request, 'user/personalprofile.html')
+    user_id=request.session.get('user_id')
+    user = users.objects.get(id=user_id)
+    if request.method == 'POST':
+        user.fullname = request.POST.get('name')
+        user.email = request.POST.get('email')
+        user.phone = request.POST.get('phone')
+        user.birthday = request.POST.get('birthday')
+        user.sex=request.POST.get("sex")
+        user.save()
+        return render(request, 'user/personalprofile.html', {"user": user,"notify":"thành công"})
+
+    return render(request, 'user/personalprofile.html',{"user": user})
 
 
 def appliedJobsList(request):
@@ -228,3 +300,23 @@ def functionPost(request):
         messages.success(request, 'Đăng tin tuyển dụng thành công!')
         return redirect('ListJob')
     return render(request, 'admin/functionPost.html')
+
+
+def search(request):
+    if request.method == 'GET':
+        boxSearch = request.GET.get('boxsearch', '').strip()
+        jobs = Job.objects.all()
+        if boxSearch:
+            salary_q = Q()
+            try:
+                salary_value = int(boxSearch)
+                salary_q = Q(salary_min__lte=salary_value) & Q(salary_max__gte=salary_value)
+            except ValueError:
+                pass
+            jobs = jobs.filter(
+                Q(title__icontains=boxSearch) |
+                Q(company__icontains=boxSearch) |
+                Q(location__icontains=boxSearch) |
+                salary_q
+            )
+    return render(request, 'user/home.html', {'jobs': jobs, "bs": boxSearch})
