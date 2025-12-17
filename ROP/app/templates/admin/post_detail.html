@@ -1,150 +1,143 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Chi tiết bài đăng</title>
-    <link rel="stylesheet" href="{% static 'app/css/post_detail.css' %}" />
-  </head>
-    <body>
-     <header class="navbar">
-    <div class="logo">
-      <img
-          id="logo"
-          src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
-          alt=""
-      />
-      <span>ROP</span>
-    </div>
-    
-    <nav class="menu">
-        <a href="{% url 'functionPost' %}">Đăng bài</a>
-      <a href="{% url 'manaPostCV' %}">CV đã ứng tuyển</a>
-      <a href="#">Liên hệ</a>
-    </nav>
-    
-    <div class="actions">
-      <a href="#" class="login-btn">Log out</a>
-    </div>
-</header>
+    <link rel="stylesheet" href="{% static 'app/css/post_detail.css' %}"/>
+</head>
+<body>
+{% include "admin\header.html" %}
 <div class="page-container">
-  <div class="job-detail-section">
-    <div class="detail-card">
+    <div class="job-detail-section">
+        <div class="detail-card">
 
-      <!-- ===== TIÊU ĐỀ (job_title) ===== -->
-      <h1>
-        Data Engineer (HCM/HN)
-      </h1>
+            <!-- ===== TIÊU ĐỀ (job_title) ===== -->
+            <h1>
+                {{job.title}}
+            </h1>
 
-      <!-- ===== TÊN CÔNG TY (company_name) ===== -->
-      <div class="company-info">
-        CÔNG TY TNHH GIẢI PHÁP CÔNG NGHỆ APOLLO
-      </div>
+            <!-- ===== TÊN CÔNG TY (company_name) ===== -->
+            <div class="company-info">
+                {{job.company}}
+            </div>
 
-      <!-- ===== THÔNG TIN TÓM TẮT (dataset chỉ có location + salary) ===== -->
-      <div class="key-info">
-        <div>
-          <span>📍 Địa điểm</span>
-          <strong>Hồ Chí Minh, Hà Nội</strong>
+            <!-- ===== THÔNG TIN TÓM TẮT (dataset chỉ có location + salary) ===== -->
+            <div class="key-info">
+                <div>
+                    <span>📍 Địa điểm</span>
+                    <strong>{{job.location}}</strong>
+                </div>
+
+                <div>
+                    <span>💰 Mức lương</span>
+                    <strong>{{job.salary_min}} - {{job.salary_max}} Triệu VND</strong>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Mô Tả Công Việc</h2>
+                <ul>
+                    {% for item in jobDescript %}
+                    <li> {{item}}</li>
+                    {% endfor%}
+                </ul>
+
+                <h2>Yêu Cầu Công Việc</h2>
+                <ul>
+                    {% for item in jobRequire %}
+                    <li> {{item}}</li>
+                    {% endfor%}
+                </ul>
+                <h2>Kỹ năng</h2>
+                <ul>
+                    {% for item in jobSkill %}
+                    <li> {{item}}</li>
+                    {% endfor%}
+                </ul>
+
+                <h2>Phúc Lợi</h2>
+                <ul>
+                    {% for item in jobBenefit %}
+                    <li> {{item}}</li>
+                    {% endfor%}
+                </ul>
+
+            </div>
+
+            <!-- ===== NÚT LỌC HỒ SƠ ===== -->
+            <div class="filter-btn-container">
+                <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
+                <a href="#" class="recommend-btn">Đề xuất</a>
+            </div>
         </div>
-
-        <div>
-          <span>💰 Mức lương</span>
-          <strong>Thỏa thuận</strong>
-        </div>
-      </div>
-
-      <div class="content-section">
-
-        <!-- ===== MÔ TẢ CÔNG VIỆC (job_description) ===== -->
-        <h2>Mô Tả Công Việc</h2>
-        <ul>
-          <li>Tham gia phát triển, xử lý dữ liệu Big Data.</li>
-          <li>Xây dựng pipeline dữ liệu và tối ưu hiệu suất.</li>
-          <li>Kết hợp với team phân tích và backend để tích hợp hệ thống.</li>
-          <li>Giám sát, kiểm tra chất lượng dữ liệu.</li>
-        </ul>
-
-        <!-- ===== YÊU CẦU (job_requirements) ===== -->
-        <h2>Yêu Cầu Công Việc</h2>
-        <ul>
-          <li>Kỹ năng SQL tốt.</li>
-          <li>Hiểu về Hadoop/Spark/Airflow là lợi thế.</li>
-          <li>Có tư duy xử lý dữ liệu.</li>
-          <li>Ưu tiên biết Python.</li>
-        </ul>
-
-      </div>
-
-      <!-- ===== NÚT LỌC HỒ SƠ ===== -->
-      <div class="filter-btn-container">
-        <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
-        <a href="#" class="recommend-btn">Đề xuất</a>
-      </div>
-
     </div>
-  </div>
 </div>
-      
-      <div id="filter-results-modal" class="filter-modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            
-            <h2>Kết quả Lọc Nâng Cao & Đánh giá CV</h2>
-            
-            <div class="filter-controls">
-                <div class="filter-group">
-                    <label for="min-experience">Kinh nghiệm tối thiểu (năm):</label>
-                    <input type="number" id="min-experience" min="0" value="0" style="width: 80px; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
-                </div>
-                <div class="filter-group">
-                    <label for="skill-search">Tìm kiếm theo Kỹ năng (VD: Python, AWS):</label>
-                    <input type="text" id="skill-search" placeholder="Nhập kỹ năng" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 250px;">
-                </div>
-                <button id="apply-filter-btn" style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Áp dụng</button>
+
+<div id="filter-results-modal" class="filter-modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+
+        <h2>Kết quả Lọc Nâng Cao & Đánh giá CV</h2>
+
+        <div class="filter-controls">
+            <div class="filter-group">
+                <label for="min-experience">Kinh nghiệm tối thiểu (năm):</label>
+                <input type="number" id="min-experience" min="0" value="0"
+                       style="width: 80px; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
             </div>
-            <div class="sort-options">
-                <label for="sort-by">Sắp xếp theo:</label>
-                <select id="sort-by">
-                    <option value="score_desc">Điểm CV (Giảm dần)</option>
-                    <option value="score_asc">Điểm CV (Tăng dần)</option>
-                </select>
+            <div class="filter-group">
+                <label for="skill-search">Tìm kiếm theo Kỹ năng (VD: Python, AWS):</label>
+                <input type="text" id="skill-search" placeholder="Nhập kỹ năng"
+                       style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 250px;">
             </div>
-            
-            <table class="results-table">
-                <thead>
-                    <tr>
-                        <th>Ứng viên</th>
-                        <th>Kinh nghiệm</th>
-                        <th>Kỹ năng chính</th>
-                        <th>Điểm CV (Tương thích)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-score="95" data-experience="4">
-                        <td>Lê Hoàng C</td>
-                        <td>4 năm</td>
-                        <td>Python, SQL, Hadoop, AWS</td>
-                        <td><span class="score high">95/100</span></td>
-                    </tr>
-                    <tr data-score="88" data-experience="3">
-                        <td>Nguyễn Văn A</td>
-                        <td>3 năm</td>
-                        <td>Python, SQL, Spark, Airflow</td>
-                        <td><span class="score medium">88/100</span></td>
-                    </tr>
-                    <tr data-score="75" data-experience="2.5">
-                        <td>Trần Thị B</td>
-                        <td>2.5 năm</td>
-                        <td>SQL Server, Power BI, Python</td>
-                        <td><span class="score low">75/100</span></td>
-                    </tr>
-                </tbody>
-            </table>
+            <button id="apply-filter-btn"
+                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">
+                Áp dụng
+            </button>
         </div>
+        <div class="sort-options">
+            <label for="sort-by">Sắp xếp theo:</label>
+            <select id="sort-by">
+                <option value="score_desc">Điểm CV (Giảm dần)</option>
+                <option value="score_asc">Điểm CV (Tăng dần)</option>
+            </select>
+        </div>
+
+        <table class="results-table">
+            <thead>
+            <tr>
+                <th>Ứng viên</th>
+                <th>Kinh nghiệm</th>
+                <th>Kỹ năng chính</th>
+                <th>Điểm CV (Tương thích)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-score="95" data-experience="4">
+                <td>Lê Hoàng C</td>
+                <td>4 năm</td>
+                <td>Python, SQL, Hadoop, AWS</td>
+                <td><span class="score high">95/100</span></td>
+            </tr>
+            <tr data-score="88" data-experience="3">
+                <td>Nguyễn Văn A</td>
+                <td>3 năm</td>
+                <td>Python, SQL, Spark, Airflow</td>
+                <td><span class="score medium">88/100</span></td>
+            </tr>
+            <tr data-score="75" data-experience="2.5">
+                <td>Trần Thị B</td>
+                <td>2.5 năm</td>
+                <td>SQL Server, Power BI, Python</td>
+                <td><span class="score low">75/100</span></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-        
-<script src="{% static 'app/js/admin_result_filter.js' %}" ></script>
-    </body>
+</div>
+
+<script src="{% static 'app/js/admin_result_filter.js' %}"></script>
+</body>
 </html>
