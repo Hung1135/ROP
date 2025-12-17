@@ -8,7 +8,8 @@ from django.db.models import Q
 
 from .models import *
 
-
+from django.contrib.auth.hashers import make_password, check_password
+from django.db import IntegrityError
 # Create your views here.
 # admin
 def post_detail(request, id):
@@ -156,8 +157,52 @@ def homeUser(request):
     jobs = Job.objects.all().order_by(order_by)
     return render(request, 'user/home.html', {'jobs': jobs, 'sort': sort})
 
+def _is_django_hash(value: str) -> bool:
+    if not isinstance(value, str):
+        return False
+    if "$" not in value:
+        return False
+    algo = value.split("$", 1)[0]
+    return algo in {"pbkdf2_sha256", "pbkdf2_sha1", "argon2", "bcrypt_sha256", "scrypt"}
+
 
 def ChangePassword(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
+
+    user = users.objects.filter(id=user_id).first()
+    if not user:
+        return redirect('login')
+
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password', '').strip()
+        new_password = request.POST.get('new_password', '').strip()
+        confirm_password = request.POST.get('confirm_password', '').strip()
+
+        if not old_password or not new_password or not confirm_password:
+            messages.error(request, "Vui lòng nhập đầy đủ thông tin.")
+            return render(request, 'user/ChangePassword.html')
+
+        stored = user.password_hash or ""
+        if _is_django_hash(stored):
+            ok_old = check_password(old_password, stored)
+        else:
+            ok_old = (old_password == stored)
+
+        if not ok_old:
+            messages.error(request, "Sai mật khẩu hiện tại.")
+            return render(request, 'user/ChangePassword.html')
+
+        if new_password != confirm_password:
+            messages.error(request, "Mật khẩu mới và nhập lại mật khẩu không khớp.")
+            return render(request, 'user/ChangePassword.html')
+        user.password_hash = make_password(new_password)
+        user.save(update_fields=['password_hash'])
+
+        messages.success(request, "Đổi mật khẩu thành công!")
+        return redirect('home')
+
     return render(request, 'user/ChangePassword.html')
 
 
