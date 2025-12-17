@@ -9,8 +9,10 @@ from .models import *
 def homeAdmin(request):
     return render(request, 'admin/home.html')
 
-def post_detail(request):
-    return render(request, 'admin/post_detail.html')
+
+def post_detail(request, job_id):
+    job = Job.objects.get(id=job_id)
+    return render(request, 'admin/post_detail.html', {'job': job})
 
 def ListJob(request):
     jobs = Job.objects.all()
@@ -51,7 +53,7 @@ def functionPost(request):
         salary_max = request.POST.get('salary_max')
         description = request.POST.get('description')
         requirements = request.POST.get('requirements')
-        benefits = request.POST.get('benefits')
+        benefit = request.POST.get('benefits')
         Job.objects.create(
             title=title,
             company=company_name,
@@ -60,7 +62,7 @@ def functionPost(request):
             salary_max=int(salary_max) if salary_max else None,
             description=description,
             requirements=requirements,
-            benefit=benefits,
+            benefit=benefit,
         )
         messages.success(request, 'Đăng tin tuyển dụng thành công!')
         return redirect('ListJob')
