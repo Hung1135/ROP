@@ -14,28 +14,25 @@
       <div class="job-detail-container">
         <!-- === JOB SUMMARY === -->
         <section class="job-summary">
-          <h1>Front-end Developer (Junior)</h1>
+          <h1>{{job.title}}</h1>
 
           <p class="detail-company">
-            <i class="fas fa-building"></i> Công ty TNHH Công nghệ Alpha
+            <i class="fas fa-building"></i> {{job.company}}
           </p>
 
           <p class="detail-location">
-            <i class="fas fa-map-marker-alt"></i> Hồ Chí Minh
+            <i class="fas fa-map-marker-alt"></i> {{job.location}}
           </p>
 
           <div class="summary-info">
             <span class="info-tag salary">
-              <i class="fas fa-money-bill-wave"></i> 12 - 18 Triệu VND
+              <i class="fas fa-money-bill-wave"></i> {{job.salary_min}} - {{job.salary_max}} Triệu VND
             </span>
 
             <span class="info-tag type">
-              <i class="fas fa-clock"></i> Toàn thời gian
+              <i class="fas fa-clock"></i> {{job.create_at}}
             </span>
 
-            <span class="info-tag deadline">
-              <i class="fas fa-calendar-alt"></i> Hạn chót: 31/12/2025
-            </span>
           </div>
         </section>
 
@@ -45,37 +42,29 @@
           <section class="job-description">
             <h2>Mô Tả Công Việc</h2>
             <ul>
-              <li>Phát triển giao diện web theo thiết kế Figma.</li>
-              <li>Tối ưu hiệu suất và trải nghiệm người dùng.</li>
-              <li>Phối hợp với Backend để tích hợp API.</li>
-              <li>Tham gia review code và cải thiện chất lượng dự án.</li>
-              <li>Sửa lỗi và cải tiến các chức năng hiện có.</li>
+              {% for item in jobDescript %}
+                <li> {{item}} </li>
+                {% endfor%}
             </ul>
 
             <h2>Yêu Cầu Công Việc</h2>
             <ul>
-              <li>Thành thạo HTML, CSS, JavaScript.</li>
-              <li>Có kinh nghiệm với ReactJS hoặc VueJS là lợi thế.</li>
-              <li>Hiểu rõ Responsive Design.</li>
-              <li>Tư duy logic, làm việc nhóm tốt.</li>
-              <li>Ít nhất 6 tháng kinh nghiệm hoặc đã làm project thực tế.</li>
+              {% for item in jobRequire %}
+                <li> {{item}} </li>
+                {% endfor%}
             </ul>
             <h2>Kỹ năng</h2>
             <ul>
-              <li>Thành thạo HTML, CSS, JavaScript.</li>
-              <li>Có kinh nghiệm với ReactJS hoặc VueJS là lợi thế.</li>
-              <li>Hiểu rõ Responsive Design.</li>
-              <li>Tư duy logic, làm việc nhóm tốt.</li>
-              <li>Ít nhất 6 tháng kinh nghiệm hoặc đã làm project thực tế.</li>
+              {% for item in jobSkill %}
+                <li> {{item}} </li>
+                {% endfor%}
             </ul>
 
             <h2>Phúc Lợi</h2>
             <ul>
-              <li>Lương tháng 13, thưởng hiệu suất.</li>
-              <li>Bảo hiểm đầy đủ, 12 ngày phép/năm.</li>
-              <li>Môi trường trẻ trung, có laptop công ty.</li>
-              <li>Tham gia workshop và khóa học nâng cao.</li>
-              <li>Du lịch hằng năm cùng công ty.</li>
+              {% for item in jobBenefit %}
+                <li> {{item}} </li>
+                {% endfor%}
             </ul>
           </section>
 

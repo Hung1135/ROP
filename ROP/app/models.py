@@ -3,35 +3,45 @@ from django.contrib.auth.hashers import make_password, check_password
 
 
 # Create your models here.
-class users (models.Model):
-    id=models.AutoField(primary_key=True)
-    fullname=models.CharField(max_length=100)
-    email=models.CharField(max_length=100)
-    phone=models.CharField(max_length=100)
-    password_hash=models.CharField(max_length=100)
-    role=models.BooleanField()
-    created_at=models.DateField(auto_now_add=True)
+class users(models.Model):
+    id = models.AutoField(primary_key=True)
+    fullname = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
+    password_hash = models.CharField(max_length=100)
+    role = models.BooleanField()
+    created_at = models.DateField(auto_now_add=True)
+    sex=models.CharField(max_length=100)
+    birthday = models.DateField()
+
     def __str__(self):
         return self.fullname
+
     def set_password(self, raw_password):
         self.password_hash = make_password(raw_password)
 
     def check_password(self, raw_password):
         return check_password(raw_password, self.password_hash)
+
     class Meta:
         db_table = 'users'
         managed = False
 
+
 class Cvs(models.Model):
     id = models.AutoField(primary_key=True)
 
-    candidate_id = models.IntegerField()
+    candidate_id = models.ForeignKey(
+        users,
+        on_delete=models.DO_NOTHING,
+        db_column='user_id',
+    )
 
     file_name = models.CharField(max_length=255)
 
     file_path = models.CharField(max_length=500)
 
-    extract_text =models.CharField(max_length=500)
+    extract_text = models.CharField(max_length=500)
 
     upload_at = models.DateField(auto_now=True)
 
@@ -41,6 +51,7 @@ class Cvs(models.Model):
 
     def __str__(self):
         return self.file_name
+
 
 class Job(models.Model):
     id = models.AutoField(primary_key=True)
@@ -65,7 +76,60 @@ class Job(models.Model):
         db_table = 'jobs'
         managed = False
 
-
-    def __str__(self): 
+    def __str__(self):
         return self.title
-    
+
+
+class Application(models.Model):
+    job = models.ForeignKey(
+        Job,
+        on_delete=models.CASCADE,
+        related_name='applications'
+    )
+
+    cv = models.ForeignKey(
+        Cvs,
+        on_delete=models.CASCADE,
+        related_name='applications'
+    )
+
+    candidate = models.ForeignKey(
+        users,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='applications'
+    )
+
+    applied_at = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True
+    )
+
+    status = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True
+    )
+
+    employer_note = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True
+    )
+
+    ai_score = models.IntegerField(
+        max_length=255,
+        null=True,
+        blank=True
+    )
+
+    manual_rank = models.IntegerField(
+        max_length=255,
+        null=True,
+        blank=True
+    )
+
+    class Meta:
+        db_table = 'applications'
+        managed = False
