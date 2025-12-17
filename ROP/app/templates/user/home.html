@@ -41,14 +41,6 @@
           <p class="job-location">{{ job.location }}</p>
           <p class="job-date">{{ job.create_at }}</p>
 
-
-          {% comment %}
-          <a href="{% url 'user_detailPost' post.id %}" class="btn-detail"
-            >Xem Chi Tiết 1</a
-          >
-          {% endcomment %}
-
-
           <ul class="job-tags">
             {% if job.skills %}
             <li><span class="tag">{{ job.skills }}</span></li>
