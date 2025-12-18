@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.db import IntegrityError
-from django.shortcuts import render, reverse
+from django.shortcuts import render, reverse, get_object_or_404
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template.defaultfilters import title
@@ -10,48 +10,39 @@ from .models import *
 
 from django.contrib.auth.hashers import make_password, check_password
 from django.db import IntegrityError
+import re
+from django.shortcuts import render
 # Create your views here.
 # admin
+
+def split_text(text):
+    if not text:
+        return []
+    return [x.strip() for x in re.split(r'\n|\. ', text) if x.strip()]
+
 def post_detail(request, id):
-    # if request.method == 'GET':
-    #     user_id = request.session.get('user_id')
-    #     if not user_id:
-    #         return redirect('login')
-    job = Job.objects.get(id=id)
-    jobDescript = [
-        x.strip()
-        for x in job.description.split(". ")
-        if x.strip()
-    ]
-    jobRequire = [
-        x.strip()
-        for x in job.requirements.split(". ")
-        if x.strip()
-    ]
-    jobSkill = [
-        x.strip()
-        for x in job.skills.split(". ")
-        if x.strip()
-    ]
-    jobBenefit = [
-        x.strip()
-        for x in job.benefit.split(". ")
-        if x.strip()
-    ]
-    return render(request, 'admin/post_detail.html', {'job': job,
-                                                      "jobDescript": jobDescript,
-                                                      "jobRequire": jobRequire,
-                                                      "jobSkill": jobSkill,
-                                                      "jobBenefit": jobBenefit
-                                                      })
+    job = Job.objects.get(id=id)  # Giữ nguyên get()
+
+    jobDescript = split_text(job.description)
+    jobRequire = split_text(job.requirements)
+    jobSkill = split_text(job.skills)
+    jobBenefit = split_text(job.benefit)
+
+    return render(request, 'admin/post_detail.html', {
+        'job': job,
+        "jobDescript": jobDescript,
+        "jobRequire": jobRequire,
+        "jobSkill": jobSkill,
+        "jobBenefit": jobBenefit
+    })
 
 
 def ListJob(request):
-    # user_id = request.session.get('user_id')
+    user_id = request.session.get('user_id')
     # if request.method == 'GET':
     #     if not user_id:
     #         return redirect('login')
-    jobs = Job.objects.all()
+    jobs = Job.objects.all().filter(user=user_id)
     return render(request, 'admin/ListJob.html', {'jobs': jobs})
 
 
@@ -113,7 +104,7 @@ def login(request):
             messages.success(request, "Đăng ký thành công! Vui lòng Đăng nhập.")
             return redirect('login')
         except IntegrityError:
-            messages.error(request, "Email hoặc Số điện thoại đã tồn tại. Vui lòng thử lại.")
+            messages.error(request, "Email hoặc Số điện thoại đã tồn tại\nVui lòng thử lại.")
             return render(request, 'login/login.html')
         except Exception as e:
             messages.error(request, f"Đã có lỗi xảy ra trong quá trình đăng ký: {e}")
@@ -212,33 +203,22 @@ def detailPost(request, id):
         if not user_id:
             return redirect('login')
 
-    job = Job.objects.get(id=id)
-    jobDescript = [
-        x.strip()
-        for x in job.description.split(". ")
-        if x.strip()
-    ]
-    jobRequire = [
-        x.strip()
-        for x in job.requirements.split(". ")
-        if x.strip()
-    ]
-    jobSkill = [
-        x.strip()
-        for x in job.skills.split(". ")
-        if x.strip()
-    ]
-    jobBenefit = [
-        x.strip()
-        for x in job.benefit.split(". ")
-        if x.strip()
-    ]
-    return render(request, 'user/detailPost.html', {'job': job,
-                                                    "jobDescript": jobDescript,
-                                                    "jobRequire": jobRequire,
-                                                    "jobSkill": jobSkill,
-                                                    "jobBenefit": jobBenefit
-                                                    })
+    job = Job.objects.get(id=id)  # Giữ nguyên get()
+
+    jobDescript = split_text(job.description)
+    jobRequire = split_text(job.requirements)
+    jobSkill = split_text(job.skills)
+    jobBenefit = split_text(job.benefit)
+
+    context = {
+        'job': job,
+        'jobDescript': jobDescript,
+        'jobRequire': jobRequire,
+        'jobSkill': jobSkill,
+        'jobBenefit': jobBenefit
+    }
+
+    return render(request, 'user/detailPost.html', context)
 
 
 def personalprofile(request):
@@ -284,7 +264,8 @@ def functionPost(request):
         requirements = request.POST.get('requirements')
         skills = request.POST.get('skills')
         benefits = request.POST.get('benefits')
-        user_id = request.session.get('id')
+        user_id = request.session.get('user_id')
+        user_obj = get_object_or_404(users, id=user_id)
         Job.objects.create(
             title=title,
             company=company_name,
@@ -295,7 +276,7 @@ def functionPost(request):
             requirements=requirements,
             benefit=benefits,
             skills=skills,
-            user_id=user_id
+            user=user_obj
         )
         messages.success(request, 'Đăng tin tuyển dụng thành công!')
         return redirect('ListJob')
