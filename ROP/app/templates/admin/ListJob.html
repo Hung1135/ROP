@@ -23,23 +23,17 @@
 </head>
 
 <body>
-{% if messages %} {% for message in messages %}
-<div
-        class="alert alert-success alert-dismissible fade show custom-alert"
-        role="alert"
->
-    <strong>{{ message }}</strong>
-    <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="alert"
-            aria-label="Close"
-    ></button>
-</div>
-{% endfor %} {% endif %}
 
 {% include "admin\header.html" %}
-
+{% if messages %}
+<div class="message-wrapper">
+    {% for message in messages %}
+        <div class="success-message">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
 <div class="page-header">
     <h1>Danh sách công việc đã đăng tuyển</h1>
 </div>
@@ -62,7 +56,7 @@
             </div>
 
             <div class="job-info">
-                <span>💰 {{ job.salary_min }} - {{ job.salary_max }}</span>
+                <span>💰 {{ job.salary_min }} - {{ job.salary_max }} triệu VNĐ</span>
             </div>
 
             <div class="btn_detail">
@@ -75,25 +69,14 @@
     </div>
 </section>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const alerts = document.querySelectorAll(".custom-alert");
-
-      alerts.forEach((alert) => {
-        // Hiển thị alert
-        setTimeout(() => {
-          alert.classList.add("show");
-        }, 100);
-
-        // Tự động ẩn sau 4 giây
-        setTimeout(() => {
-          alert.classList.remove("show");
-          // Xóa hoàn toàn khỏi DOM sau khi fade out
-          setTimeout(() => {
-            alert.remove();
-          }, 500);
-        }, 4000);
-      });
-    });
+    setTimeout(() => {
+        const msg = document.querySelector('.success-message');
+        if (msg) {
+            msg.style.opacity = '0';
+            msg.style.transform = 'translateY(-8px)';
+            setTimeout(() => msg.remove(), 400);
+        }
+    }, 1500);
 </script>
 </body>
 </html>
