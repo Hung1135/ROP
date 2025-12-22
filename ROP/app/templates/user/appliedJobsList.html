@@ -11,52 +11,18 @@
     />
   </head>
   <body>
-    <header class="header">
-      <div class="logo">
-        <img
-          id="logo"
-          src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
-          alt=""
-        />
-        <h1>ROP</h1>
-      </div>
+    {% include "user\header.html" %}
 
-      <nav class="navbar">
-        <ul class="nav-links">
-          <li><a href="{% url 'home' %}">Trang Chủ</a></li>
-            <li><a href="{% url 'appliedJobsList' %}">Lịch sử ứng tuyển</a></li>
-        </ul>
-
-
-        <div class="search-box">
-          <input type="text" placeholder="Tìm kiếm công việc..." />
-          <button type="submit">Tìm</button>
-        </div>
-
-        <div class="account-wrapper">
-          <a href="#" class="btn-account">Tài Khoản</a>
-          <div class="account-submenu">
-            <a href="{% url 'user_personalprofile' %}" class="btn-submenu-item"
-              >Hồ sơ cá nhân</a
-            >
-            <a href="{% url 'appliedJobsList' %}" class="btn-submenu-item"
-              >Việc làm đã ứng tuyển</a
-            >
-            <a href="{% url 'ChangePassword' %}" class="btn-submenu-item"
-              >Đổi mật khẩu</a
-            >
-            <a href="{% url 'login' %}" class="btn-submenu-item">Đăng xuất</a>
-          </div>
-        </div>
-      </nav>
-    </header>
     <main class="main-content">
       <div class="applied-jobs-container">
         <h2 class="section-title-applied">
-          DANH SÁCH VIỆC LÀM ĐÃ ỨNG TUYỂN (4)
+          DANH SÁCH VIỆC LÀM ĐÃ ỨNG TUYỂN ({{ applications.count }})
         </h2>
 
-        <div class="job-card applied pending">
+        {% for app in applications %}
+        <div
+          class="job-card applied {% if app.status == 'new' %}pending{% elif app.status == 'rejected' %}rejected{% elif app.status == 'passed' %}interview{% endif %}"
+        >
           <div class="job-header">
             <img
               src="https://via.placeholder.com/60"
@@ -64,104 +30,39 @@
               class="company-logo"
             />
             <div class="job-info">
-              <h3 class="job-title">Lập Trình Viên Backend (Java/Python)</h3>
-              <p class="company-name">Công ty Cổ phần Công nghệ ABC</p>
+              <h3 class="job-title">{{ app.job.title }}</h3>
+              <p class="company-name">{{ app.job.company_name }}</p>
             </div>
-            <div class="status-badge pending">Đang xét duyệt</div>
+            <div class="status-badge"> {% if app.status == 'new' %} Đang xét duyệt 
+                {% elif app.status == 'rejected' %} Đã từ chối 
+                {% elif app.status == 'passed' %} Mời phỏng vấn 
+                {% endif %} </div>
           </div>
 
           <div class="job-details">
             <p class="detail-item">
               <i class="fas fa-map-marker-alt"></i>
-              <span>TP. Hồ Chí Minh</span>
+              <span>{{ app.job.location }}</span>
             </p>
             <p class="detail-item">
               <i class="fas fa-money-bill-wave"></i>
-              <span>15 - 25 Triệu VND</span>
+              <span>{{ app.job.salary_range }}</span>
             </p>
             <p class="detail-item">
               <i class="fas fa-clock"></i>
-              <span>Ứng tuyển ngày: 28/11/2025</span>
+              <span>Ứng tuyển ngày: {{ app.applied_at|date:"d/m/Y" }}</span>
             </p>
           </div>
 
           <div class="job-actions">
-            <button class="btn-detail">Xem chi tiết bài đăng</button>
-            <button class="btn-withdraw">Rút hồ sơ</button>
+            <a href="{% url 'detailPost' app.job.id %}" class="btn-detail"
+              >Xem chi tiết bài đăng</a
+            >
           </div>
         </div>
-
-        <div class="job-card applied rejected">
-          <div class="job-header">
-            <img
-              src="https://via.placeholder.com/60"
-              alt="Logo công ty"
-              class="company-logo"
-            />
-            <div class="job-info">
-              <h3 class="job-title">Chuyên viên Marketing Digital</h3>
-              <p class="company-name">Tập đoàn Phát triển EFG</p>
-            </div>
-            <div class="status-badge rejected">Đã từ chối</div>
-          </div>
-
-          <div class="job-details">
-            <p class="detail-item">
-              <i class="fas fa-map-marker-alt"></i>
-              <span>Hà Nội</span>
-            </p>
-            <p class="detail-item">
-              <i class="fas fa-money-bill-wave"></i>
-              <span>12 - 18 Triệu VND</span>
-            </p>
-            <p class="detail-item">
-              <i class="fas fa-clock"></i>
-              <span>Ứng tuyển ngày: 15/10/2025</span>
-            </p>
-          </div>
-
-          <div class="job-actions">
-            <button class="btn-detail">Xem chi tiết bài đăng</button>
-            <button class="btn-feedback disabled" disabled>Xem phản hồi</button>
-          </div>
-        </div>
-
-        <div class="job-card applied interview">
-          <div class="job-header">
-            <img
-              src="https://via.placeholder.com/60"
-              alt="Logo công ty"
-              class="company-logo"
-            />
-            <div class="job-info">
-              <h3 class="job-title">Thực tập sinh Thiết kế UI/UX</h3>
-              <p class="company-name">Studio Sáng tạo HJK</p>
-            </div>
-            <div class="status-badge interview">Mời phỏng vấn</div>
-          </div>
-
-          <div class="job-details">
-            <p class="detail-item">
-              <i class="fas fa-map-marker-alt"></i>
-              <span>TP. Hồ Chí Minh</span>
-            </p>
-            <p class="detail-item">
-              <i class="fas fa-money-bill-wave"></i>
-              <span>3 - 5 Triệu VND (Trợ cấp)</span>
-            </p>
-            <p class="detail-item">
-              <i class="fas fa-clock"></i>
-              <span>Ứng tuyển ngày: 01/12/2025</span>
-            </p>
-          </div>
-
-          <div class="job-actions">
-            <button class="btn-detail">Xem chi tiết bài đăng</button>
-            <button class="btn-schedule primary">
-              Xác nhận lịch phỏng vấn
-            </button>
-          </div>
-        </div>
+        {% empty %}
+        <p>Bạn chưa ứng tuyển công việc nào.</p>
+        {% endfor %}
       </div>
     </main>
 
