@@ -1,158 +1,150 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Chi tiết bài đăng</title>
-    <link rel="stylesheet" href="{% static 'app/css/post_detail.css' %}" />
-  </head>
-  <body>
-    <header class="navbar">
-      <div class="logo">
-        <img
-          id="logo"
-          src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
-          alt=""
-        />
-        <span>ROP</span>
-      </div>
-
-      <nav class="menu">
-        <a href="{% url 'functionPost' %}">Đăng bài</a>
-        <a href="{% url 'manaPostCV' %}">CV đã ứng tuyển</a>
-        <a href="#">Liên hệ</a>
-      </nav>
-
-      <div class="actions">
-        <a href="#" class="login-btn">Log out</a>
-      </div>
-    </header>
-    <div class="page-container">
-      <div class="job-detail-section">
+    <link rel="stylesheet" href="{% static 'app/css/post_detail.css' %}"/>
+</head>
+<body>
+{% include "admin\header.html" %}
+<div class="page-container">
+    <div class="job-detail-section">
         <div class="detail-card">
-          <h1>{{ job.title }}</h1>
 
-          <div class="company-info">{{ job.company }}</div>
+            <h1>
+                {{job.title}}
+            </h1>
 
-          <div class="key-info">
-            <div>
-              <span>📍 Địa điểm</span>
-              <strong>{{ job.location }}</strong>
+            <!-- ===== TÊN CÔNG TY (company_name) ===== -->
+            <div class="company-info">
+                {{job.company}}
             </div>
-            <div>
-              <span>💰 Mức lương</span>
-              <strong>{{ job.salary_min }} - {{ job.salary_max }}</strong>
+
+            <!-- ===== THÔNG TIN TÓM TẮT (dataset chỉ có location + salary) ===== -->
+            <div class="key-info">
+                <div>
+                    <span>📍 Địa điểm</span>
+                    <strong>{{job.location}}</strong>
+                </div>
+
+                <div>
+                    <span>💰 Mức lương</span>
+                    <strong>{{job.salary_min}} - {{job.salary_max}} Triệu VND</strong>
+                </div>
             </div>
-          </div>
 
-          <div class="content-section">
-            <h2>Mô Tả Công Việc</h2>
-            <p>{{ job.description }}</p>
+            <div class="content-section">
+                <h2>Mô Tả Công Việc</h2>
+                <ul>
+                    {% for item in jobDescript %}
+                    <li> {{item}}</li>
+                    {% endfor%}
+                </ul>
 
-            <h2>Yêu Cầu Công Việc</h2>
-            <p>{{ job.requirements }}</p>
+                <h2>Yêu Cầu Công Việc</h2>
+                <ul>
+                    {% for item in jobRequire %}
+                    <li> {{item}}</li>
+                    {% endfor%}
+                </ul>
+                <h2>Kỹ năng</h2>
+                <ul>
+                    {% for item in jobSkill %}
+                    <li> {{item}}</li>
+                    {% endfor%}
+                </ul>
 
-            <h2>Quyền lợi</h2>
-            <p>{{ job.benefit }}</p>
-          </div>
+                <h2>Phúc Lợi</h2>
+                <ul>
+                    {% for item in jobBenefit %}
+                    <li> {{item}}</li>
+                    {% endfor%}
+                </ul>
+
+            </div>
+
+            <!-- ===== NÚT LỌC HỒ SƠ ===== -->
+            <div class="filter-btn-container">
+                <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
+                <a href="#" class="recommend-btn">Danh sách các CV ứng tuyển</a>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 
-    <div id="filter-results-modal" class="filter-modal">
-      <div class="modal-content">
+<div id="filter-results-modal" class="filter-modal">
+    <div class="modal-content">
         <span class="close-btn">&times;</span>
 
         <h2>Kết quả Lọc Nâng Cao & Đánh giá CV</h2>
 
         <div class="filter-controls">
-          <div class="filter-group">
-            <label for="min-experience">Kinh nghiệm tối thiểu (năm):</label>
-            <input
-              type="number"
-              id="min-experience"
-              min="0"
-              value="0"
-              style="
-                width: 80px;
-                padding: 8px;
-                border-radius: 4px;
-                border: 1px solid #ccc;
-              "
-            />
-          </div>
-          <div class="filter-group">
-            <label for="skill-search"
-              >Tìm kiếm theo Kỹ năng (VD: Python, AWS):</label
-            >
-            <input
-              type="text"
-              id="skill-search"
-              placeholder="Nhập kỹ năng"
-              style="
-                padding: 8px;
-                border-radius: 4px;
-                border: 1px solid #ccc;
-                width: 250px;
-              "
-            />
-          </div>
-          <button
-            id="apply-filter-btn"
-            style="
-              background-color: #ff5733;
-              color: white;
-              padding: 8px 15px;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-            "
-          >
-            Áp dụng
-          </button>
+            <div class="filter-group">
+                <label for="min-experience">Kinh nghiệm tối thiểu (năm):</label>
+                <input type="number" id="min-experience" min="0" value="0"
+                       style="width: 80px; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+            </div>
+            <div class="filter-group">
+                <label for="skill-search">Tìm kiếm theo Kỹ năng (VD: Python, AWS):</label>
+                <input type="text" id="skill-search" placeholder="Nhập kỹ năng"
+                       style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 250px;">
+            </div>
+            <button id="apply-filter-btn"
+                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">
+                Áp dụng
+            </button>
         </div>
         <div class="sort-options">
-          <label for="sort-by">Sắp xếp theo:</label>
-          <select id="sort-by">
-            <option value="score_desc">Điểm CV (Giảm dần)</option>
-            <option value="score_asc">Điểm CV (Tăng dần)</option>
-          </select>
+            <label for="sort-by">Sắp xếp theo:</label>
+            <select id="sort-by">
+                <option value="score_desc">Điểm CV (Giảm dần)</option>
+                <option value="score_asc">Điểm CV (Tăng dần)</option>
+            </select>
         </div>
 
         <table class="results-table">
-          <thead>
+            <thead>
             <tr>
-              <th>Ứng viên</th>
-              <th>Kinh nghiệm</th>
-              <th>Kỹ năng chính</th>
-              <th>Điểm CV (Tương thích)</th>
+                <th>Ứng viên</th>
+                <th>Kinh nghiệm</th>
+                <th>Kỹ năng chính</th>
+                <th>Điểm CV (Tương thích)</th>
+                <th>  </th>
             </tr>
-          </thead>
-          <tbody>
+            </thead>
+            <tbody>
             <tr data-score="95" data-experience="4">
-              <td>Lê Hoàng C</td>
-              <td>4 năm</td>
-              <td>Python, SQL, Hadoop, AWS</td>
-              <td><span class="score high">95/100</span></td>
+                <td>Lê Hoàng C</td>
+                <td>4 năm</td>
+                <td>Python, SQL, Hadoop, AWS</td>
+                <td><span class="score high">95/100</span></td>
+                <td><button class="view-cv-btn" id="apply-filter-btn"
+                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Duyệt</button></td>
             </tr>
             <tr data-score="88" data-experience="3">
-              <td>Nguyễn Văn A</td>
-              <td>3 năm</td>
-              <td>Python, SQL, Spark, Airflow</td>
-              <td><span class="score medium">88/100</span></td>
+                <td>Nguyễn Văn A</td>
+                <td>3 năm</td>
+                <td>Python, SQL, Spark, Airflow</td>
+                <td><span class="score medium">88/100</span></td>
+                <td><button class="view-cv-btn" id="apply-filter-btn"
+                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Duyệt</button></td>
             </tr>
             <tr data-score="75" data-experience="2.5">
-              <td>Trần Thị B</td>
-              <td>2.5 năm</td>
-              <td>SQL Server, Power BI, Python</td>
-              <td><span class="score low">75/100</span></td>
+                <td>Trần Thị B</td>
+                <td>2.5 năm</td>
+                <td>SQL Server, Power BI, Python</td>
+                <td><span class="score low">75/100</span></td>
+                <td><button class="view-cv-btn" id="apply-filter-btn"
+                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Duyệt</button></td>
             </tr>
-          </tbody>
+            </tbody>
         </table>
-      </div>
     </div>
+</div>
 
-    <script src="{% static 'app/js/admin_result_filter.js' %}"></script>
-  </body>
+
+<script src="{% static 'app/js/admin_result_filter.js' %}"></script>
+</body>
 </html>

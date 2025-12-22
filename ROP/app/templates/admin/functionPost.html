@@ -11,26 +11,7 @@
 </head>
 
 <body>
-<header class="navbar">
-    <div class="logo">
-        <img
-            id="logo"
-            src="https://thumbs.dreamstime.com/b/letter-cv-logotype-design-company-name-colored-blue-swoosh-vector-logo-business-identity-203865393.jpg"
-            alt=""
-        />
-        <span>ROP</span>
-    </div>
-
-    <nav class="menu">
-        <a href="#">Đăng bài</a>
-          <a href="{% url 'manaPostCV' %}">CV đã ứng tuyển</a>
-        <a href="#">Liên hệ</a>
-    </nav>
-
-    <div class="actions">
-        <a href="#" class="login-btn">Log out</a>
-    </div>
-</header>
+{% include "admin\header.html" %}
 
 <div class="page-container">
     <div class="form-container">
@@ -61,12 +42,12 @@
             <div class="group-row">
                 <div class="form-group half">
                     <label>Lương tối thiểu</label>
-                    <input type="number" step="0.01" name="salary_min" required placeholder="20000000">
+                    <input type="number" step="0.01" name="salary_min" required placeholder="5 Triệu">
                 </div>
 
                 <div class="form-group half">
                     <label>Lương tối đa</label>
-                    <input type="number" step="0.01" name="salary_max" required placeholder="30000000">
+                    <input type="number" step="0.01" name="salary_max" required placeholder="10 Triệu">
                 </div>
             </div>
 
@@ -80,6 +61,10 @@
             <h2>Yêu cầu công việc</h2>
             <div class="form-group">
                 <textarea name="requirements" required placeholder="Nhập yêu cầu công việc..."></textarea>
+            </div>
+            <h2>Kỹ năng</h2>
+            <div class="form-group">
+                <textarea name="skill" required placeholder="Nhập yêu cầu công việc..."></textarea>
             </div>
 
             <!-- BENEFITS -->
