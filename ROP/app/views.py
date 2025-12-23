@@ -10,11 +10,13 @@ from django.db.models import Q
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.conf import settings   
-from .forms import UploadCVForm
+# from .forms import UploadCVForm
 from django.utils import timezone
 from django.utils import timezone
 from .models import Cvs, Applications, Job, users
-
+from django.http import FileResponse, Http404
+from django.shortcuts import render, get_object_or_404
+from django.views.decorators.clickjacking import xframe_options_sameorigin
 
 from .models import *
 
@@ -60,7 +62,8 @@ def ListJob(request):
     # if request.method == 'GET':
     #     if not user_id:
     #         return redirect('login')
-    jobs = Job.objects.all().filter(user=user_id)
+    # jobs = Job.objects.all().filter(user=user_id)
+    jobs = Job.objects.all()
     return render(request, 'admin/ListJob.html', {'jobs': jobs})
 
 def manaPostCV(request):
@@ -269,7 +272,6 @@ def appliedJobsList(request):
             return redirect('login')
     return render(request, 'user/appliedJobsList.html')
 
-# cái này db
 def functionPost(request):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
@@ -334,7 +336,6 @@ def upload_cv(request):
         return redirect('appliedJobsList')
     return redirect('home')
 
-
 def apply_job(request, job_id):
     if request.method == 'POST':
         file = request.FILES['file'] 
@@ -361,8 +362,6 @@ def apply_job(request, job_id):
         return redirect('appliedJobsList')
     return redirect('home')
 
-
-# render ra trang lịch sử úng tuyển
 def appliedJobsList(request):
     # Lấy user hiện tại từ session
     custom_user = users.objects.get(id=request.session['user_id'])
@@ -371,4 +370,23 @@ def appliedJobsList(request):
     applications = Applications.objects.filter(user=custom_user).select_related('job').order_by('-applied_at')
 
     return render(request, 'user/appliedJobsList.html', {'applications': applications})
+
+@xframe_options_sameorigin
+def cv_detail(request, id):
+    cv = get_object_or_404(Cvs, id=id)
+    # kiểm tra file có phải PDF không
+    is_pdf = cv.file_name.lower().endswith(".pdf")
+    print(cv.file.url)
+    return render(request, 'admin/cv_detail.html', {'cv': cv, 'is_pdf': is_pdf})
+
+def cv_pdf(request, id):
+    cv = get_object_or_404(Cvs, id=id)
+    if not cv.file:
+        raise Http404("No file")
+    f = cv.file.open('rb')
+    response = FileResponse(f, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="{cv.file_name}"'
+    # Cho phép nhúng cùng origin
+    response['X-Frame-Options'] = 'SAMEORIGIN'
+    return response
 
