@@ -29,6 +29,10 @@ urlpatterns = [
     path('upload_cv/', views.upload_cv, name='upload_cv'),
     path('apply_job/<int:job_id>/', views.apply_job, name='apply_job'),
 
+
+    path('cv/<int:id>/', views.cv_detail, name='cv_detail'),
+    path('cv/pdf/<int:id>/', views.cv_pdf, name='cv_pdf'),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

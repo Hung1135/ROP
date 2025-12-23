@@ -29,30 +29,17 @@
         {% for cv in cvs %}
         <div class="cv-card mb-3 p-3 border rounded shadow-sm">
           <h5 class="cv-name">{{ cv.user.fullname }}</h5>
-          <p><strong>📞 SĐT:</strong> {{ cv.user.phone }}</p>
+          <p><strong>📄 Tên file:</strong> {{ cv.file_name }}</p>
           <p><strong>📧 Email:</strong> {{ cv.user.email }}</p>
           <p><strong>🗓 Ngày tạo:</strong> {{ cv.uploaded_at|date:"d/m/Y" }}</p>
+
           <div class="cv-actions mt-2">
-            {% comment %}
-            <a
-              href="/media/{{ cv.file_path }}"
-              target="_blank"
-              class="btn btn-primary btn-sm"
-            >
+            <a href="{% url 'cv_detail' cv.id %}" class="btn btn-primary btn-sm" target="_blank">
               <i class="bi bi-file-earmark-text"></i> Xem chi tiết CV
             </a>
-            {% endcomment %}
-
-            <a
-              href="/media/{{ cv.file_path }}"
-              target="_blank"
-              class="btn btn-primary btn-sm"
-            >
-              <i class="bi bi-file-earmark-text"></i> Xem chi tiết CV
-            </a>
-
-            
           </div>
+
+          
         </div>
         {% empty %}
         <p>Chưa có CV nào được nộp.</p>
