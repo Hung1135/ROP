@@ -54,8 +54,8 @@ def ListJob(request):
     # if request.method == 'GET':
     #     if not user_id:
     #         return redirect('login')
-    # jobs = Job.objects.all().filter(user=user_id)
-    jobs = Job.objects.all()
+    user = users.objects.get(id=user_id)
+    jobs = Job.objects.filter(user=user).order_by('-create_at')
     return render(request, 'admin/ListJob.html', {'jobs': jobs})
 
 
