@@ -62,8 +62,8 @@ def ListJob(request):
     # if request.method == 'GET':
     #     if not user_id:
     #         return redirect('login')
-    # jobs = Job.objects.all().filter(user=user_id)
-    jobs = Job.objects.all()
+    jobs = Job.objects.all().filter(user=user_id)
+    # jobs = Job.objects.all()
     return render(request, 'admin/ListJob.html', {'jobs': jobs})
 
 def manaPostCV(request):
