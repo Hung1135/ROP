@@ -5,14 +5,12 @@ from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template.defaultfilters import title
 from django.db.models import Q
-
-
+from .AI.cv_matcher import extract_cv_text, match_cv_with_job
+from .models import Applications, Job, Cvs
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.conf import settings
-# from .forms import UploadCVForm
-from django.utils import timezone
-from django.utils import timezone
+
 from .models import Cvs, Applications, Job, users
 from django.http import FileResponse, Http404
 from django.shortcuts import render, get_object_or_404
@@ -33,29 +31,72 @@ def split_text(text):
     return [x.strip() for x in re.split(r'\n|\. ', text) if x.strip()]
 
 def post_detail(request, id):
-    job = Job.objects.get(id=id)  # Giữ nguyên get()
+    job = Job.objects.get(id=id)
 
-    jobDescript = split_text(job.description)
-    jobRequire = split_text(job.requirements)
-    jobSkill = split_text(job.skills)
-    jobBenefit = split_text(job.benefit)
+    cv_analyses = analyze_cvs_for_job(job)
 
     return render(request, 'admin/post_detail.html', {
         'job': job,
-        "jobDescript": jobDescript,
-        "jobRequire": jobRequire,
-        "jobSkill": jobSkill,
-        "jobBenefit": jobBenefit
+        'jobDescript': split_text(job.description),
+        'jobRequire': split_text(job.requirements),
+        'jobSkill': split_text(job.skills),
+        'jobBenefit': split_text(job.benefit),
+        'cv_analyses': cv_analyses,
+        'total_cvs': len(cv_analyses)
     })
 
+
+def analyze_cvs_for_job(job):
+    applications = Applications.objects.filter(job=job)\
+        .select_related('cv', 'user')
+
+    job_text = f"""
+    {job.title}
+    {job.description}
+    {job.requirements}
+    {job.skills}
+    {job.benefit}
+    """
+
+    results = []
+
+    for app in applications:
+        cv = app.cv
+
+        # 1️⃣ Nếu CV chưa extract → extract & lưu
+        if not cv.extracted_text:
+            cv_text = extract_cv_text(cv.file.path)
+            cv.extracted_text = cv_text
+            cv.save(update_fields=['extracted_text'])
+        else:
+            cv_text = cv.extracted_text
+
+        # 2️⃣ AI matching
+        score, level = match_cv_with_job(cv_text, job_text)
+
+        # 3️⃣ Lưu AI score vào Applications
+        app.ai_score = f"{score} ({level})"
+        app.save(update_fields=['ai_score'])
+
+        results.append({
+            "application": app,
+            "cv": cv,
+            "score": score,
+            "match_level": level,
+            "parsed": {
+                "name": app.user.fullname,
+                "email": app.user.email
+            }
+        })
+
+    return results
 
 def ListJob(request):
     user_id = request.session.get('user_id')
     # if request.method == 'GET':
     #     if not user_id:
     #         return redirect('login')
-    # jobs = Job.objects.all().filter(user=user_id)
-    jobs = Job.objects.all()
+    jobs = Job.objects.all().filter(user=user_id)
     return render(request, 'admin/ListJob.html', {'jobs': jobs})
 
 
@@ -381,4 +422,5 @@ def cv_pdf(request, id):
     # Cho phép nhúng cùng origin
     response['X-Frame-Options'] = 'SAMEORIGIN'
     return response
+
 
