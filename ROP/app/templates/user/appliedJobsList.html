@@ -1,134 +1,73 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-<head>
-    <meta charset="UTF-8"/>
+  <head>
+    <meta charset="UTF-8" />
     <title>Title</title>
-    <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}"/>
+    <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}" />
     <link
-            rel="stylesheet"
-            href="{% static 'app/css_user/appliedJobsList.css' %}"
+      rel="stylesheet"
+      href="{% static 'app/css_user/appliedJobsList.css' %}"
     />
-</head>
-<body>
-{% include "user\header.html" %}
-<main class="main-content">
-    <div class="applied-jobs-container">
+  </head>
+  <body>
+    {% include "user\header.html" %}
+
+    <main class="main-content">
+      <div class="applied-jobs-container">
         <h2 class="section-title-applied">
-            DANH SÁCH VIỆC LÀM ĐÃ ỨNG TUYỂN (4)
+          DANH SÁCH VIỆC LÀM ĐÃ ỨNG TUYỂN ({{ applications.count }})
         </h2>
 
-        <div class="job-card applied pending">
-            <div class="job-header">
-                <img
-                        src="https://via.placeholder.com/60"
-                        alt="Logo công ty"
-                        class="company-logo"
-                />
-                <div class="job-info">
-                    <h3 class="job-title">Lập Trình Viên Backend (Java/Python)</h3>
-                    <p class="company-name">Công ty Cổ phần Công nghệ ABC</p>
-                </div>
-                <div class="status-badge pending">Đang xét duyệt</div>
+        {% for app in applications %}
+        <div
+          class="job-card applied {% if app.status == 'new' %}pending{% elif app.status == 'rejected' %}rejected{% elif app.status == 'passed' %}interview{% endif %}"
+        >
+          <div class="job-header">
+            <img
+              src="https://via.placeholder.com/60"
+              alt="Logo công ty"
+              class="company-logo"
+            />
+            <div class="job-info">
+              <h3 class="job-title">{{ app.job.title }}</h3>
+              <p class="company-name">{{ app.job.company_name }}</p>
             </div>
+            <div class="status-badge"> {% if app.status == 'new' %} Đang xét duyệt 
+                {% elif app.status == 'rejected' %} Đã từ chối 
+                {% elif app.status == 'passed' %} Mời phỏng vấn 
+                {% endif %} </div>
+          </div>
 
-            <div class="job-details">
-                <p class="detail-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>TP. Hồ Chí Minh</span>
-                </p>
-                <p class="detail-item">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>15 - 25 Triệu VND</span>
-                </p>
-                <p class="detail-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Ứng tuyển ngày: 28/11/2025</span>
-                </p>
-            </div>
+          <div class="job-details">
+            <p class="detail-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>{{ app.job.location }}</span>
+            </p>
+            <p class="detail-item">
+              <i class="fas fa-money-bill-wave"></i>
+              <span>{{ app.job.salary_range }}</span>
+            </p>
+            <p class="detail-item">
+              <i class="fas fa-clock"></i>
+              <span>Ứng tuyển ngày: {{ app.applied_at|date:"d/m/Y" }}</span>
+            </p>
+          </div>
 
-            <div class="job-actions">
-                <button class="btn-detail">Xem chi tiết bài đăng</button>
-                <button class="btn-withdraw">Rút hồ sơ</button>
-            </div>
+          <div class="job-actions">
+            <a href="{% url 'detailPost' app.job.id %}" class="btn-detail"
+              >Xem chi tiết bài đăng</a
+            >
+          </div>
         </div>
+        {% empty %}
+        <p>Bạn chưa ứng tuyển công việc nào.</p>
+        {% endfor %}
+      </div>
+    </main>
 
-        <div class="job-card applied rejected">
-            <div class="job-header">
-                <img
-                        src="https://via.placeholder.com/60"
-                        alt="Logo công ty"
-                        class="company-logo"
-                />
-                <div class="job-info">
-                    <h3 class="job-title">Chuyên viên Marketing Digital</h3>
-                    <p class="company-name">Tập đoàn Phát triển EFG</p>
-                </div>
-                <div class="status-badge rejected">Đã từ chối</div>
-            </div>
-
-            <div class="job-details">
-                <p class="detail-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Hà Nội</span>
-                </p>
-                <p class="detail-item">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>12 - 18 Triệu VND</span>
-                </p>
-                <p class="detail-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Ứng tuyển ngày: 15/10/2025</span>
-                </p>
-            </div>
-
-            <div class="job-actions">
-                <button class="btn-detail">Xem chi tiết bài đăng</button>
-                <button class="btn-feedback disabled" disabled>Xem phản hồi</button>
-            </div>
-        </div>
-
-        <div class="job-card applied interview">
-            <div class="job-header">
-                <img
-                        src="https://via.placeholder.com/60"
-                        alt="Logo công ty"
-                        class="company-logo"
-                />
-                <div class="job-info">
-                    <h3 class="job-title">Thực tập sinh Thiết kế UI/UX</h3>
-                    <p class="company-name">Studio Sáng tạo HJK</p>
-                </div>
-                <div class="status-badge interview">Mời phỏng vấn</div>
-            </div>
-
-            <div class="job-details">
-                <p class="detail-item">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>TP. Hồ Chí Minh</span>
-                </p>
-                <p class="detail-item">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>3 - 5 Triệu VND (Trợ cấp)</span>
-                </p>
-                <p class="detail-item">
-                    <i class="fas fa-clock"></i>
-                    <span>Ứng tuyển ngày: 01/12/2025</span>
-                </p>
-            </div>
-
-            <div class="job-actions">
-                <button class="btn-detail">Xem chi tiết bài đăng</button>
-                <button class="btn-schedule primary">
-                    Xác nhận lịch phỏng vấn
-                </button>
-            </div>
-        </div>
-    </div>
-</main>
-
-<footer>
-    <p>&copy; 2025 JobFinder. All rights reserved.</p>
-</footer>
-</body>
+    <footer>
+      <p>&copy; 2025 JobFinder. All rights reserved.</p>
+    </footer>
+  </body>
 </html>
