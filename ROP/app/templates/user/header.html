@@ -22,7 +22,8 @@
         </ul>
 
         <form action="{% url 'search' %}"  method="get" class="search-box">
-          <input type="text" placeholder="Tìm kiếm công việc..." name="boxsearch" value="{{bs}}" />
+          {% csrf_token %}
+            <input type="text" placeholder="Tìm kiếm công việc..." name="boxsearch" value="{{bs}}" />
           <button type="submit">Tìm</button>
         </form>
 

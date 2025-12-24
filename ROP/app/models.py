@@ -1,3 +1,4 @@
+from time import timezone
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
 
@@ -29,29 +30,18 @@ class users(models.Model):
 
 
 class Cvs(models.Model):
-    id = models.AutoField(primary_key=True)
-
-    candidate_id = models.ForeignKey(
+    user = models.ForeignKey(
         users,
-        on_delete=models.DO_NOTHING,
-        db_column='user_id',
+        on_delete=models.CASCADE,
+        null=True, blank=True,
     )
-
+    file = models.FileField(upload_to='cv_files/', null=True, blank=True)
     file_name = models.CharField(max_length=255)
+    extracted_text = models.TextField(blank=True, null=True)
+    uploaded_at =  models.DateField(auto_now_add=True)
 
-    file_path = models.CharField(max_length=500)
-
-    extract_text = models.CharField(max_length=500)
-
-    upload_at = models.DateField(auto_now=True)
-
-    class Meta:
+    class Meta: 
         db_table = 'cvs'
-        managed = False
-
-    def __str__(self):
-        return self.file_name
-
 
 class Job(models.Model):
     id = models.AutoField(primary_key=True)
@@ -79,57 +69,33 @@ class Job(models.Model):
     def __str__(self):
         return self.title
 
+from django.db import models
+from django.utils import timezone
 
-class Application(models.Model):
-    job = models.ForeignKey(
-        Job,
-        on_delete=models.CASCADE,
-        related_name='applications'
+class Applications(models.Model):
+    id = models.AutoField(primary_key=True)
+    job = models.ForeignKey( Job, on_delete=models.CASCADE, db_column='job_id')
+    cv = models.ForeignKey(Cvs,  on_delete=models.CASCADE, db_column='cv_id' )
+    user = models.ForeignKey(users, on_delete=models.CASCADE, db_column='user_id')
+    applied_at =  models.DateField(auto_now_add=True)
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('new', 'New'),
+            ('rejected', 'Rejected'),
+            ('passed', 'Passed'),
+        ],
+        default='new'
     )
-
-    cv = models.ForeignKey(
-        Cvs,
-        on_delete=models.CASCADE,
-        related_name='applications'
-    )
-
-    candidate = models.ForeignKey(
-        users,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='applications'
-    )
-
-    applied_at = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True
-    )
-
-    status = models.PositiveSmallIntegerField(
-        null=True,
-        blank=True
-    )
-
-    employer_note = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True
-    )
-
-    ai_score = models.IntegerField(
-        max_length=255,
-        null=True,
-        blank=True
-    )
-
-    manual_rank = models.IntegerField(
-        max_length=255,
-        null=True,
-        blank=True
-    )
+    employer_note = models.CharField(max_length=255, null=True, blank=True)
+    ai_score = models.CharField(max_length=255, null=True, blank=True)
+    manual_rank = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         db_table = 'applications'
-        managed = False
+        managed = False   # vì bảng đã có sẵn trong DB
+
+    def __str__(self):
+        return f"{self.user.fullname} - {self.job.title} ({self.status})"
+
+
