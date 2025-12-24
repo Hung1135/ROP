@@ -13,7 +13,6 @@
     <div class="job-detail-section">
         <div class="detail-card">
 
-            <!-- ===== TIÊU ĐỀ (job_title) ===== -->
             <h1>
                 {{job.title}}
             </h1>
@@ -69,7 +68,7 @@
             <!-- ===== NÚT LỌC HỒ SƠ ===== -->
             <div class="filter-btn-container">
                 <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
-                <a href="#" class="recommend-btn">Đề xuất</a>
+                <a href="#" class="recommend-btn">Danh sách các CV ứng tuyển</a>
             </div>
         </div>
     </div>
@@ -112,6 +111,7 @@
                 <th>Kinh nghiệm</th>
                 <th>Kỹ năng chính</th>
                 <th>Điểm CV (Tương thích)</th>
+                <th>  </th>
             </tr>
             </thead>
             <tbody>
@@ -120,23 +120,30 @@
                 <td>4 năm</td>
                 <td>Python, SQL, Hadoop, AWS</td>
                 <td><span class="score high">95/100</span></td>
+                <td><button class="view-cv-btn" id="apply-filter-btn"
+                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Duyệt</button></td>
             </tr>
             <tr data-score="88" data-experience="3">
                 <td>Nguyễn Văn A</td>
                 <td>3 năm</td>
                 <td>Python, SQL, Spark, Airflow</td>
                 <td><span class="score medium">88/100</span></td>
+                <td><button class="view-cv-btn" id="apply-filter-btn"
+                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Duyệt</button></td>
             </tr>
             <tr data-score="75" data-experience="2.5">
                 <td>Trần Thị B</td>
                 <td>2.5 năm</td>
                 <td>SQL Server, Power BI, Python</td>
                 <td><span class="score low">75/100</span></td>
+                <td><button class="view-cv-btn" id="apply-filter-btn"
+                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Duyệt</button></td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
+
 
 <script src="{% static 'app/js/admin_result_filter.js' %}"></script>
 </body>
