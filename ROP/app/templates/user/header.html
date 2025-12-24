@@ -21,7 +21,7 @@
           <li><a href="{% url 'appliedJobsList' %}">Lịch sử ứng tuyển</a></li>
         </ul>
 
-        <form action="search" method="get" class="search-box">
+        <form action="{% url 'search' %}"  method="get" class="search-box">
           <input type="text" placeholder="Tìm kiếm công việc..." name="boxsearch" value="{{bs}}" />
           <button type="submit">Tìm</button>
         </form>
