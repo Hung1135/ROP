@@ -10,14 +10,11 @@ from .models import Applications, Job, Cvs
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.conf import settings
-
 from .models import Cvs, Applications, Job, users
 from django.http import FileResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.clickjacking import xframe_options_sameorigin
-
 from .models import *
-
 from django.contrib.auth.hashers import make_password, check_password
 from django.db import IntegrityError
 import re
@@ -45,7 +42,7 @@ def post_detail(request, id):
         'total_cvs': len(cv_analyses)
     })
 
-
+# Lấy tất cả Applications của job, extract CV, tính score, lưu vào DB.
 def analyze_cvs_for_job(job):
     applications = Applications.objects.filter(job=job)\
         .select_related('cv', 'user')
@@ -63,7 +60,7 @@ def analyze_cvs_for_job(job):
     for app in applications:
         cv = app.cv
 
-        # 1️⃣ Nếu CV chưa extract → extract & lưu
+        # Nếu CV chưa extract → extract & lưu
         if not cv.extracted_text:
             cv_text = extract_cv_text(cv.file.path)
             cv.extracted_text = cv_text
@@ -71,10 +68,10 @@ def analyze_cvs_for_job(job):
         else:
             cv_text = cv.extracted_text
 
-        # 2️⃣ AI matching
+        #  AI matching
         score, level = match_cv_with_job(cv_text, job_text)
 
-        # 3️⃣ Lưu AI score vào Applications
+        #  Lưu AI score vào Applications
         app.ai_score = f"{score} ({level})"
         app.save(update_fields=['ai_score'])
 
