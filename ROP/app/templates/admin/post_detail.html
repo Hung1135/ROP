@@ -1,150 +1,255 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Chi tiết bài đăng</title>
+    <title>Chi tiết bài đăng - {{ job.title }}</title>
     <link rel="stylesheet" href="{% static 'app/css/post_detail.css' %}"/>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
-{% include "admin\header.html" %}
-<div class="page-container">
-    <div class="job-detail-section">
-        <div class="detail-card">
+    {% include "admin/header.html" %}
 
-            <h1>
-                {{job.title}}
-            </h1>
+    <div class="page-container">
+        <div class="job-detail-section">
+            <div class="detail-card">
 
-            <!-- ===== TÊN CÔNG TY (company_name) ===== -->
-            <div class="company-info">
-                {{job.company}}
-            </div>
+                <h1>{{ job.title }}</h1>
 
-            <!-- ===== THÔNG TIN TÓM TẮT (dataset chỉ có location + salary) ===== -->
-            <div class="key-info">
-                <div>
-                    <span>📍 Địa điểm</span>
-                    <strong>{{job.location}}</strong>
+                <div class="company-info">
+                    {{ job.company }}
                 </div>
 
-                <div>
-                    <span>💰 Mức lương</span>
-                    <strong>{{job.salary_min}} - {{job.salary_max}} Triệu VND</strong>
+                <div class="key-info">
+                    <div>
+                        <span>📍 Địa điểm</span>
+                        <strong>{{ job.location }}</strong>
+                    </div>
+                    <div>
+                        <span>💰 Mức lương</span>
+                        <strong>
+                            {% if job.salary_min and job.salary_max %}
+                                {{ job.salary_min }} - {{ job.salary_max }} Triệu VND
+                            {% elif job.salary_min %}
+                                Từ {{ job.salary_min }} Triệu VND
+                            {% else %}
+                                Thỏa thuận
+                            {% endif %}
+                        </strong>
+                    </div>
                 </div>
-            </div>
 
-            <div class="content-section">
-                <h2>Mô Tả Công Việc</h2>
-                <ul>
-                    {% for item in jobDescript %}
-                    <li> {{item}}</li>
-                    {% endfor%}
-                </ul>
+                <div class="content-section">
+                    <h2>Mô Tả Công Việc</h2>
+                    <ul>
+                        {% for item in jobDescript %}
+                            <li>{{ item }}</li>
+                        {% empty %}
+                            <li>Không có thông tin</li>
+                        {% endfor %}
+                    </ul>
 
-                <h2>Yêu Cầu Công Việc</h2>
-                <ul>
-                    {% for item in jobRequire %}
-                    <li> {{item}}</li>
-                    {% endfor%}
-                </ul>
-                <h2>Kỹ năng</h2>
-                <ul>
-                    {% for item in jobSkill %}
-                    <li> {{item}}</li>
-                    {% endfor%}
-                </ul>
+                    <h2>Yêu Cầu Công Việc</h2>
+                    <ul>
+                        {% for item in jobRequire %}
+                            <li>{{ item }}</li>
+                        {% empty %}
+                            <li>Không có thông tin</li>
+                        {% endfor %}
+                    </ul>
 
-                <h2>Phúc Lợi</h2>
-                <ul>
-                    {% for item in jobBenefit %}
-                    <li> {{item}}</li>
-                    {% endfor%}
-                </ul>
+                    <h2>Kỹ Năng</h2>
+                    <ul>
+                        {% for item in jobSkill %}
+                            <li>{{ item }}</li>
+                        {% empty %}
+                            <li>Không yêu cầu cụ thể</li>
+                        {% endfor %}
+                    </ul>
 
-            </div>
+                    <h2>Phúc Lợi</h2>
+                    <ul>
+                        {% for item in jobBenefit %}
+                            <li>{{ item }}</li>
+                        {% empty %}
+                            <li>Không có thông tin</li>
+                        {% endfor %}
+                    </ul>
+                </div>
 
-            <!-- ===== NÚT LỌC HỒ SƠ ===== -->
-            <div class="filter-btn-container">
-                <a href="#" class="filter-btn">Lọc hồ sơ nâng cao</a>
-                <a href="#" class="recommend-btn">Danh sách các CV ứng tuyển</a>
+                <!-- NÚT MỞ MODAL CV -->
+                <div class="filter-btn-container my-4">
+                    {% if total_cvs > 0 %}
+                        <button class="recommend-btn shadow" data-bs-toggle="modal" data-bs-target="#cvModal">
+                            📄 Danh sách CV ứng tuyển & Đánh giá AI ({{ total_cvs }} CV)
+                        </button>
+                    {% else %}
+                        <button class="recommend-btn" disabled>
+                            📄 Chưa có CV ứng tuyển
+                        </button>
+                    {% endif %}
+                </div>
+
             </div>
         </div>
     </div>
-</div>
 
-<div id="filter-results-modal" class="filter-modal">
-    <div class="modal-content">
-        <span class="close-btn">&times;</span>
+    <!-- MODAL HIỂN THỊ CV + AI SCORE -->
+    <div class="modal fade" id="cvModal" tabindex="-1" aria-labelledby="cvModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="cvModalLabel">
+                        🎯 Đánh giá AI: CV phù hợp với "{{ job.title }}"
+                        <span class="badge bg-light text-dark ms-2">{{ total_cvs }} CV</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
 
-        <h2>Kết quả Lọc Nâng Cao & Đánh giá CV</h2>
+                <div class="modal-body">
+                    <!-- Bộ lọc -->
+                    <div class="filter-controls mb-4 p-3 bg-light rounded">
+                        <div class="row g-3 align-items-end">
+                                <label class="form-label">Sắp xếp theo</label>
+                                <select id="sort-by" class="form-select">
+                                    <option value="score_desc">Điểm AI cao nhất</option>
+                                    <option value="score_asc">Điểm AI thấp nhất</option>
+                                    <option value="date_desc">Mới nhất</option>
+                                </select>
+                        </div>
+                    </div>
 
-        <div class="filter-controls">
-            <div class="filter-group">
-                <label for="min-experience">Kinh nghiệm tối thiểu (năm):</label>
-                <input type="number" id="min-experience" min="0" value="0"
-                       style="width: 80px; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                    <!-- Bảng CV -->
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle" id="cv-table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Điểm AI</th>
+                                    <th>Ứng viên</th>
+<!--                                    <th>Kỹ năng chính</th>-->
+<!--                                    <th>Kinh nghiệm</th>-->
+<!--                                    <th>Thời gian nộp</th>-->
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for analysis in cv_analyses %}
+                                <tr data-score="{{ analysis.score|default:0 }}"
+                                      data-date="{{ analysis.application.applied_at|date:'c' }}">
+                                    <td>
+                                        <strong class="fs-5">{{ analysis.score|floatformat:1|default:"0" }}</strong><br>
+                                        <span class="badge
+                                            {% if analysis.score > 80 %}bg-success
+                                            {% elif analysis.score > 60 %}bg-warning text-dark
+                                            {% else %}bg-danger{% endif %}">
+                                            {{ analysis.match_level|default:"Thấp" }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <strong>{{ analysis.parsed.name|default:analysis.cv.user.fullname|default:"Chưa xác định" }}</strong><br>
+                                        <small class="text-muted">{{ analysis.parsed.email|default:"—" }}</small>
+                                    </td>
+
+
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'cv_detail' analysis.cv.id %}" class="btn btn-sm btn-outline-primary" target="_blank">
+                                                Chi tiết
+                                            </a>
+                                            {% if analysis.cv.file_name|lower|slice:"-4:" == ".pdf" %}
+
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-5 text-muted">
+                                        <i class="fas fa-inbox fa-3x mb-3"></i>
+                                        <h5>Chưa có CV nào ứng tuyển</h5>
+                                        <p>Hãy chờ ứng viên nộp hồ sơ hoặc chia sẻ tin tuyển dụng!</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
             </div>
-            <div class="filter-group">
-                <label for="skill-search">Tìm kiếm theo Kỹ năng (VD: Python, AWS):</label>
-                <input type="text" id="skill-search" placeholder="Nhập kỹ năng"
-                       style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 250px;">
-            </div>
-            <button id="apply-filter-btn"
-                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">
-                Áp dụng
-            </button>
         </div>
-        <div class="sort-options">
-            <label for="sort-by">Sắp xếp theo:</label>
-            <select id="sort-by">
-                <option value="score_desc">Điểm CV (Giảm dần)</option>
-                <option value="score_asc">Điểm CV (Tăng dần)</option>
-            </select>
-        </div>
-
-        <table class="results-table">
-            <thead>
-            <tr>
-                <th>Ứng viên</th>
-                <th>Kinh nghiệm</th>
-                <th>Kỹ năng chính</th>
-                <th>Điểm CV (Tương thích)</th>
-                <th>  </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr data-score="95" data-experience="4">
-                <td>Lê Hoàng C</td>
-                <td>4 năm</td>
-                <td>Python, SQL, Hadoop, AWS</td>
-                <td><span class="score high">95/100</span></td>
-                <td><button class="view-cv-btn" id="apply-filter-btn"
-                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Duyệt</button></td>
-            </tr>
-            <tr data-score="88" data-experience="3">
-                <td>Nguyễn Văn A</td>
-                <td>3 năm</td>
-                <td>Python, SQL, Spark, Airflow</td>
-                <td><span class="score medium">88/100</span></td>
-                <td><button class="view-cv-btn" id="apply-filter-btn"
-                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Duyệt</button></td>
-            </tr>
-            <tr data-score="75" data-experience="2.5">
-                <td>Trần Thị B</td>
-                <td>2.5 năm</td>
-                <td>SQL Server, Power BI, Python</td>
-                <td><span class="score low">75/100</span></td>
-                <td><button class="view-cv-btn" id="apply-filter-btn"
-                    style="background-color: #ff5733; color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Duyệt</button></td>
-            </tr>
-            </tbody>
-        </table>
     </div>
-</div>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="{% static 'app/js/admin_result_filter.js' %}"></script>
+    <!-- JS Lọc & Sắp xếp CV -->
+    <script src="{% static 'app/js/admin_cv_filter.js' %}"></script>
+    <!-- Nếu chưa có file JS, tạo file static/app/js/admin_cv_filter.js với nội dung dưới đây -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    // Lấy bảng CV
+    const table = document.getElementById('cv-table');
+    if (!table) {
+        console.warn('Không tìm thấy bảng cv-table');
+        return;
+    }
+
+    const tbody = table.querySelector('tbody');
+    const sortSelect = document.getElementById('sort-by');
+
+    if (!sortSelect) {
+        console.warn('Không tìm thấy select sort-by');
+        return;
+    }
+
+    /**
+     * Hàm sắp xếp bảng
+     */
+    function sortTable() {
+        const sortValue = sortSelect.value;
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+
+        rows.sort((a, b) => {
+            const scoreA = Number(a.dataset.score || 0);
+            const scoreB = Number(b.dataset.score || 0);
+
+            // date dạng: YYYY-MM-DD
+            const dateA = new Date(a.dataset.date || '1970-01-01');
+            const dateB = new Date(b.dataset.date || '1970-01-01');
+
+            switch (sortValue) {
+                case 'score_desc':
+                    return scoreB - scoreA;
+
+                case 'score_asc':
+                    return scoreA - scoreB;
+
+                case 'date_desc':
+                    return dateB - dateA;
+
+                default:
+                    return 0;
+            }
+        });
+
+        // Gắn lại thứ tự mới
+        rows.forEach(row => tbody.appendChild(row));
+    }
+
+    // Đổi option là sắp xếp ngay
+    sortSelect.addEventListener('change', sortTable);
+
+    // Sắp xếp mặc định khi load (Điểm AI cao nhất)
+    sortTable();
+});
+
+    </script>
 </body>
 </html>
