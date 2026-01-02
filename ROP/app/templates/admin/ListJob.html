@@ -64,6 +64,9 @@
             <div class="job-info">
                 <span>💰 {{ job.salary_min }} - {{ job.salary_max }} triệu VNĐ</span>
             </div>
+            <div class="job-info">
+                <span>{{ job.create_at }} - {{ job.end_date }}</span>
+            </div>
 
             <div class="btn_detail">
                 <a href="{% url 'admin_post_detail' job.id %}">
