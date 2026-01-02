@@ -55,7 +55,7 @@ class Job(models.Model):
     location = models.CharField(max_length=255, null=True, blank=True)
     salary_min = models.IntegerField(null=True, blank=True)
     salary_max = models.IntegerField(null=True, blank=True)
-    work_type = models.CharField(max_length=255, null=True, blank=True)
+    end_date = models.DateField()
     description = models.CharField(max_length=255, null=True, blank=True)
     requirements = models.CharField(max_length=255, null=True, blank=True)
     skills = models.CharField(max_length=255, null=True, blank=True)
