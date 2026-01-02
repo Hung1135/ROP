@@ -4,9 +4,6 @@ from docx import Document
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# =========================
-# LOAD MODEL AI TRAIN SẴN
-# =========================
 model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
 def extract_text_from_pdf(file_path):
