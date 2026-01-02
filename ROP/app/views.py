@@ -318,6 +318,7 @@ def functionPost(request):
         benefits = request.POST.get('benefits')
         user_id = request.session.get('user_id')
         user_obj = get_object_or_404(users, id=user_id)
+        end_date=request.POST.get('end_date')
         Job.objects.create(
             title=title,
             company=company_name,
@@ -328,7 +329,8 @@ def functionPost(request):
             requirements=requirements,
             benefit=benefits,
             skills=skills,
-            user=user_obj
+            user=user_obj,
+            end_date=end_date,
         )
         messages.success(request, 'Đăng tin tuyển dụng thành công!')
         return redirect('ListJob')
