@@ -32,6 +32,7 @@ urlpatterns = [
 
     path('cv/<int:id>/', views.cv_detail, name='cv_detail'),
     path('cv/pdf/<int:id>/', views.cv_pdf, name='cv_pdf'),
+path('cv/json/<int:id>/', views.cv_detail_json, name='cv_detail_json'),
 
 ]
 if settings.DEBUG:

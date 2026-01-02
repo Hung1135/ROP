@@ -35,13 +35,17 @@ class Cvs(models.Model):
         on_delete=models.CASCADE,
         null=True, blank=True,
     )
-    file = models.FileField(upload_to='cv_files/', null=True, blank=True)
-    file_name = models.CharField(max_length=255)
-    extracted_text = models.TextField(blank=True, null=True)
-    uploaded_at =  models.DateField(auto_now_add=True)
+    full_name = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100)
+    address = models.CharField(max_length=100)
+    skills = models.TextField()
+    description = models.TextField()
+    uploaded_at = models.DateField(auto_now_add=True)
 
     class Meta: 
         db_table = 'cvs'
+        managed = False
 
 class Job(models.Model):
     id = models.AutoField(primary_key=True)
@@ -68,7 +72,6 @@ class Job(models.Model):
 
     def __str__(self):
         return self.title
-
 from django.db import models
 from django.utils import timezone
 
@@ -93,7 +96,7 @@ class Applications(models.Model):
 
     class Meta:
         db_table = 'applications'
-        managed = False   # vì bảng đã có sẵn trong DB
+        managed = False
 
     def __str__(self):
         return f"{self.user.fullname} - {self.job.title} ({self.status})"
