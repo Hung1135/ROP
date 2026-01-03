@@ -93,6 +93,8 @@ class Applications(models.Model):
     employer_note = models.CharField(max_length=255, null=True, blank=True)
     ai_score = models.CharField(max_length=255, null=True, blank=True)
     manual_rank = models.CharField(max_length=255, null=True, blank=True)
+    is_sent = models.BooleanField(default=False) # Thêm dòng này
+
 
     class Meta:
         db_table = 'applications'

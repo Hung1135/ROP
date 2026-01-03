@@ -19,7 +19,8 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.db import IntegrityError
 import re
 from django.shortcuts import render
-
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 # admin
@@ -494,3 +495,31 @@ def cv_pdf(request, id):
     # Cho phép nhúng cùng origin
     response['X-Frame-Options'] = 'SAMEORIGIN'
     return response
+
+def send_interview_email(request, app_id):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        try:
+            application = get_object_or_404(Applications, id=app_id)
+            user_candidate = application.user
+            job = application.job
+
+            subject = f"[Mời phỏng vấn] Vị trí {job.title} - {job.company}"
+            message = f"""
+            Chào {user_candidate.fullname},
+
+            Chúng tôi đã nhận được hồ sơ của bạn cho vị trí {job.title}. 
+            Dựa trên đánh giá AI, chúng tôi muốn mời bạn tham gia buổi phỏng vấn trực tiếp.
+
+            Trân trọng,
+            Phòng nhân sự {job.company}.
+            """
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [user_candidate.email]
+
+            send_mail(subject, message, email_from, recipient_list)
+            application.is_sent = True
+            application.save()
+
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
