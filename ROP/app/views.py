@@ -523,3 +523,12 @@ def send_interview_email(request, app_id):
             return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import Cvs
+
+def cv_detail_form(request, cv_id):
+    cv = get_object_or_404(Cvs, id=cv_id)
+    return render(request, 'admin/detail.html', {'cv': cv})
