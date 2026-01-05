@@ -32,6 +32,10 @@ urlpatterns = [
 
     path('cv/<int:id>/', views.cv_detail, name='cv_detail'),
     path('cv/pdf/<int:id>/', views.cv_pdf, name='cv_pdf'),
+path('cv/json/<int:id>/', views.cv_detail_json, name='cv_detail_json'),
+
+path('send_interview_email/<int:app_id>/', views.send_interview_email, name='send_interview_email'),
+
 
 ]
 if settings.DEBUG:
