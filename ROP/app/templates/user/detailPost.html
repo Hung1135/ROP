@@ -1,139 +1,133 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8"/>
     <title>Title</title>
-    <link rel="stylesheet" href="{% static 'app/css_user/detailPost.css' %}" />
-    <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}" />
-  </head>
-  <body>
-    {% include "user\header.html" %}
+    <link rel="stylesheet" href="{% static 'app/css_user/detailPost.css' %}"/>
+    <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}"/>
+</head>
+<body>
+{% include "user\header.html" %}
 
-    <main class="main-detail-content">
-      <div class="job-detail-container">
+<main class="main-detail-content">
+    <div class="job-detail-container">
         <!-- === JOB SUMMARY === -->
         <section class="job-summary">
-          <h1>{{job.title}}</h1>
+            <h1>{{job.title}}</h1>
 
-          <p class="detail-company">
-            <i class="fas fa-building"></i> {{job.company}}
-          </p>
+            <p class="detail-company">
+                <i class="fas fa-building"></i> {{job.company}}
+            </p>
 
-          <p class="detail-location">
-            <i class="fas fa-map-marker-alt"></i> {{job.location}}
-          </p>
+            <p class="detail-location">
+                <i class="fas fa-map-marker-alt"></i> {{job.location}}
+            </p>
 
-          <div class="summary-info">
+            <div class="summary-info">
             <span class="info-tag salary">
               <i class="fas fa-money-bill-wave"></i> {{job.salary_min}} -
               {{job.salary_max}} Triệu VND
             </span>
 
-            <span class="info-tag type">
+                <span class="info-tag type">
               <i class="fas fa-clock"></i> {{job.create_at}} - {{job.end_date}}
             </span>
-          </div>
+            </div>
         </section>
 
         <!-- === JOB DETAILS + FORM === -->
         <div class="detail-body-grid">
-          <!-- LEFT SIDE: JOB DESCRIPTION -->
-          <section class="job-description">
-            <h2>Mô Tả Công Việc</h2>
-            <ul>
-              {% for item in jobDescript %}
-              <li>{{item}}</li>
-              {% endfor%}
-            </ul>
+            <!-- LEFT SIDE: JOB DESCRIPTION -->
+            <section class="job-description">
+                <h2>Mô Tả Công Việc</h2>
+                <ul>
+                    {% for item in jobDescript %}
+                    <li>{{item}}</li>
+                    {% endfor%}
+                </ul>
 
-            <h2>Yêu Cầu Công Việc</h2>
-            <ul>
-              {% for item in jobRequire %}
-              <li>{{item}}</li>
-              {% endfor%}
-            </ul>
-            <h2>Kỹ năng</h2>
-            <ul>
-              {% for item in jobSkill %}
-              <li>{{item}}</li>
-              {% endfor%}
-            </ul>
+                <h2>Yêu Cầu Công Việc</h2>
+                <ul>
+                    {% for item in jobRequire %}
+                    <li>{{item}}</li>
+                    {% endfor%}
+                </ul>
+                <h2>Kỹ năng</h2>
+                <ul>
+                    {% for item in jobSkill %}
+                    <li>{{item}}</li>
+                    {% endfor%}
+                </ul>
 
-            <h2>Phúc Lợi</h2>
-            <ul>
-              {% for item in jobBenefit %}
-              <li>{{item}}</li>
-              {% endfor%}
-            </ul>
-          </section>
+                <h2>Phúc Lợi</h2>
+                <ul>
+                    {% for item in jobBenefit %}
+                    <li>{{item}}</li>
+                    {% endfor%}
+                </ul>
+            </section>
 
-          <!-- RIGHT SIDE: APPLY FORM -->
-          <aside class="application-form" id="application-form">
-            <h3>Form Ứng Tuyển Nhanh</h3>
+            {% load tz %} {# nếu bạn dùng timezone-aware datetime #}
 
-            <form
-              action="{% url 'apply_job' job.id %}"
-              method="POST"
-              enctype="multipart/form-data"
-            >
-              {% csrf_token %}
-              <div class="form-group cv-upload">
-                <label for="cv_file">Tải CV Lên (*)</label>
-                <input
-                  type="file"
-                  id="cv_file"
-                  name="file"
-                  accept=".pdf,.doc,.docx"
-                  required
-                />
-                <p class="file-note">
-                  Chỉ chấp nhận file .pdf, .doc, .docx (tối đa 5MB).
-                </p>
-              </div>
-              <button type="submit" class="btn-submit-cv">
-                Gửi Hồ Sơ Ứng Tuyển
-              </button>
-            </form>
+            <aside class="application-form" id="application-form">
+                <h3>Form Ứng Tuyển Nhanh</h3>
 
-            {% comment %}
-            <form
-              action="{% url 'upload_cv' %}"
-              method="POST"
-              enctype="multipart/form-data"
-            >
-              {% csrf_token %}
+                {% now "Y-m-d" as today %}
+                {% if is_active %}
+                <form action="{% url 'apply_job' job.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="full_name">Họ và Tên (*)</label>
+                        <input type="text" id="full_name" name="full_name" required placeholder="Nguyễn Văn A"/>
+                    </div>
 
-              <div class="form-group cv-upload">
-                <label for="cv_file">Tải CV Lên (*)</label>
-                <input
-                  type="file"
-                  id="cv_file"
-                  name="file"
-                  accept=".pdf,.doc,.docx"
-                  required
-                />
-                <p class="file-note">
-                  Chỉ chấp nhận file .pdf, .doc, .docx (tối đa 5MB).
-                </p>
-              </div>
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email (*)</label>
+                        <input type="email" id="email" name="email" required placeholder="example@gmail.com"/>
+                    </div>
 
-              <button type="submit" class="btn-submit-cv">
-                Gửi Hồ Sơ Ứng Tuyển
-              </button>
-            </form>
-            {% endcomment %}
-          </aside>
+                    <div class="form-group">
+                        <label for="phone">Số điện thoại (*)</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="0123456789"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Địa chỉ</label>
+                        <input type="text" id="address" name="address" required placeholder="Thành phố/ tỉnh nơi ở"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Mô tả bản thân</label>
+                        <textarea id="description" name="description" rows="4"
+                                  placeholder="Mô tả kinh nghiệm, bằng cấp và các thành tựu, ưu điểm và nhược điểm của bạn..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="experience">Kỹ năng</label>
+                        <textarea id="experience" name="experience" rows="4"
+                                  placeholder="Mô tả kinh nghiệm và kỹ năng của bạn..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit-cv">Gửi Hồ Sơ Ứng Tuyển</button>
+                </form>
+                {% else %}
+                <p class="expired-note" style="color:red; font-weight:bold;">Bài đăng ứng tuyển không trong thời hạn.</p>
+                {% endif %}
+            </aside>
+
         </div>
-      </div>
-    </main>
+    </div>
+</main>
 
-    <footer>
-      <p>&copy; 2025 JobFinder. All rights reserved.</p>
-    </footer>
-    <script
-      src="https://kit.fontawesome.com/a076d05399.js"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+<footer>
+    <p>&copy; 2025 JobFinder. All rights reserved.</p>
+</footer>
+<script
+        src="https://kit.fontawesome.com/a076d05399.js"
+        crossorigin="anonymous"
+></script>
+
+</body>
 </html>
