@@ -72,12 +72,39 @@ class Job(models.Model):
 from django.db import models
 from django.utils import timezone
 
+# class Applications(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     job = models.ForeignKey( Job, on_delete=models.CASCADE, db_column='job_id')
+#     cv = models.ForeignKey(Cvs,  on_delete=models.CASCADE, db_column='cv_id' )
+#     user = models.ForeignKey(users, on_delete=models.CASCADE, db_column='user_id')
+#     applied_at =  models.DateField(auto_now_add=True)
+#     status = models.CharField(
+#         max_length=20,
+#         choices=[
+#             ('new', 'New'),
+#             ('rejected', 'Rejected'),
+#             ('passed', 'Passed'),
+#         ],
+#         default='new'
+#     )
+#     employer_note = models.CharField(max_length=255, null=True, blank=True)
+#     ai_score = models.CharField(max_length=255, null=True, blank=True)
+#     manual_rank = models.CharField(max_length=255, null=True, blank=True)
+
+#     class Meta:
+#         db_table = 'applications'
+#         managed = False   # vì bảng đã có sẵn trong DB
+
+#     def __str__(self):
+#         return f"{self.user.fullname} - {self.job.title} ({self.status})"
+
+
 class Applications(models.Model):
     id = models.AutoField(primary_key=True)
-    job = models.ForeignKey( Job, on_delete=models.CASCADE, db_column='job_id')
-    cv = models.ForeignKey(Cvs,  on_delete=models.CASCADE, db_column='cv_id' )
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, db_column='job_id')
+    cv = models.ForeignKey(Cvs, on_delete=models.CASCADE, db_column='cv_id')
     user = models.ForeignKey(users, on_delete=models.CASCADE, db_column='user_id')
-    applied_at =  models.DateField(auto_now_add=True)
+    applied_at = models.DateField(auto_now_add=True)
     status = models.CharField(
         max_length=20,
         choices=[
@@ -88,7 +115,17 @@ class Applications(models.Model):
         default='new'
     )
     employer_note = models.CharField(max_length=255, null=True, blank=True)
-    ai_score = models.CharField(max_length=255, null=True, blank=True)
+
+    # điểm tổng hợp AI
+    ai_score = models.FloatField(null=True, blank=True)
+
+    # điểm chi tiết
+    skill_score = models.FloatField(null=True, blank=True)
+    req_score = models.FloatField(null=True, blank=True)
+
+    # mức độ phù hợp (text)
+    match_level = models.CharField(max_length=50, null=True, blank=True)
+
     manual_rank = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
@@ -97,5 +134,3 @@ class Applications(models.Model):
 
     def __str__(self):
         return f"{self.user.fullname} - {self.job.title} ({self.status})"
-
-

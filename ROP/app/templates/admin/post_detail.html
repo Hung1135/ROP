@@ -127,15 +127,12 @@
                     </div>
 
                     <!-- Bảng CV -->
-                    <div class="table-responsive">
+                    {% comment %} <div class="table-responsive">
                         <table class="table table-hover align-middle" id="cv-table">
                             <thead class="table-dark">
                                 <tr>
                                     <th>Điểm AI</th>
                                     <th>Ứng viên</th>
-<!--                                    <th>Kỹ năng chính</th>-->
-<!--                                    <th>Kinh nghiệm</th>-->
-<!--                                    <th>Thời gian nộp</th>-->
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
@@ -180,7 +177,75 @@
                                 {% endfor %}
                             </tbody>
                         </table>
+                    </div> {% endcomment %}
+
+                    <div class="table-responsive">
+    <table class="table table-hover align-middle" id="cv-table">
+        <thead class="table-dark">
+            <tr>
+                <th>Điểm AI</th>
+                <th>Điểm Kỹ năng</th>
+                <th>Điểm Yêu cầu</th>
+                <th>Ứng viên</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for analysis in cv_analyses %}
+            <tr data-score="{{ analysis.ai_score|default:0 }}"
+                data-date="{{ analysis.application.applied_at|date:'c' }}">
+                
+                <!-- Tổng điểm AI -->
+                <td>
+                    <strong class="fs-5">{{ analysis.ai_score|floatformat:1|default:"0" }}</strong><br>
+                    <span class="badge
+                        {% if analysis.ai_score > 80 %}bg-success
+                        {% elif analysis.ai_score > 60 %}bg-warning text-dark
+                        {% else %}bg-danger{% endif %}">
+                        {{ analysis.match_level|default:"Thấp" }}
+                    </span>
+                </td>
+
+                <!-- Điểm kỹ năng -->
+                <td>
+                    <strong>{{ analysis.skill_score|floatformat:1|default:"0" }}</strong>
+                </td>
+
+                <!-- Điểm yêu cầu -->
+                <td>
+                    <strong>{{ analysis.req_score|floatformat:1|default:"0" }}</strong>
+                </td>
+
+                <!-- Thông tin ứng viên -->
+                <td>
+                    <strong>{{ analysis.parsed.name|default:analysis.cv.user.fullname|default:"Chưa xác định" }}</strong><br>
+                    <small class="text-muted">{{ analysis.parsed.email|default:"—" }}</small>
+                </td>
+
+                <!-- Hành động -->
+                <td>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'cv_detail' analysis.cv.id %}" class="btn btn-sm btn-outline-primary" target="_blank">
+                            Chi tiết
+                        </a>
                     </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center py-5 text-muted">
+                    <i class="fas fa-inbox fa-3x mb-3"></i>
+                    <h5>Chưa có CV nào ứng tuyển</h5>
+                    <p>Hãy chờ ứng viên nộp hồ sơ hoặc chia sẻ tin tuyển dụng!</p>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
                 </div>
 
                 <div class="modal-footer">

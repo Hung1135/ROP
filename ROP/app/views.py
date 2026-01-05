@@ -5,7 +5,10 @@ from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.template.defaultfilters import title
 from django.db.models import Q
-from .AI.cv_matcher import extract_cv_text, match_cv_with_job
+from .AI.cv_matcher import extract_cv_text, match_cv_with_job_advanced
+from .AI.cv_matcher import extract_cv_text, match_cv_with_job_advanced
+
+# from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_with_job_advanced
 from .models import Applications, Job, Cvs
 from django.utils import timezone
 from django.shortcuts import render, redirect
@@ -43,50 +46,50 @@ def post_detail(request, id):
     })
 
 # Lấy tất cả Applications của job, extract CV, tính score, lưu vào DB.
-def analyze_cvs_for_job(job):
-    applications = Applications.objects.filter(job=job)\
-        .select_related('cv', 'user')
+# def analyze_cvs_for_job(job):
+#     applications = Applications.objects.filter(job=job)\
+#         .select_related('cv', 'user')
 
-    job_text = f"""
-    {job.title}
-    {job.description}
-    {job.requirements}
-    {job.skills}
-    {job.benefit}
-    """
+#     job_text = f"""
+#     {job.title}
+#     {job.description}
+#     {job.requirements}
+#     {job.skills}
+#     {job.benefit}
+#     """
 
-    results = []
+#     results = []
 
-    for app in applications:
-        cv = app.cv
+#     for app in applications:
+#         cv = app.cv
 
-        # Nếu CV chưa extract → extract & lưu
-        if not cv.extracted_text:
-            cv_text = extract_cv_text(cv.file.path)
-            cv.extracted_text = cv_text
-            cv.save(update_fields=['extracted_text'])
-        else:
-            cv_text = cv.extracted_text
+#         # Nếu CV chưa extract → extract & lưu
+#         if not cv.extracted_text:
+#             cv_text = extract_cv_text(cv.file.path)
+#             cv.extracted_text = cv_text
+#             cv.save(update_fields=['extracted_text'])
+#         else:
+#             cv_text = cv.extracted_text
 
-        #  AI matching
-        score, level = match_cv_with_job(cv_text, job_text)
+#         #  AI matching
+#         score, level = match_cv_with_job(cv_text, job_text)
 
-        #  Lưu AI score vào Applications
-        app.ai_score = f"{score} ({level})"
-        app.save(update_fields=['ai_score'])
+#         #  Lưu AI score vào Applications
+#         app.ai_score = f"{score} ({level})"
+#         app.save(update_fields=['ai_score'])
 
-        results.append({
-            "application": app,
-            "cv": cv,
-            "score": score,
-            "match_level": level,
-            "parsed": {
-                "name": app.user.fullname,
-                "email": app.user.email
-            }
-        })
+#         results.append({
+#             "application": app,
+#             "cv": cv,
+#             "score": score,
+#             "match_level": level,
+#             "parsed": {
+#                 "name": app.user.fullname,
+#                 "email": app.user.email
+#             }
+#         })
 
-    return results
+#     return results
 
 def ListJob(request):
     user_id = request.session.get('user_id')
@@ -424,3 +427,47 @@ def cv_pdf(request, id):
     return response
 
 
+
+
+# cái này làm lại AI
+def analyze_cvs_for_job(job):
+    applications = Applications.objects.filter(job=job)\
+        .select_related('cv', 'user')
+
+    results = []
+
+    for app in applications:
+        cv = app.cv
+
+        # Nếu CV chưa extract → extract & lưu
+        if not cv.extracted_text:
+            cv_text = extract_cv_text(cv.file.path)
+            cv.extracted_text = cv_text
+            cv.save(update_fields=['extracted_text'])
+        else:
+            cv_text = cv.extracted_text
+
+        # AI matching nâng cao
+        skill_score, req_score, ai_score, level = match_cv_with_job_advanced(cv_text, job)
+
+        # Lưu điểm chi tiết vào Applications
+        app.skill_score = skill_score
+        app.req_score = req_score
+        app.ai_score = ai_score
+        app.match_level = level
+        app.save(update_fields=['skill_score', 'req_score', 'ai_score', 'match_level'])
+
+        results.append({
+            "application": app,
+            "cv": cv,
+            "skill_score": skill_score,
+            "req_score": req_score,
+            "ai_score": ai_score,
+            "match_level": level,
+            "parsed": {
+                "name": app.user.fullname,
+                "email": app.user.email
+            }
+        })
+
+    return results
