@@ -86,11 +86,8 @@
         setTimeout(() => {
           alert.classList.add("show");
         }, 100);
-
-        // Tự động ẩn sau 4 giây
         setTimeout(() => {
           alert.classList.remove("show");
-          // Xóa hoàn toàn khỏi DOM sau khi fade out
           setTimeout(() => {
             alert.remove();
           }, 500);
