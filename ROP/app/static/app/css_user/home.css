@@ -250,3 +250,218 @@ footer {
 .account-wrapper:hover .account-submenu {
   display: flex;
 }
+.filter-section {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-group input, .filter-group select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  flex: 1;
+}
+
+.btn-search {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0 25px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-search:hover {
+  background: #0056b3;
+}
+
+.job-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+/* Container cá»§a toÃ n bá»™ menu */
+.nav-links {
+  display: flex;
+  list-style: none;
+  align-items: center;
+}
+
+.dropdown {
+  position: static; /* Quan trá»ng Ä‘á»ƒ menu con cÃ³ thá»ƒ full-width */
+}
+
+/* Menu con áº©n máº·c Ä‘á»‹nh */
+.dropdown-content-full {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 60px; /* Äiá»u chá»‰nh tÃ¹y theo Ä‘á»™ cao header cá»§a báº¡n */
+  width: 100%;
+  background-color: #ffffff;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.1);
+  z-index: 1000;
+  border-top: 1px solid #eee;
+  padding: 20px 0;
+}
+
+/* Hiá»ƒn thá»‹ khi hover */
+.dropdown:hover .dropdown-content-full {
+  display: block;
+}
+
+/* Chia cá»™t bÃªn trong menu */
+.dropdown-grid {
+  display: flex;
+  justify-content: space-around;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.column {
+  flex: 1;
+  padding: 0 20px;
+}
+
+.column h4 {
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #007bff;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.column a {
+  color: #555;
+  padding: 8px 0;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+}
+
+.column a:hover {
+  color: #007bff;
+  padding-left: 5px;
+  transition: 0.2s;
+}
+/* Chỉnh lại Header để chia làm 3 phần */
+.header {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 50px;
+  display: flex;
+  justify-content: space-between; /* Đẩy Logo qua trái, Navbar ra giữa/phải */
+  align-items: center;
+  height: 70px; /* Cố định chiều cao để dễ căn chỉnh */
+}
+
+/* Logo chiếm một khoảng cố định bên trái */
+.logo {
+  display: flex;
+  align-items: center;
+  flex: 0 0 200px; /* Không cho logo co giãn, độ rộng 200px */
+}
+
+/* Navbar sẽ chiếm hết phần còn lại và căn giữa nội dung bên trong */
+.navbar {
+  flex: 1; /* Chiếm toàn bộ không gian ở giữa */
+  display: flex;
+  justify-content: center; /* CĂN GIỮA MENU */
+  align-items: center;
+}
+
+/* Đưa cụm Tài khoản ra sát lề phải */
+.account-wrapper {
+  margin-left: auto; /* Đẩy cụm tài khoản về phía bên phải của navbar */
+  flex: 0 0 200px; /* Độ rộng bằng phần logo để menu chính ở giữa tuyệt đối */
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Reset lại nav-links để không bị lệch */
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 30px; /* Khoảng cách giữa các chữ menu */
+}
+.category-list {
+  list-style: none; /* Bỏ dấu chấm tròn */
+  padding: 0;
+  margin: 0;
+}
+
+.category-list li a {
+  color: #555;
+  text-decoration: none;
+  font-size: 14px;
+  display: block;
+  padding: 5px 0;
+}
+
+.category-list li a:hover {
+  color: #007bff;
+}
+/* Container của từng mục menu (li) */
+.nav-box-item {
+  position: relative;
+  display: inline-block;
+  list-style: none;
+}
+
+/* Link chính (Công ty, Hồ sơ) */
+.nav-box-link {
+  text-decoration: none;
+  padding: 10px 15px;
+  display: block;
+  color: #333;
+}
+
+/* NỀN DƯỚI (Dropdown): Đã bóp nhỏ lại */
+.nav-box-sub {
+  display: none; /* Ẩn mặc định */
+  position: absolute;
+  top: 100%; /* Xuất hiện ngay sát dưới link chính */
+  left: 0;
+  background-color: #ffffff;
+  min-width: 170px; /* Độ rộng nhỏ gọn, vừa đủ cho chữ */
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1); /* Đổ bóng nhẹ cho sang */
+  border: 1px solid #eee;
+  border-radius: 4px;
+  z-index: 999;
+  padding: 8px 0; /* Khoảng cách trên dưới bên trong hộp */
+}
+
+/* Các link con bên trong nền trắng */
+.nav-box-sub a {
+  color: #444 !important;
+  padding: 10px 15px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+  text-align: left;
+}
+
+/* Hiệu ứng khi di chuột vào từng dòng */
+.nav-box-sub a:hover {
+  background-color: #f5f5f5;
+  color: #007bff !important;
+}
+
+/* LỆNH QUAN TRỌNG: Di chuột vào mục cha thì hiện mục con */
+.nav-box-item:hover .nav-box-sub {
+  display: block;
+}

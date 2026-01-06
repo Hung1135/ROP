@@ -36,7 +36,15 @@ urlpatterns = [
 
     path('send_interview_email/<int:app_id>/', views.send_interview_email, name='send_interview_email'),
     path('cv_form/<int:cv_id>/', views.cv_detail_form, name='cv_detail_form'),
-
-]
+    path('search/', views.search, name='search'),
+    path('cv/create/', views.create_cv, name='create_cv'),
+    path('cv/list/', views.cv_list, name='cv_list'),
+    path('companies/', views.company_list, name='company_list'),
+    path('companies/featured/', views.featured_companies, name='featured_companies'), 
+    
+    # rop
+    path('admin-rop/candidates/', views.admin_manage_candidates, name='admin_manage_candidates'),
+    path('admin-rop/employers/', views.admin_manage_employers, name='admin_manage_employers'),
+       ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
