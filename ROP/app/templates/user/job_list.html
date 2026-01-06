@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Việc làm - ROP</title>
+    <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}" />
+    <style>
+        .filter-section { background: #f4f4f4; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
+        .filter-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .filter-group input, .filter-group select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .btn-search { background: #0056b3; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; }
+        .active { font-weight: bold; color: #0056b3; }
+    </style>
+</head>
+<body>
+
+    {% include "user/header.html" %}
+
+    <main class="main-content">
+        <section class="filter-section">
+            <form method="get" action="{% url 'search' %}" class="filter-form">
+                <div class="filter-group">
+                    <input type="text" name="boxsearch" placeholder="Tên công việc, vị trí..." value="{{ bs }}">
+                    
+                    <select name="location">
+                        <option value="">Tất cả địa điểm</option>
+                        {% for p in provinces %}
+                            <option value="{{ p }}" {% if current_loc == p %}selected{% endif %}>{{ p }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="salary_range">
+                        <option value="">Mức lương</option>
+                        <option value="10-20" {% if current_salary == '10-20' %}selected{% endif %}>10 - 20 Triệu</option>
+                        <option value="20+" {% if current_salary == '20+' %}selected{% endif %}>Trên 20 Triệu</option>
+                    </select>
+
+                    <button type="submit" class="btn-search">Lọc kết quả</button>
+                </div>
+            </form>
+        </section>
+
+        <div class="title">
+            <h2>Kết Quả Tuyển Dụng</h2>
+            <div class="sort-box">
+                 <span>Sắp xếp:</span>
+                 <a href="?sort=newest&boxsearch={{bs}}&location={{current_loc}}" class="{% if sort == 'newest' %}active{% endif %}">Mới nhất</a> | 
+                 <a href="?sort=oldest&boxsearch={{bs}}&location={{current_loc}}" class="{% if sort == 'oldest' %}active{% endif %}">Cũ nhất</a>
+            </div>
+        </div>
+
+        <div class="job-listings">
+            {% for job in jobs %}
+            <div class="job-card">
+                <div class="job-header">
+                    <h3>{{ job.title }}</h3>
+                    <span class="job-salary">
+                        {% if job.salary_min %}{{ job.salary_min }} - {{ job.salary_max }} Triệu{% else %}Thỏa thuận{% endif %}
+                    </span>
+                </div>
+                <p class="job-company"><strong>{{ job.company }}</strong></p>
+                <p class="job-location">{{ job.location }}</p>
+                
+                <div class="job-footer">
+                    <p class="job-date">Hạn: {{ job.end_date|date:"d/m/Y" }}</p>
+                    <a href="{% url 'detailPost' job.id %}" class="btn-detail">Xem Chi Tiết</a>
+                </div>
+            </div>
+            {% empty %}
+            <p>Không tìm thấy công việc nào.</p>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 ROP. All rights reserved.</p>
+    </footer>
+</body>
+</html>

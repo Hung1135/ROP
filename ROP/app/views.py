@@ -21,7 +21,11 @@ import re
 from django.shortcuts import render
 from django.core.mail import send_mail
 from django.conf import settings
-
+from .AI.utils import classify_job_category
+from django.shortcuts import render
+from django.db.models import Q
+from .models import Job
+from django.db.models import Count  
 # Create your views here.
 # admin
 
@@ -206,8 +210,11 @@ def login(request):
             request.session['user_id'] = user.id
             request.session['user_full_name'] = user.fullname
             request.session['user_role'] = user.role
+            request.session['user_email'] = user.email
 
-            if user.role:
+            if user.email == "admin@gmail.com":
+                return redirect('admin_manage_candidates') # Admin nên vào thẳng trang quản lý
+            elif user.role:
                 return redirect('ListJob')
             else:
                 return redirect('home')
@@ -350,6 +357,7 @@ def functionPost(request):
         user_id = request.session.get('user_id')
         user_obj = get_object_or_404(users, id=user_id)
         end_date = request.POST.get('end_date')
+        category = classify_job_category(title, skills, description)
         Job.objects.create(
             title=title,
             company=company_name,
@@ -360,32 +368,13 @@ def functionPost(request):
             requirements=requirements,
             benefit=benefits,
             skills=skills,
-            user=user_obj,
             end_date=end_date,
+            category = classify_job_category(title, skills, description),
+            user=user_obj
         )
         messages.success(request, 'Đăng tin tuyển dụng thành công!')
         return redirect('ListJob')
     return render(request, 'admin/functionPost.html')
-
-
-def search(request):
-    if request.method == 'GET':
-        boxSearch = request.GET.get('boxsearch', '').strip()
-        jobs = Job.objects.all()
-        if boxSearch:
-            salary_q = Q()
-            try:
-                salary_value = int(boxSearch)
-                salary_q = Q(salary_min__lte=salary_value) & Q(salary_max__gte=salary_value)
-            except ValueError:
-                pass
-            jobs = jobs.filter(
-                Q(title__icontains=boxSearch) |
-                Q(company__icontains=boxSearch) |
-                Q(location__icontains=boxSearch) |
-                salary_q
-            )
-    return render(request, 'user/home.html', {'jobs': jobs, "bs": boxSearch})
 
 
 def upload_cv(request):
@@ -532,3 +521,206 @@ from .models import Cvs
 def cv_detail_form(request, cv_id):
     cv = get_object_or_404(Cvs, id=cv_id)
     return render(request, 'admin/detail.html', {'cv': cv})
+
+# them
+def job_list_user(request):
+    # Lấy dữ liệu lọc từ GET
+    query = request.GET.get('boxsearch', '').strip()
+    location = request.GET.get('location', '').strip()
+    salary_range = request.GET.get('salary_range', '')
+    sort = request.GET.get('sort', 'newest')
+
+    jobs = Job.objects.all()
+
+    # 1. Lọc theo từ khóa (Tiêu đề, Công ty)
+    if query:
+        jobs = jobs.filter(Q(title__icontains=query) | Q(company__icontains=query))
+
+    # 2. Lọc theo địa điểm
+    if location:
+        jobs = jobs.filter(location__icontains=location)
+
+    # 3. Lọc theo mức lương
+    if salary_range == '10-20':
+        jobs = jobs.filter(salary_min__gte=10, salary_max__lte=20)
+    elif salary_range == '20+':
+        jobs = jobs.filter(salary_min__gte=20)
+
+    # 4. Sắp xếp
+    order_by = 'create_at' if sort == 'oldest' else '-create_at'
+    jobs = jobs.order_by(order_by)
+
+    # Lấy danh sách địa điểm duy nhất để hiển thị lên thanh lọc
+    locations = Job.objects.values_list('location', flat=True).distinct()
+
+    return render(request, 'user/job_list.html', {
+        'jobs': jobs,
+        'locations': locations,
+        'current_loc': location,
+        'current_salary': salary_range,
+        'sort': sort,
+        'bs': query
+    })
+
+from django.db.models import Q # Đảm bảo đã import Q ở đầu file
+
+def home_view(request):
+    # Trang chủ chỉ hiện 6-10 tin mới nhất cho nhẹ
+    jobs = Job.objects.all().order_by('-create_at')[:10]
+    return render(request, 'home.html', {'jobs': jobs})
+
+# views.py
+def search(request):
+    # 1. Lấy tham số lọc từ URL
+    boxSearch = request.GET.get('boxsearch', '').strip()
+    location_filter = request.GET.get('location', '').strip()
+    salary_range = request.GET.get('salary_range', '')
+    category_filter = request.GET.get('category', '').strip()
+    sort = request.GET.get('sort', 'newest')
+
+    # Khởi tạo dữ liệu gốc
+    jobs = Job.objects.all()
+
+    # 2. Tìm kiếm theo từ khóa (Ô nhập liệu)
+    if boxSearch:
+        salary_q = Q()
+        try:
+            # Nếu nhập số thì tìm theo khoảng lương
+            salary_value = int(boxSearch)
+            salary_q = Q(salary_min__lte=salary_value) & Q(salary_max__gte=salary_value)
+        except ValueError:
+            pass
+        
+        jobs = jobs.filter(
+            Q(title__icontains=boxSearch) |
+            Q(company__icontains=boxSearch) |
+            Q(location__icontains=boxSearch) |
+            salary_q
+        )
+
+    # 3. Lọc theo địa điểm (Quan trọng: So khớp Tên Tỉnh vào Địa chỉ chi tiết)
+    if location_filter:
+        # Dùng icontains để "TP.HCM" khớp với "123 Quận 1, TP.HCM"
+        jobs = jobs.filter(location__icontains=location_filter)
+
+    # 4. Lọc theo ngành nghề (Dữ liệu từ AI)
+    if category_filter:
+        jobs = jobs.filter(category=category_filter)
+
+    # 5. Lọc theo mức lương (Dropdown)
+    if salary_range == '10-20':
+        jobs = jobs.filter(salary_min__gte=10, salary_max__lte=20)
+    elif salary_range == '20+':
+        jobs = jobs.filter(salary_min__gte=20)
+
+    # 6. Sắp xếp kết quả
+    if sort == 'oldest':
+        jobs = jobs.order_by('create_at')
+    else:
+        jobs = jobs.order_by('-create_at')
+
+    # 7. Danh sách đầy đủ 63 tỉnh thành để hiển thị lên thanh lọc
+    provinces = [
+        "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Định", 
+        "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Cao Bằng", "Đà Nẵng", "Đắk Lắk", 
+        "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", 
+        "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", 
+        "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", 
+        "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", 
+        "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", 
+        "Tiền Giang", "TP.HCM", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
+    ]
+    
+    # Lấy danh sách ngành nghề thực tế đang có bài đăng
+    categories = Job.objects.exclude(category__isnull=True).exclude(category='').values_list('category', flat=True).distinct()
+
+    return render(request, 'user/job_list.html', {
+        'jobs': jobs,
+        'bs': boxSearch,
+        'provinces': provinces,
+        'categories': categories,
+        'current_loc': location_filter,
+        'current_salary': salary_range,
+        'current_cat': category_filter,
+        'sort': sort
+    })
+
+def company_list(request):
+    all_companies = Job.objects.exclude(company__isnull=True).exclude(company='') \
+        .values('company') \
+        .annotate(num_jobs=Count('id')) \
+        .order_by('company') # Sắp xếp A-Z
+
+    return render(request, 'user/company_list.html', {
+        'companies': all_companies
+    })
+
+# 2. Trang CÔNG TY NỔI BẬT (Xếp theo số lượng bài đăng nhiều nhất)
+
+def featured_companies(request):
+    # Lấy danh sách công ty
+    # annotate: đếm số lượng bài đăng
+    # order_by('-num_jobs'): dấu trừ (-) nghĩa là sắp xếp GIẢM DẦN (nhiều nhất lên đầu)
+    top_companies = Job.objects.exclude(company__isnull=True).exclude(company='') \
+        .values('company') \
+        .annotate(num_jobs=Count('id')) \
+        .order_by('-num_jobs') 
+
+    return render(request, 'user/company_list.html', {
+        'companies': top_companies,
+        'is_featured_page': True  # Đánh dấu đây là trang nổi bật để đổi tiêu đề nếu muốn
+    })
+# View Tạo Hồ Sơ
+def create_cv(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
+    
+    if request.method == 'POST':
+        custom_user = users.objects.get(id=user_id)
+        # Lấy dữ liệu từ form (giống hệt form apply_job của bạn)
+        Cvs.objects.create(
+            user=custom_user,
+            full_name=request.POST.get('full_name'),
+            email=request.POST.get('email'),
+            phone=request.POST.get('phone'),
+            address=request.POST.get('address'),
+            description=request.POST.get('description'),
+            skills=request.POST.get('experience'), # Map kinh nghiệm vào skills
+            uploaded_at=timezone.now()
+        )
+        messages.success(request, "Tạo hồ sơ thành công!")
+        return redirect('cv_list') # Chuyển hướng sang danh sách hồ sơ
+
+    return render(request, 'user/create_cv.html')
+
+# View Danh Sách Hồ Sơ
+def cv_list(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
+    
+    # Lấy tất cả CV của user hiện tại
+    user_cvs = Cvs.objects.filter(user_id=user_id).order_by('-uploaded_at')
+    return render(request, 'user/cv_list.html', {'cvs': user_cvs})
+# rop
+# Quản lý Ứng viên
+def admin_manage_candidates(request):
+    # Kiểm tra xem có đúng là Admin tổng đăng nhập không
+    if request.session.get('user_email') != "admin@gmail.com":
+        return HttpResponse("Bạn không có quyền truy cập!")
+        
+    candidates = users.objects.filter(role=False).order_by('-id')
+    return render(request, 'admin/manage_candidates.html', {'candidates': candidates})
+
+# Quản lý Công ty
+def admin_manage_employers(request):
+    if request.session.get('user_email') != "admin@gmail.com":
+        return HttpResponse("Bạn không có quyền truy cập!")
+        
+    # Lấy các công ty (role=True) nhưng bỏ qua chính tài khoản admin
+    employers = users.objects.filter(role=True).exclude(email="admin@gmail.com").annotate(
+        job_count=Count('job')
+    ).order_by('-id')
+    
+    return render(request, 'admin/manage_employers.html', {'employers': employers})
