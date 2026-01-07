@@ -18,15 +18,61 @@
       <nav class="navbar">
         <ul class="nav-links">
           <li><a href="{% url 'home' %}">Trang Chủ</a></li>
+          
+          <li class="dropdown">
+            <a href="{% url 'search' %}" class="dropbtn">Việc làm </a>
+            <div class="dropdown-content-full">
+              <div class="dropdown-grid">
+                <div class="column">
+                  <h4>Việc làm</h4>
+                  <a href="{% url 'search' %}?salary_range=20+">Tìm việc</a>
+                  <a href="{% url 'appliedJobsList' %}">Việc làm đã ứng tuyển</a>
+
+                  <a href="{% url 'matching_jobs' %}">Việc làm phù hợp</a>
+                  <a href="{% url 'company_list' %}">Danh sách công ty</a>
+                </div>
+                <div class="column">
+                  <h4>Việc làm theo ngành nghề (AI Phân loại)</h4>
+                  <ul class="category-list">
+                    {% for cat in all_categories %}
+                        <li><a href="{% url 'search' %}?category={{ cat }}">{{ cat }}</a></li>
+                    {% empty %}
+                        <li>Chưa có ngành nghề nào</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                <div class="column">
+                  <h4>Việc làm theo địa điểm</h4>
+                  <a href="{% url 'search' %}?location=Hồ Chí Minh">Việc làm tại TP.HCM</a>
+                  <a href="{% url 'search' %}?location=Hà Nội">Việc làm tại Hà Nội</a>
+                  <a href="{% url 'search' %}?location=Bình Dương">Việc làm tại Bình Dương</a>
+                  <a href="{% url 'search' %}">Tất cả địa điểm</a>
+
+                </div>
+               
+              </div>
+            </div>
+          </li>
+          <li class="nav-box-item">
+            <a href="{% url 'company_list' %}" class="nav-box-link">Công Ty</a>
+            <div class="nav-box-sub">
+                <a href="{% url 'company_list' %}">Danh sách công ty</a>
+                <a href="{% url 'featured_companies' %}">Công ty nổi bật</a>
+            </div>
+        </li>
+        
+        <li class="nav-box-item">
+            <a href="#" class="nav-box-link">Hồ sơ/ CV</a>
+            <div class="nav-box-sub">
+                <a href="{% url 'create_cv' %}">Tạo hồ sơ</a>
+                <a href="{% url 'cv_list' %}">Hồ sơ đã tạo</a>
+            </div>
+        </li>
+
           <li><a href="{% url 'appliedJobsList' %}">Lịch sử ứng tuyển</a></li>
         </ul>
-
-        <form action="{% url 'search' %}"  method="get" class="search-box">
-          {% csrf_token %}
-            <input type="text" placeholder="Tìm kiếm công việc..." name="boxsearch" value="{{bs}}" />
-          <button type="submit">Tìm</button>
-        </form>
-
+       
+        </nav>
         <div class="account-wrapper">
           <a href="#" class="btn-account">Tài Khoản</a>
           <div class="account-submenu">
@@ -41,8 +87,12 @@
             >
             <a href="{% url 'logout' %}" class="btn-submenu-item">Đăng xuất</a>
           </div>
-        </div>
-      </nav>
+        </div>  
     </header>
 </body>
 </html>
+
+
+
+
+

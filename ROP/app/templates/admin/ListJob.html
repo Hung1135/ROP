@@ -22,6 +22,7 @@
 </head>
 
 <body>
+    
 {% if messages %} {% for message in messages %}
 <div
         class="alert alert-success alert-dismissible fade show custom-alert"
@@ -37,7 +38,7 @@
 </div>
 {% endfor %} {% endif %}
 
-{% include "admin\header.html" %}
+{% include "admin/header.html" %}
 
 <div class="page-header">
     <h1>Danh sách công việc đã đăng tuyển</h1>
