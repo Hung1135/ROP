@@ -493,27 +493,42 @@ def send_interview_email(request, app_id):
             user_candidate = application.user
             job = application.job
 
+            itv_time = request.GET.get('time', 'Sẽ thông báo sau')
+            itv_location = request.GET.get('location', 'Tại văn phòng công ty')
+            itv_docs = request.GET.get('docs', 'Không yêu cầu')
+            itv_contact = request.GET.get('contact', 'Phòng nhân sự') 
+
             subject = f"[Mời phỏng vấn] Vị trí {job.title} - {job.company}"
+            
             message = f"""
             Chào {user_candidate.fullname},
 
             Chúng tôi đã nhận được hồ sơ của bạn cho vị trí {job.title}. 
-            Dựa trên đánh giá AI, chúng tôi muốn mời bạn tham gia buổi phỏng vấn trực tiếp.
+            Dựa trên đánh giá chuyên môn, chúng tôi trân trọng mời bạn tham gia buổi phỏng vấn.
 
+            CHI TIẾT BUỔI PHỎNG VẤN:
+            - Thời gian: {itv_time}
+            - Địa điểm: {itv_location}
+            - Tài liệu cần chuẩn bị: {itv_docs}
+            - Thông tin liên hệ nếu có thắc mắc: {itv_contact}
+
+            Vui lòng phản hồi email này để xác nhận sự tham gia của bạn.
+            
             Trân trọng,
             Phòng nhân sự {job.company}.
             """
+            
             email_from = settings.EMAIL_HOST_USER
             recipient_list = [user_candidate.email]
 
             send_mail(subject, message, email_from, recipient_list)
+            
             application.is_sent = True
             application.save()
 
             return JsonResponse({'status': 'success'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-
 
 
 from django.shortcuts import render, get_object_or_404

@@ -215,6 +215,40 @@
       </div>
     </div>
 
+    <div class="modal fade" id="interviewDetailsModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title">Thông tin buổi phỏng vấn</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="pending_app_id">
+            <div class="mb-3">
+              <label class="form-label">Ngày & Giờ phỏng vấn</label>
+              <input type="datetime-local" id="interview_time" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Địa điểm</label>
+              <input type="text" id="interview_location" class="form-control" placeholder="Link Zoom hoặc địa chỉ công ty">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Tài liệu cần chuẩn bị</label>
+              <textarea id="interview_docs" class="form-control" rows="3" placeholder="Ví dụ: CCCD, bằng cấp gốc..."></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Thông tin liên hệ</label>
+              <textarea id="interview_contact" class="form-control" rows="3" placeholder="Số điện thoại hoặc email..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="button" class="btn btn-primary" id="confirmSendMail">Xác nhận & Gửi Mail</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -306,49 +340,64 @@
       });
     </script>
     <script>
-      document.querySelectorAll(".btn-send-email").forEach((button) => {
-        button.addEventListener("click", function () {
-          const url = this.getAttribute("data-url");
-          const btn = this;
-          const originalText = btn.innerHTML;
+document.querySelectorAll(".btn-send-email").forEach((button) => {
+  button.addEventListener("click", function (e) {
+    e.preventDefault();
+    const appId = this.getAttribute("data-url").split('/').filter(Boolean).pop(); // Lấy ID từ URL
+    document.getElementById("pending_app_id").value = appId;
+    
+    const interviewModal = new bootstrap.Modal(document.getElementById('interviewDetailsModal'));
+    interviewModal.show();
+  });
+});
 
-          btn.disabled = true;
-          btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang gửi...';
+document.getElementById("confirmSendMail").addEventListener("click", function () {
+  const appId = document.getElementById("pending_app_id").value;
+  const time = document.getElementById("interview_time").value;
+  const location = document.getElementById("interview_location").value;
+  const docs = document.getElementById("interview_docs").value;
+  const contact = document.getElementById("interview_contact").value; 
 
-          fetch(url, {
-            method: "GET",
-            headers: {
-              "X-Requested-With": "XMLHttpRequest",
-            },
-          })
-            .then((response) => {
-              if (!response.ok) {
-                return response.json().then((err) => {
-                  throw err;
-                });
-              }
-              return response.json();
-            })
-            .then((data) => {
-              if (data.status === "success") {
-                btn.classList.remove("btn-outline-success", "btn-send-email");
-                btn.classList.add("btn-success");
-                btn.disabled = true;
-                btn.innerHTML = '<i class="bi bi-check-circle"></i> Đã gửi xong';
-              } else {
-                alert("Lỗi: " + data.message);
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-              }
-            })
-            .catch((error) => {
-              console.error("Fetch Error:", error);
-              alert("Lỗi kết nối server hoặc cấu hình mail sai!");
-              btn.disabled = false;
-              btn.innerHTML = originalText;
-            });
-        });
-      });
+  if (!time || !location) {
+    alert("Vui lòng nhập thời gian và địa điểm!");
+    return;
+  }
+
+  const btn = document.querySelector(`[data-url*="/${appId}/"]`);
+  const originalText = btn.innerHTML;
+  
+  bootstrap.Modal.getInstance(document.getElementById('interviewDetailsModal')).hide();
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang gửi...';
+
+  const url = `{% url 'send_interview_email' 0 %}`.replace('0', appId) + 
+  `?time=${encodeURIComponent(time)}` +
+  `&location=${encodeURIComponent(location)}` +
+  `&docs=${encodeURIComponent(docs)}` +
+  `&contact=${encodeURIComponent(contact)}`;
+  
+  fetch(url, {
+    method: "GET",
+    headers: { "X-Requested-With": "XMLHttpRequest" },
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        btn.classList.replace("btn-outline-success", "btn-success");
+        btn.innerHTML = '<i class="bi bi-check-circle"></i> Đã gửi xong';
+      } else {
+        alert("Lỗi: " + data.message);
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    });
+});
     </script>
 
 
@@ -357,11 +406,11 @@ document.querySelectorAll('.view-cv-btn').forEach(btn => {
   btn.addEventListener('click', function() {
     const cvId = this.dataset.cv;
     const jobId = this.dataset.job;
-    // Điều hướng sang trang chi tiết
     window.location.href = `/cv_form/${cvId}/?job_id=${jobId}`;
   });
 });
 </script>
+
 
   </body>
 </html>
