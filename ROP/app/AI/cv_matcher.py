@@ -207,9 +207,6 @@ def match_cv_with_job_advanced(cv_text, job):
     else:
         level = "Thấp"
 
-    logger.info(
-        "FINAL -> Skill: %.2f | Req: %.2f | Desc: %.2f | AI: %.2f | Level: %s",
-        skill_score, req_score, desc_score, ai_score, level
-    )
+    return percent, level
 
     return skill_score, req_score, ai_score, level

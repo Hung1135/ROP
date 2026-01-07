@@ -1,42 +1,42 @@
-    body {
+    /* body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
       background-color: #f4f7f6;
       color: #333;
-    }
+    } */
 
-    .navbar {
+    /* .navbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       background-color: #ffffff;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
       padding: 10px 50px;
-    }
+    } */
 
-    .logo {
+    /* .logo {
       display: flex;
       align-items: center;
       font-size: 24px;
       font-weight: bold;
       color: #007bff;
-    }
+    } */
 
-    .logo img {
+    /* .logo img {
       width: 50px;
       height: 50px;
       margin-right: 5px;
-    }
+    } */
 
-    .menu {
+    /* .menu {
       display: flex;
       gap: 30px;
       margin-left: auto;
       margin-right: auto;
-    }
+    } */
 
-    .menu a {
+    /* .menu a {
       text-decoration: none;
       color: #333;
       font-size: 16px;
@@ -47,9 +47,9 @@
 
     .menu a:hover {
       color: #007bff;
-    }
+    } */
 
-    .login-btn {
+    /* .login-btn {
       text-decoration: none;
       background-color: #e63946;
       color: white;
@@ -61,7 +61,7 @@
 
     .login-btn:hover {
       background-color: #d62f3c;
-    }
+    } */
 
     .page-container {
       max-width: 1200px;
