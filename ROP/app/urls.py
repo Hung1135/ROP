@@ -41,10 +41,8 @@ urlpatterns = [
     path('cv/list/', views.cv_list, name='cv_list'),
     path('companies/', views.company_list, name='company_list'),
     path('companies/featured/', views.featured_companies, name='featured_companies'), 
-    
-    # rop
-    path('admin-rop/candidates/', views.admin_manage_candidates, name='admin_manage_candidates'),
-    path('admin-rop/employers/', views.admin_manage_employers, name='admin_manage_employers'),
+    path('matching-jobs/', views.matching_jobs_for_cv, name='matching_jobs'),
+
        ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
