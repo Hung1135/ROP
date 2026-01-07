@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}"/>
 </head>
 <body>
-{% include "user\header.html" %}
+{% include "user/header.html" %}
 
 <main class="main-detail-content">
     <div class="job-detail-container">
@@ -72,10 +72,29 @@
 
             <aside class="application-form" id="application-form">
                 <h3>Form Ứng Tuyển Nhanh</h3>
+            
+                <p style="font-size: 12px; color: gray;">Hồ sơ tìm thấy: {{ user_cvs.count }}</p>
 
-                {% now "Y-m-d" as today %}
-                {% if is_active %}
-                <form action="{% url 'apply_job' job.id %}" method="POST">
+                {% if user_cvs %}
+                <div class="form-group" style="background: #f0f7ff; padding: 15px; border-radius: 8px; border: 1px dashed #0056b3; display: block !important;">
+                    <label style="color: #0056b3; font-weight: bold;"><i class="fas fa-magic"></i> AI Điền nhanh & Chấm điểm:</label>
+                    <select id="cv-selector" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #0056b3;">
+                        <option value="">-- Chọn hồ sơ của bạn --</option>
+                        {% for cv in user_cvs %}
+                            <option value="{{ cv.id }}">{{ cv.full_name }} ({{ cv.uploaded_at|date:"d/m/Y" }})</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <div id="ai-score-box" style="display: none; margin-top: 10px;">
+                         <span id="ai-percent" style="font-weight: bold;">0%</span> - <span id="ai-level"></span>
+                         <div style="width: 100%; background: #eee; height: 10px; border-radius: 5px;">
+                             <div id="ai-progress-bar" style="width: 0%; height: 100%; background: green; border-radius: 5px;"></div>
+                         </div>
+                    </div>
+                </div>
+                {% endif %}
+            
+                <form action="{% url 'apply_job' job.id %}" method="POST" id="apply-form">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="full_name">Họ và Tên (*)</label>
@@ -109,12 +128,9 @@
                         <textarea id="experience" name="experience" rows="4"
                                   placeholder="Mô tả kinh nghiệm và kỹ năng của bạn..."></textarea>
                     </div>
-
                     <button type="submit" class="btn-submit-cv">Gửi Hồ Sơ Ứng Tuyển</button>
+
                 </form>
-                {% else %}
-                <p class="expired-note" style="color:red; font-weight:bold;">Bài đăng ứng tuyển không trong thời hạn.</p>
-                {% endif %}
             </aside>
 
         </div>
@@ -128,6 +144,63 @@
         src="https://kit.fontawesome.com/a076d05399.js"
         crossorigin="anonymous"
 ></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cvSelector = document.getElementById('cv-selector');
+        const urlParams = new URLSearchParams(window.location.search);
+        const cvIdFromUrl = urlParams.get('cv_id');
+        const jobId = "{{ job.id }}";
 
+        // Hàm fetch dữ liệu tách riêng để dùng chung
+        function loadCvToForm(cvId) {
+            if (!cvId) return;
+            fetch(`/cv/json/${cvId}/?job_id=${jobId}`) // Sửa lại đúng path /cv/json/ như trong urls.py của bạn
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('full_name').value = data.full_name || '';
+                    document.getElementById('email').value = data.email || '';
+                    document.getElementById('phone').value = data.phone || '';
+                    document.getElementById('address').value = data.address || '';
+                    document.getElementById('description').value = data.description || '';
+                    document.getElementById('experience').value = data.skills || '';
+
+                    if (data.score_data) {
+                        const scoreBox = document.getElementById('ai-score-box');
+                        scoreBox.style.display = 'block';
+                        document.getElementById('ai-percent').innerText = data.score_data.total_score + "%";
+                        document.getElementById('ai-level').innerText = data.score_data.level;
+                        document.getElementById('ai-progress-bar').style.width = data.score_data.total_score + "%";
+                        
+                        let color = data.score_data.total_score >= 75 ? "#28a745" : (data.score_data.total_score >= 50 ? "#ffc107" : "#dc3545");
+                        {% comment %} document.getElementById('ai-level').style.backgroundColor = color;
+                        document.getElementById('ai-progress-bar').style.backgroundColor = color; {% endcomment %}
+                        const aiLevel = document.getElementById('ai-level');
+aiLevel.style.backgroundColor = "transparent"; 
+aiLevel.style.color = color;                  
+aiLevel.style.fontWeight = "bold";           
+aiLevel.style.padding = "0px";               
+document.getElementById('ai-progress-bar').style.backgroundColor = color;
+
+                    }
+                });
+        }
+
+        if (cvIdFromUrl && cvSelector) {
+            cvSelector.value = cvIdFromUrl;
+            loadCvToForm(cvIdFromUrl);
+            document.getElementById('application-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Nếu người dùng tự tay chọn trên Select
+        cvSelector?.addEventListener('change', function() {
+            if (!this.value) {
+                document.getElementById('apply-form').reset();
+                document.getElementById('ai-score-box').style.display = 'none';
+            } else {
+                loadCvToForm(this.value);
+            }
+        });
+    });
+</script>
 </body>
 </html>
