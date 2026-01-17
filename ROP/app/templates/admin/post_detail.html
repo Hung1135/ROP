@@ -104,61 +104,6 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
 
-<<<<<<< HEAD
-                    <!-- Bảng CV -->
-                    {% comment %} <div class="table-responsive">
-                        <table class="table table-hover align-middle" id="cv-table">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Điểm AI</th>
-                                    <th>Ứng viên</th>
-                                    <th>Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for analysis in cv_analyses %}
-                                <tr data-score="{{ analysis.score|default:0 }}"
-                                      data-date="{{ analysis.application.applied_at|date:'c' }}">
-                                    <td>
-                                        <strong class="fs-5">{{ analysis.score|floatformat:1|default:"0" }}</strong><br>
-                                        <span class="badge
-                                            {% if analysis.score > 80 %}bg-success
-                                            {% elif analysis.score > 60 %}bg-warning text-dark
-                                            {% else %}bg-danger{% endif %}">
-                                            {{ analysis.match_level|default:"Thấp" }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <strong>{{ analysis.parsed.name|default:analysis.cv.user.fullname|default:"Chưa xác định" }}</strong><br>
-                                        <small class="text-muted">{{ analysis.parsed.email|default:"—" }}</small>
-                                    </td>
-
-
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="{% url 'cv_detail' analysis.cv.id %}" class="btn btn-sm btn-outline-primary" target="_blank">
-                                                Chi tiết
-                                            </a>
-                                            {% if analysis.cv.file_name|lower|slice:"-4:" == ".pdf" %}
-
-                                            {% endif %}
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="6" class="text-center py-5 text-muted">
-                                        <i class="fas fa-inbox fa-3x mb-3"></i>
-                                        <h5>Chưa có CV nào ứng tuyển</h5>
-                                        <p>Hãy chờ ứng viên nộp hồ sơ hoặc chia sẻ tin tuyển dụng!</p>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-=======
             <div class="modal-body">
                 <!-- Bộ lọc -->
                 <div class="filter-controls mb-4 p-3 bg-light rounded">
@@ -242,7 +187,6 @@
                     </table>
                 </div>
             </div>
->>>>>>> ed43d9ff39add11f2b9531724ec144fd60f73e10
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>

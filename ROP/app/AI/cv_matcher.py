@@ -102,114 +102,6 @@ def text_to_vector(text: str):
 def cosine_score(vec1, vec2) -> float:
     return float(cosine_similarity([vec1], [vec2])[0][0])
 
-<<<<<<< HEAD
-
-# ================== SPLIT CV & JD ==================
-def split_cv_lines(cv_text: str) -> list:
-    raw_parts = re.split(r"\n|•|-|–|—|;\s|\. ", cv_text)
-    parts = []
-
-    for p in raw_parts:
-        p = clean_text(p)
-        if not p:
-            continue
-
-        # bỏ nhiễu
-        if re.search(r"\b\d{9,}\b", p):  # phone / id
-            continue
-        if re.search(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", p):
-            continue
-        if len(p.split()) < 3:
-            continue
-
-        parts.append(p)
-
-    return parts
-
-
-def split_jd_items(text: str) -> list:
-    if not text:
-        return []
-
-    items = [
-        clean_text(x)
-        for x in re.split(r"\n|•|-|–|—|;\s|\. ", text)
-        if clean_text(x)
-    ]
-
-    return [i for i in items if len(i.split()) >= 2]
-
-
-# ================== MATCHING ==================
-def match_list_score(cv_text, jd_text, section_name="Section", threshold=0.5) -> float:
-    cv_lines = split_cv_lines(cv_text)
-    jd_items = split_jd_items(jd_text)
-
-    if not cv_lines or not jd_items:
-        logger.info("[%s] Không có dữ liệu để so khớp", section_name)
-        return 0.0
-
-    # 🔥 TỐI ƯU: encode CV 1 lần
-    cv_vectors = {line: text_to_vector(line) for line in cv_lines}
-
-    kept_scores = []
-
-    for item in jd_items:
-        item_vec = text_to_vector(item)
-        best_score = -1
-        best_line = None
-
-        for line in cv_lines:
-            raw_cos = cosine_score(cv_vectors[line], item_vec)
-            overlap = jaccard(tokenize(line), tokenize(item))
-            combined = 0.7 * raw_cos + 0.3 * overlap
-
-            if combined > best_score:
-                best_score = combined
-                best_line = line
-
-        logger.debug(
-            "[%s] JD: %s\n    CV: %s\n    Score: %.2f",
-            section_name, item, best_line, best_score
-        )
-
-        if best_score >= threshold:
-            kept_scores.append(best_score)
-
-    return round((sum(kept_scores) / len(kept_scores)) * 100, 2) if kept_scores else 0.0
-
-
-def match_cv_with_job_advanced(cv_text, job):
-    if not cv_text:
-        return 0, 0, 0, "Thấp"
-
-    logger.info("===== CV CONTENT =====\n%s", cv_text)
-    logger.info(
-        "===== JOB =====\nTitle: %s\nDesc: %s\nReq: %s\nSkill: %s\nBenefit: %s",
-        job.title,
-        job.description or "",
-        job.requirements or "",
-        job.skills or "",
-        job.benefit or ""
-    )
-
-    req_score = match_list_score(cv_text, job.requirements or "", "Requirement", 0.5)
-    skill_score = match_list_score(cv_text, job.skills or "", "Skill", 0.5)
-    desc_score = match_list_score(cv_text, job.description or "", "Description", 0.45)
-
-    ai_score = round(0.6 * skill_score + 0.3 * req_score + 0.1 * desc_score, 2)
-
-    if ai_score >= 80:
-        level = "Rất phù hợp"
-    elif ai_score >= 60:
-        level = "Phù hợp"
-    elif ai_score >= 40:
-        level = "Trung bình"
-    else:
-        level = "Thấp"
-
-    return percent, level
-=======
 # def match_cv_with_job(cv_text, job_text):
 #     if not cv_text or not job_text:
 #         return 0, "Thấp"
@@ -284,6 +176,5 @@ def match_cv_fields(cv_data, job):
         "location_score": round(score_location * 100, 2)
     }
 
->>>>>>> ed43d9ff39add11f2b9531724ec144fd60f73e10
 
     return skill_score, req_score, ai_score, level

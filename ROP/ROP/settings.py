@@ -137,29 +137,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-<<<<<<< HEAD
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "D:/Data/PythonDev/DoAnPython/ROP/logs/debug.log",
-        },
-        "console": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-        },
-    },
-    "loggers": {
-        "app.AI.cv_matcher": {   # tên module tương ứng với __name__
-            "handlers": ["file", "console"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
-    },
-=======
 
 # Cấu hình gửi mail (Ví dụ dùng Gmail)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -194,5 +171,4 @@ JAZZMIN_SETTINGS = {
     ],
 
     "hide_apps": ["auth"],
->>>>>>> ed43d9ff39add11f2b9531724ec144fd60f73e10
 }
