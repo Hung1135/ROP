@@ -1,252 +1,158 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8"/>
-    <title>Title</title>
+    <title>Chi tiết công việc</title>
     <link rel="stylesheet" href="{% static 'app/css_user/detailPost.css' %}"/>
     <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}"/>
 </head>
 <body>
+
 {% include "user/header.html" %}
 
 <main class="main-detail-content">
     <div class="job-detail-container">
-        <!-- === JOB SUMMARY === -->
+
+        <!-- JOB SUMMARY -->
         <section class="job-summary">
-            <h1>{{job.title}}</h1>
+            <h1>{{ job.title }}</h1>
 
             <p class="detail-company">
-                <i class="fas fa-building"></i> {{job.company}}
+                <i class="fas fa-building"></i> {{ job.company }}
             </p>
 
             <p class="detail-location">
-                <i class="fas fa-map-marker-alt"></i> {{job.location}}
+                <i class="fas fa-map-marker-alt"></i> {{ job.location }}
             </p>
 
             <div class="summary-info">
-            <span class="info-tag salary">
-              <i class="fas fa-money-bill-wave"></i> {{job.salary_min}} -
-              {{job.salary_max}} Triệu VND
-            </span>
+                <span class="info-tag salary">
+                    <i class="fas fa-money-bill-wave"></i>
+                    {{ job.salary_min }} - {{ job.salary_max }} Triệu VND
+                </span>
 
                 <span class="info-tag type">
-              <i class="fas fa-clock"></i> {{job.create_at}} - {{job.end_date}}
-            </span>
+                    <i class="fas fa-clock"></i>
+                    {{ job.create_at }} - {{ job.end_date }}
+                </span>
             </div>
         </section>
 
-        <!-- === JOB DETAILS + FORM === -->
         <div class="detail-body-grid">
-            <!-- LEFT SIDE: JOB DESCRIPTION -->
+
+            <!-- LEFT -->
             <section class="job-description">
                 <h2>Mô Tả Công Việc</h2>
                 <ul>
-                    {% for item in jobDescript %}
-                    <li>{{item}}</li>
-                    {% endfor%}
+                    {% for i in jobDescript %}<li>{{ i }}</li>{% endfor %}
                 </ul>
 
-                <h2>Yêu Cầu Công Việc</h2>
+                <h2>Yêu Cầu</h2>
                 <ul>
-                    {% for item in jobRequire %}
-                    <li>{{item}}</li>
-                    {% endfor%}
+                    {% for i in jobRequire %}<li>{{ i }}</li>{% endfor %}
                 </ul>
+
                 <h2>Kỹ năng</h2>
                 <ul>
-                    {% for item in jobSkill %}
-                    <li>{{item}}</li>
-                    {% endfor%}
+                    {% for i in jobSkill %}<li>{{ i }}</li>{% endfor %}
                 </ul>
 
-                <h2>Phúc Lợi</h2>
+                <h2>Phúc lợi</h2>
                 <ul>
-                    {% for item in jobBenefit %}
-                    <li>{{item}}</li>
-                    {% endfor%}
+                    {% for i in jobBenefit %}<li>{{ i }}</li>{% endfor %}
                 </ul>
             </section>
 
-            {% load tz %} {# nếu bạn dùng timezone-aware datetime #}
+            <!-- RIGHT -->
+            <aside class="application-form" id="application-form">
+                <h3>Ứng tuyển công việc</h3>
 
-          <aside class="application-form" id="application-form">
-    <h3>Ứng Tuyển Công Việc</h3>
+                {% with user_cv=user_cvs.first %}
+                {% if user_cv %}
 
-<<<<<<< HEAD
-                {% if user_cvs %}
-                <div class="form-group" style="background: #f0f7ff; padding: 15px; border-radius: 8px; border: 1px dashed #0056b3; display: block !important;">
-                    <label style="color: #0056b3; font-weight: bold;"><i class="fas fa-magic"></i> AI Điền nhanh & Chấm điểm:</label>
-                    <select id="cv-selector" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #0056b3;">
-                        <option value="">-- Chọn hồ sơ của bạn --</option>
-                        {% for cv in user_cvs %}
-                            <option value="{{ cv.id }}">{{ cv.full_name }} ({{ cv.uploaded_at|date:"d/m/Y" }})</option>
-                        {% endfor %}
-                    </select>
-                    
-                    <div id="ai-score-box" style="display: none; margin-top: 10px; align-items: center; gap: 8px; background: #f9f9f9; padding: 8px 12px; border-radius: 20px; width: fit-content; border: 1px solid #eee;">
-                        <span id="ai-dot" style="height: 12px; width: 12px; border-radius: 50%; display: inline-block; box-shadow: 0 0 5px rgba(0,0,0,0.1);"></span>
-                        
-                        <span id="ai-level" style="font-size: 14px; font-weight: bold;"></span>
-                   </div>
-=======
-    {% with user_cv=user_cvs.first %}
-        {% if user_cv %}
-            <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; border: 1px solid #0056b3; margin-bottom: 20px;">
-                <p style="font-weight: bold; color: #0056b3; margin-bottom: 10px;">
-                    <i class="fas fa-user-check"></i> Hệ thống đã nhận diện hồ sơ của bạn:
-                </p>
-                <div style="background: white; padding: 10px; border-radius: 5px; border: 1px solid #ddd;">
-                    <strong>{{ user_cv.full_name }}</strong><br><small>Cập nhật lần cuối: {{ user_cv.uploaded_at|date:"d/m/Y" }}</small>
-                </div>
+                <div style="background:#f0f7ff;padding:15px;border-radius:8px;margin-bottom:15px;">
+                    <strong>{{ user_cv.full_name }}</strong><br>
+                    <small>Cập nhật: {{ user_cv.uploaded_at|date:"d/m/Y" }}</small>
 
-                <div id="ai-score-box" style="margin-top: 15px;">
-                    <p style="font-size: 14px; margin-bottom: 5px;">Độ tương thích với công việc:</p>
-                    <span id="ai-percent" style="font-weight: bold; font-size: 18px;">Tính toán...</span> - <span id="ai-level"></span>
-                    <div style="width: 100%; background: #eee; height: 10px; border-radius: 5px; margin-top: 5px;">
-                        <div id="ai-progress-bar" style="width: 0%; height: 100%; background: #28a745; border-radius: 5px; transition: width 1s;"></div>
+                    <div id="ai-score-box" style="margin-top:15px;display:none;">
+                        <p>Độ phù hợp:</p>
+                        <span id="ai-percent">...</span> -
+                        <span id="ai-level"></span>
+
+                        <div style="background:#eee;height:10px;border-radius:5px;">
+                            <div id="ai-progress-bar"
+                                 style="height:100%;width:0%;border-radius:5px;"></div>
+                        </div>
                     </div>
->>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
                 </div>
-            </div>
 
-            <form action="{% url 'apply_job' job.id %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="full_name" value="{{ user_cv.full_name }}">
-                <input type="hidden" name="email" value="{{ user_cv.email }}">
-                <input type="hidden" name="phone" value="{{ user_cv.phone }}">
-                <input type="hidden" name="address" value="{{ user_cv.address }}">
-                <input type="hidden" name="description" value="{{ user_cv.description }}">
-                <input type="hidden" name="experience" value="{{ user_cv.skills }}">
+                <form method="POST" action="{% url 'apply_job' job.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="full_name" value="{{ user_cv.full_name }}">
+                    <input type="hidden" name="email" value="{{ user_cv.email }}">
+                    <input type="hidden" name="phone" value="{{ user_cv.phone }}">
+                    <input type="hidden" name="address" value="{{ user_cv.address }}">
+                    <input type="hidden" name="description" value="{{ user_cv.description }}">
+                    <input type="hidden" name="experience" value="{{ user_cv.skills }}">
 
-                <button type="submit" class="btn-submit-cv" style="background-color: #28a745;">
-                    <i class="fas fa-paper-plane"></i> Xác nhận Ứng Tuyển ngay
-                </button>
-                <p style="text-align: center; font-size: 12px; color: gray; margin-top: 10px;">
-                    Dữ liệu sẽ được lấy từ hồ sơ cá nhân của bạn.
-                </p>
-            </form>
+                    <button class="btn-submit-cv" style="background:#28a745;">
+                        Xác nhận ứng tuyển
+                    </button>
+                </form>
 
-            <input type="hidden" id="existing-cv-id" value="{{ user_cv.id }}">
+                <input type="hidden" id="existing-cv-id" value="{{ user_cv.id }}">
 
-        {% else %}
-            <p style="color: #666; font-size: 13px; margin-bottom: 15px;">Bạn chưa có hồ sơ. Vui lòng điền thông tin bên dưới để ứng tuyển:</p>
-            <form action="{% url 'apply_job' job.id %}" method="POST" id="apply-form">
-                {% csrf_token %}
-                <div class="form-group">
-                    <label>Họ và Tên (*)</label>
-                    <input type="text" name="full_name" required placeholder="Nguyễn Văn A"/>
-                </div>
-                <div class="form-group">
-                    <label>Email (*)</label>
-                    <input type="email" name="email" required placeholder="example@gmail.com"/>
-                </div>
-                <div class="form-group">
-                    <label>Số điện thoại (*)</label>
-                    <input type="tel" name="phone" required placeholder="0123456789"/>
-                </div>
-                <div class="form-group">
-                    <label>Địa chỉ</label><input type="text" name="address" required placeholder="Thành phố/ tỉnh nơi ở"/>
-                </div>
-                <div class="form-group">
-                    <label>Mô tả bản thân</label>
-                    <textarea name="description" rows="4" placeholder="Mô tả kinh nghiệm, bằng cấp..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Kỹ năng</label>
-                    <textarea name="experience" rows="4" placeholder="Kỹ năng chuyên môn của bạn..."></textarea>
-                </div>
-                <button type="submit" class="btn-submit-cv">Tạo hồ sơ & Ứng tuyển</button>
-            </form>
-        {% endif %}
-    {% endwith %}
-</aside>
+                {% else %}
+                <p>Bạn chưa có hồ sơ.</p>
+                {% endif %}
+                {% endwith %}
+
+            </aside>
         </div>
     </div>
 </main>
 
 <footer>
-    <p>&copy; 2025 JobFinder. All rights reserved.</p>
+    <p>&copy; 2025 JobFinder</p>
 </footer>
-<script
-        src="https://kit.fontawesome.com/a076d05399.js"
-        crossorigin="anonymous"
-></script><script>
-document.addEventListener('DOMContentLoaded', function() {
+
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const cvId = document.getElementById('existing-cv-id')?.value;
     const jobId = "{{ job.id }}";
-    const existingCvId = document.getElementById('existing-cv-id')?.value;
 
-    if (existingCvId) {
-        // Tự động gọi AI tính điểm ngay khi vừa vào trang
-        fetch(`/cv/json/${existingCvId}/?job_id=${jobId}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.score_data) {
-                    const scoreBox = document.getElementById('ai-score-box');
-                    const percentElement = document.getElementById('ai-percent');
-                    const levelElement = document.getElementById('ai-level');
-                    const progressBar = document.getElementById('ai-progress-bar');
+    if (!cvId) return;
 
-<<<<<<< HEAD
-                    if (data.score_data) {
-                const scoreBox = document.getElementById('ai-score-box');
-                const aiDot = document.getElementById('ai-dot');
-                const aiLevel = document.getElementById('ai-level');
-        
-                scoreBox.style.display = 'flex'; // Dùng flex để icon và chữ nằm hàng ngang
-                
-                // 1. Xác định màu sắc dựa trên điểm (nhưng không hiện số điểm ra ngoài)
-                let color = "";
-                if (data.score_data.total_score >= 75) {
-                    color = "#28a745"; // Xanh lá - Rất tốt
-                } else if (data.score_data.total_score >= 50) {
-                    color = "#ffc107"; // Vàng - Khá
-                } else {
-                    color = "#dc3545"; // Đỏ - Thấp
-                }
-                // 2. Gán màu và nội dung
-        aiDot.style.backgroundColor = color;
-        aiLevel.innerText = "Mức độ phù hợp: " + data.score_data.level;
-        aiLevel.style.color = color;
-    }
-                });
-        }
+    fetch(`/cv/json/${cvId}/?job_id=${jobId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.score_data) return;
 
-        if (cvIdFromUrl && cvSelector) {
-            cvSelector.value = cvIdFromUrl;
-            loadCvToForm(cvIdFromUrl);
-            document.getElementById('application-form').scrollIntoView({ behavior: 'smooth' });
-        }
+            const score = data.score_data.total_score;
+            const level = data.score_data.level;
 
-        // Nếu người dùng tự tay chọn trên Select
-        cvSelector?.addEventListener('change', function() {
-            if (!this.value) {
-                document.getElementById('apply-form').reset();
-                document.getElementById('ai-score-box').style.display = 'none';
-            } else {
-                loadCvToForm(this.value);
-            }
-        });
-    });
-=======
-                    percentElement.innerText = data.score_data.total_score + "%";
-                    levelElement.innerText = data.score_data.level;
-                    progressBar.style.width = data.score_data.total_score + "%";
+            const box = document.getElementById('ai-score-box');
+            const percent = document.getElementById('ai-percent');
+            const levelEl = document.getElementById('ai-level');
+            const bar = document.getElementById('ai-progress-bar');
 
-                    // Đổi màu dựa trên điểm
-                    let color = data.score_data.total_score >= 75 ? "#28a745" : (data.score_data.total_score >= 50 ? "#ffc107" : "#dc3545");
-                    levelElement.style.color = color;
-                    levelElement.style.fontWeight = "bold";
-                    progressBar.style.backgroundColor = color;
-                }
-            })
-            .catch(err => {
-                console.error("Lỗi khi tính điểm AI:", err);
-                document.getElementById('ai-percent').innerText = "N/A";
-            });
-    }
+            let color = score >= 75 ? "#28a745" :
+                        score >= 50 ? "#ffc107" : "#dc3545";
+
+            box.style.display = "block";
+            percent.innerText = score + "%";
+            levelEl.innerText = level;
+            levelEl.style.color = color;
+
+            bar.style.width = score + "%";
+            bar.style.backgroundColor = color;
+        })
+        .catch(err => console.error("AI error:", err));
 });
->>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
 </script>
+
 </body>
 </html>

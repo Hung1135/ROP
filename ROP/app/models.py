@@ -69,7 +69,10 @@ class Job(models.Model):
     skills = models.CharField(max_length=255, null=True, blank=True)
     benefit = models.CharField(max_length=255, null=True, blank=True)
     create_at = models.DateField(auto_now_add=True)
-    category = models.CharField(max_length=100, null=True, blank=True) 
+    category = models.CharField(max_length=100, null=True, blank=True)
+    skill_score = models.FloatField()
+    reg_score = models.FloatField()
+    location_score = models.FloatField()
 
     class Meta:
         db_table = 'jobs'

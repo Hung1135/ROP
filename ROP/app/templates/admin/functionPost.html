@@ -82,6 +82,24 @@
                 <textarea name="benefits" required
                           placeholder="Nhập phúc lợi: thưởng, bảo hiểm, ngày nghỉ..."></textarea>
             </div>
+            <h2>Tiêu chí tính điểm AI (%)</h2>
+
+<div class="group-row">
+    <div class="form-group half">
+        <label>Yêu cầu / Mô tả (%)</label>
+        <input type="number" name="reg_score" value="40" min="0" max="100" required>
+    </div>
+
+    <div class="form-group half">
+        <label>Kỹ năng (%)</label>
+        <input type="number" name="skill_score" value="40" min="0" max="100" required>
+    </div>
+</div>
+
+<div class="form-group">
+    <label>Địa điểm (%)</label>
+    <input type="number" name="location_score" value="20" min="0" max="100" required>
+</div>
 
             <button type="submit" class="submit-btn">Đăng Bài</button>
         </form>

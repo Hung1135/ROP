@@ -5,13 +5,9 @@ from django.shortcuts import redirect
 from django.http import HttpResponse, JsonResponse
 from django.template.defaultfilters import title
 from django.db.models import Q
-<<<<<<< HEAD
-from .AI.cv_matcher import extract_cv_text, match_cv_fields
-# from .AI.cv_matcher import  match_cv_with_job
-=======
-from django.core.exceptions import ValidationError
-from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
->>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
+from xhtml2pdf import pisa
+
+from .AI.cv_matcher import match_cv_fields
 from .models import Applications, Job, Cvs
 from django.utils import timezone
 from django.shortcuts import render, redirect
@@ -337,43 +333,49 @@ def functionPost(request):
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
-
     if request.method == 'POST':
+        reg_score = float(request.POST.get("reg_score"))
+        skill_score = float(request.POST.get("skill_score"))
+        location_score = float(request.POST.get("location_score"))
+
+        # 1️⃣ Tổng phải = 100
+        if reg_score + skill_score + location_score != 100:
+            messages.error(request, " Tổng 3 tiêu chí phải bằng 100%")
+            return redirect("functionPost")
+
+        title = request.POST.get('title')
+        company_name = request.POST.get('company_name')
+        location = request.POST.get('location')
+        salary_min = request.POST.get('salary_min')
+        salary_max = request.POST.get('salary_max')
+        description = request.POST.get('description')
+        requirements = request.POST.get('requirements')
+        skills = request.POST.get('skills')
+        benefits = request.POST.get('benefits')
         user_id = request.session.get('user_id')
         user_obj = get_object_or_404(users, id=user_id)
+        end_date = request.POST.get('end_date')
+        category = classify_job_category(title, skills, description)
+        Job.objects.create(
+            title=title,
+            company=company_name,
+            location=location,
+            salary_min=int(salary_min) if salary_min else None,
+            salary_max=int(salary_max) if salary_max else None,
+            description=description,
+            requirements=requirements,
+            benefit=benefits,
+            skills=skills,
+            end_date=end_date,
+            category=classify_job_category(title, skills, description),
+            user=user_obj,
+            skill_score=skill_score,
+            reg_score=reg_score,
+            location_score=location_score,
 
-        try:
-            job = Job(
-                title=request.POST.get('title'),
-                company=request.POST.get('company_name'),
-                location=request.POST.get('location'),
-                salary_min=int(request.POST.get('salary_min')) if request.POST.get('salary_min') else None,
-                salary_max=int(request.POST.get('salary_max')) if request.POST.get('salary_max') else None,
-                description=request.POST.get('description'),
-                requirements=request.POST.get('requirements'),
-                benefit=request.POST.get('benefits'),
-                skills=request.POST.get('skills'),
-                end_date=request.POST.get('end_date'),
-                category=classify_job_category(
-                    request.POST.get('title'),
-                    request.POST.get('skills'),
-                    request.POST.get('description')
-                ),
-                user=user_obj
-            )
-
-            # 🔥🔥🔥 DÒNG QUAN TRỌNG NHẤT
-            job.full_clean()   # CHẠY TOÀN BỘ LUẬT CHỐNG SPAM
-
-            job.save()
-
-            messages.success(request, 'Đăng tin tuyển dụng thành công!')
-            return redirect('ListJob')
-
-        except ValidationError as e:
-            messages.error(request, e.message if hasattr(e, 'message') else e.messages[0])
-            return render(request, 'admin/functionPost.html')
-
+        )
+        messages.success(request, 'Đăng tin tuyển dụng thành công!')
+        return redirect('ListJob')
     return render(request, 'admin/functionPost.html')
 
 
@@ -662,16 +664,8 @@ def matching_jobs_for_cv(request):
         'recommended_jobs': recommended_jobs,
         'selected_cv_id': int(selected_cv_id) if selected_cv_id else None
     })
-<<<<<<< HEAD
 
-from django.http import HttpResponse
-from django.template.loader import get_template
-from django.shortcuts import get_object_or_404
-from xhtml2pdf import pisa
-from .models import Applications
-from xhtml2pdf import pisa
 
-from xhtml2pdf import pisa
 
 def application_pdf_download(request, app_id):
     application = get_object_or_404(Applications, id=app_id)
@@ -690,9 +684,7 @@ def application_pdf_download(request, app_id):
 def test_font(request):
     return render(request, "test_font.html")
 
-from django.http import HttpResponse
-from django.template.loader import get_template
-from xhtml2pdf import pisa
+
 
 def test_pdf_font(request):
     template = get_template("test_pdf.html")
@@ -712,7 +704,7 @@ def test_pdf_font(request):
 
 
 from django.http import HttpResponse
-from django.template.loader import render_to_string
+from django.template.loader import render_to_string, get_template
 from weasyprint import HTML
 from django.shortcuts import get_object_or_404
 from .models import Applications  # nhớ import model
@@ -733,7 +725,7 @@ def application_pdf_download(request, app_id):
     response = HttpResponse(pdf_file, content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename=application_{app_id}.pdf'
     return response
-=======
+
 # KIEU
 def detailPost(request, id):
     if request.method == 'GET':
@@ -851,4 +843,3 @@ def cv_list(request):
         'cv': cv
     })
 
->>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e

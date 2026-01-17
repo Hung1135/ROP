@@ -70,9 +70,9 @@ def match_cv_fields(cv_data, job):
     Trọng số: requirements 50%, skills 40%, location 10%
     """
     weights = {
-        "requirements": 0.5,
-        "skills": 0.4,
-        "location": 0.1
+        "requirements": job.reg_score/100,
+        "skills":job.skill_score/100,
+        "location": job.location_score/100,
     }
 
     # 1. Description ↔ Requirements
