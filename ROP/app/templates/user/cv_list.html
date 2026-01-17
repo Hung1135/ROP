@@ -12,6 +12,24 @@
 
 {% include "user/header.html" %}
 
+<<<<<<< HEAD
+<main class="container" style="padding: 50px 20px; min-height: 80vh;">
+    <section class="job-summary" style="text-align: center;">
+        <h1 style="color: #0056b3;">Hồ Sơ/ CV đã tạo</h1>
+    </section>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">
+        {% for cv in cvs %}
+        <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; background: #fff; border-left: 5px solid #28a745;">
+            <h3 style="margin: 0; color: #333;">{{ cv.full_name }}</h3>
+            <p style="font-size: 14px; color: #666;"><i class="fas fa-envelope"></i> {{ cv.email }}</p>
+            <p style="font-size: 14px; color: #666;"><i class="fas fa-calendar-alt"></i> Ngày tạo: {{ cv.uploaded_at|date:"d/m/Y" }}</p>
+            <hr>
+            <div style="margin: 10px 0; height: 60px; overflow: hidden; font-size: 13px; color: #777;">
+                <strong>Kỹ năng:</strong> {{ cv.skills|truncatechars:100 }}
+            </div>
+            <a href="{% url 'cv_form_user' cv.id %}" style="color: #0056b3; font-weight: bold; text-decoration: none;">Chi tiết hồ sơ →</a>
+=======
 <main class="main-detail-content">
     <div class="job-detail-container">
 
@@ -117,6 +135,7 @@
                 </div>
             {% endif %}
 
+>>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
         </div>
     </div>
 </main>

@@ -22,9 +22,21 @@
         {% comment %} <a href="#">Liên hệ</a> {% endcomment %}
     </nav>
 
-    <div class="actions">
+    {% comment %} <div class="actions">
         <a href="{% url 'logout' %}" class="login-btn">Log out</a>
-    </div>
+    </div> {% endcomment %}
+     <div class="account-wrapper">
+          <a href="#" class="btn-account">Tài Khoản</a>
+          <div class="account-submenu">
+             <a href="{% url 'user_personalprofile' %}" class="btn-submenu-item"
+              >Hồ sơ cá nhân</a
+            >
+            {% comment %} <a href="{% url 'ChangePassword' %}" class="btn-submenu-item"
+              >Đổi mật khẩu</a {% endcomment %}
+            
+            <a href="{% url 'logout' %}" class="btn-submenu-item">Đăng xuất</a>
+          </div>
+        </div>  
 </header>
 </body>
 </html>
