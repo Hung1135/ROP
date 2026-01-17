@@ -19,7 +19,7 @@
             <form method="GET" action="{% url 'matching_jobs' %}">
                 <label><b>Chọn hồ sơ của bạn:</b></label>
                 <select name="cv_id" onchange="this.form.submit()" style="padding: 10px; width: 100%; border-radius: 5px;">
-                    <option value="">-- Vui lòng chọn một hồ sơ để AI phân tích --</option>
+                    <option value="">-- Vui lòng chọn hồ sơ --</option>
                     {% for cv in user_cvs %}
                         <option value="{{ cv.id }}" {% if selected_cv_id == cv.id %}selected{% endif %}>
                             {{ cv.full_name }} - Ngày tạo: {{ cv.uploaded_at|date:"d/m/Y" }}
