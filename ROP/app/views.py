@@ -5,7 +5,8 @@ from django.shortcuts import redirect
 from django.http import HttpResponse, JsonResponse
 from django.template.defaultfilters import title
 from django.db.models import Q
-from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
+from .AI.cv_matcher import extract_cv_text, match_cv_fields
+# from .AI.cv_matcher import  match_cv_with_job
 from .models import Applications, Job, Cvs
 from django.utils import timezone
 from django.shortcuts import render, redirect
@@ -130,13 +131,25 @@ def ListJob(request):
     return render(request, 'admin/ListJob.html', {'jobs': jobs})
 
 
+# def manaPostCV(request):
+#     if request.method == 'GET':
+#         user_id = request.session.get('user_id')
+#         if not user_id:
+#             return redirect('login')
+#     cvs = Cvs.objects.select_related('user').all()
+#     return render(request, 'admin/managePostCV.html', {'cvs': cvs})
 def manaPostCV(request):
-    if request.method == 'GET':
-        user_id = request.session.get('user_id')
-        if not user_id:
-            return redirect('login')
-    cvs = Cvs.objects.select_related('user').all()
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
+
+    # Lấy tất cả CV ứng tuyển vào các job do user này đăng
+    cvs = Cvs.objects.filter(
+        applications__job__user_id=user_id
+    ).select_related('user').distinct()
+
     return render(request, 'admin/managePostCV.html', {'cvs': cvs})
+
 
 
 # logout
@@ -537,6 +550,10 @@ from .models import Cvs
 def cv_detail_form(request, cv_id):
     cv = get_object_or_404(Cvs, id=cv_id)
     return render(request, 'admin/detail.html', {'cv': cv})
+
+def cv_detail_form_user(request, cv_id):
+    cv = get_object_or_404(Cvs, id=cv_id)
+    return render(request, 'user/detail.html', {'cv': cv})
 
 # them
 def job_list_user(request):

@@ -38,29 +38,29 @@ def text_to_vector(text):
 def cosine_score(vec1, vec2):
     return float(cosine_similarity([vec1], [vec2])[0][0])
 
-def match_cv_with_job(cv_text, job_text):
-    if not cv_text or not job_text:
-        return 0, "Thấp"
+# def match_cv_with_job(cv_text, job_text):
+#     if not cv_text or not job_text:
+#         return 0, "Thấp"
 
-    cv_text = clean_text(cv_text)
-    job_text = clean_text(job_text)
+#     cv_text = clean_text(cv_text)
+#     job_text = clean_text(job_text)
 
-    cv_vec = text_to_vector(cv_text)
-    job_vec = text_to_vector(job_text)
+#     cv_vec = text_to_vector(cv_text)
+#     job_vec = text_to_vector(job_text)
 
-    score = cosine_score(cv_vec, job_vec)
-    percent = round(score * 100, 2)
+#     score = cosine_score(cv_vec, job_vec)
+#     percent = round(score * 100, 2)
 
-    if percent >= 80:
-        level = "Rất phù hợp"
-    elif percent >= 60:
-        level = "Phù hợp"
-    elif percent >= 40:
-        level = "Trung bình"
-    else:
-        level = "Thấp"
+#     if percent >= 80:
+#         level = "Rất phù hợp"
+#     elif percent >= 60:
+#         level = "Phù hợp"
+#     elif percent >= 40:
+#         level = "Trung bình"
+#     else:
+#         level = "Thấp"
 
-    return percent, level
+#     return percent, level
 # cv_matcher.py
 def match_cv_fields(cv_data, job):
     """

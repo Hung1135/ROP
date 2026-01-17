@@ -29,7 +29,7 @@ body {
   color: #007bff;
   font-size: 25px;
   margin: 0;
-  margin-top: 25px;
+  /* margin-top: 15px; */
 }
 .logo img {
   width: 5vw;
@@ -464,4 +464,16 @@ footer {
 /* LỆNH QUAN TRỌNG: Di chuột vào mục cha thì hiện mục con */
 .nav-box-item:hover .nav-box-sub {
   display: block;
+}
+
+
+.custom-alert {
+  position: fixed;       /* giữ cố định trên màn hình */
+  top: 50%;              /* đẩy xuống giữa */
+  left: 50%;             /* đẩy sang giữa */
+  transform: translate(-50%, -50%); /* căn chỉnh chính xác giữa */
+  z-index: 1050;         /* đảm bảo nằm trên các phần tử khác */
+  width: auto;           /* hoặc đặt width cụ thể nếu muốn */
+  max-width: 400px;      /* giới hạn chiều rộng */
+  text-align: center;    /* căn giữa nội dung bên trong */
 }

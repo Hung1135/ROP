@@ -85,12 +85,11 @@
                         {% endfor %}
                     </select>
                     
-                    <div id="ai-score-box" style="display: none; margin-top: 10px;">
-                         <span id="ai-percent" style="font-weight: bold;">0%</span> - <span id="ai-level"></span>
-                         <div style="width: 100%; background: #eee; height: 10px; border-radius: 5px;">
-                             <div id="ai-progress-bar" style="width: 0%; height: 100%; background: green; border-radius: 5px;"></div>
-                         </div>
-                    </div>
+                    <div id="ai-score-box" style="display: none; margin-top: 10px; align-items: center; gap: 8px; background: #f9f9f9; padding: 8px 12px; border-radius: 20px; width: fit-content; border: 1px solid #eee;">
+                        <span id="ai-dot" style="height: 12px; width: 12px; border-radius: 50%; display: inline-block; box-shadow: 0 0 5px rgba(0,0,0,0.1);"></span>
+                        
+                        <span id="ai-level" style="font-size: 14px; font-weight: bold;"></span>
+                   </div>
                 </div>
                 {% endif %}
             
@@ -165,23 +164,26 @@
                     document.getElementById('experience').value = data.skills || '';
 
                     if (data.score_data) {
-                        const scoreBox = document.getElementById('ai-score-box');
-                        scoreBox.style.display = 'block';
-                        document.getElementById('ai-percent').innerText = data.score_data.total_score + "%";
-                        document.getElementById('ai-level').innerText = data.score_data.level;
-                        document.getElementById('ai-progress-bar').style.width = data.score_data.total_score + "%";
-                        
-                        let color = data.score_data.total_score >= 75 ? "#28a745" : (data.score_data.total_score >= 50 ? "#ffc107" : "#dc3545");
-                        {% comment %} document.getElementById('ai-level').style.backgroundColor = color;
-                        document.getElementById('ai-progress-bar').style.backgroundColor = color; {% endcomment %}
-                        const aiLevel = document.getElementById('ai-level');
-aiLevel.style.backgroundColor = "transparent"; 
-aiLevel.style.color = color;                  
-aiLevel.style.fontWeight = "bold";           
-aiLevel.style.padding = "0px";               
-document.getElementById('ai-progress-bar').style.backgroundColor = color;
-
-                    }
+                const scoreBox = document.getElementById('ai-score-box');
+                const aiDot = document.getElementById('ai-dot');
+                const aiLevel = document.getElementById('ai-level');
+        
+                scoreBox.style.display = 'flex'; // Dùng flex để icon và chữ nằm hàng ngang
+                
+                // 1. Xác định màu sắc dựa trên điểm (nhưng không hiện số điểm ra ngoài)
+                let color = "";
+                if (data.score_data.total_score >= 75) {
+                    color = "#28a745"; // Xanh lá - Rất tốt
+                } else if (data.score_data.total_score >= 50) {
+                    color = "#ffc107"; // Vàng - Khá
+                } else {
+                    color = "#dc3545"; // Đỏ - Thấp
+                }
+                // 2. Gán màu và nội dung
+        aiDot.style.backgroundColor = color;
+        aiLevel.innerText = "Mức độ phù hợp: " + data.score_data.level;
+        aiLevel.style.color = color;
+    }
                 });
         }
 
