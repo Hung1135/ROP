@@ -466,14 +466,3 @@ footer {
   display: block;
 }
 
-
-.custom-alert {
-  position: fixed;       /* giữ cố định trên màn hình */
-  top: 50%;              /* đẩy xuống giữa */
-  left: 50%;             /* đẩy sang giữa */
-  transform: translate(-50%, -50%); /* căn chỉnh chính xác giữa */
-  z-index: 1050;         /* đảm bảo nằm trên các phần tử khác */
-  width: auto;           /* hoặc đặt width cụ thể nếu muốn */
-  max-width: 400px;      /* giới hạn chiều rộng */
-  text-align: center;    /* căn giữa nội dung bên trong */
-}
