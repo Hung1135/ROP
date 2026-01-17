@@ -29,7 +29,7 @@ body {
   color: #007bff;
   font-size: 25px;
   margin: 0;
-  margin-top: 25px;
+  /* margin-top: 15px; */
 }
 .logo img {
   width: 5vw;
@@ -465,3 +465,4 @@ footer {
 .nav-box-item:hover .nav-box-sub {
   display: block;
 }
+

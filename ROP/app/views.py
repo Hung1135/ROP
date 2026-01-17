@@ -5,8 +5,13 @@ from django.shortcuts import redirect
 from django.http import HttpResponse, JsonResponse
 from django.template.defaultfilters import title
 from django.db.models import Q
+<<<<<<< HEAD
+from .AI.cv_matcher import extract_cv_text, match_cv_fields
+# from .AI.cv_matcher import  match_cv_with_job
+=======
 from django.core.exceptions import ValidationError
 from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
+>>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
 from .models import Applications, Job, Cvs
 from django.utils import timezone
 from django.shortcuts import render, redirect
@@ -131,13 +136,25 @@ def ListJob(request):
     return render(request, 'admin/ListJob.html', {'jobs': jobs})
 
 
+# def manaPostCV(request):
+#     if request.method == 'GET':
+#         user_id = request.session.get('user_id')
+#         if not user_id:
+#             return redirect('login')
+#     cvs = Cvs.objects.select_related('user').all()
+#     return render(request, 'admin/managePostCV.html', {'cvs': cvs})
 def manaPostCV(request):
-    if request.method == 'GET':
-        user_id = request.session.get('user_id')
-        if not user_id:
-            return redirect('login')
-    cvs = Cvs.objects.select_related('user').all()
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
+
+    # Lấy tất cả CV ứng tuyển vào các job do user này đăng
+    cvs = Cvs.objects.filter(
+        applications__job__user_id=user_id
+    ).select_related('user').distinct()
+
     return render(request, 'admin/managePostCV.html', {'cvs': cvs})
+
 
 
 # logout
@@ -477,6 +494,10 @@ def cv_detail_form(request, cv_id):
     cv = get_object_or_404(Cvs, id=cv_id)
     return render(request, 'admin/detail.html', {'cv': cv})
 
+def cv_detail_form_user(request, cv_id):
+    cv = get_object_or_404(Cvs, id=cv_id)
+    return render(request, 'user/detail.html', {'cv': cv})
+
 # them
 def job_list_user(request):
     query = request.GET.get('boxsearch', '').strip()
@@ -641,6 +662,78 @@ def matching_jobs_for_cv(request):
         'recommended_jobs': recommended_jobs,
         'selected_cv_id': int(selected_cv_id) if selected_cv_id else None
     })
+<<<<<<< HEAD
+
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.shortcuts import get_object_or_404
+from xhtml2pdf import pisa
+from .models import Applications
+from xhtml2pdf import pisa
+
+from xhtml2pdf import pisa
+
+def application_pdf_download(request, app_id):
+    application = get_object_or_404(Applications, id=app_id)
+    template = get_template("admin/application_detail.html")
+    html = template.render({"application": application})
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="application_{app_id}.pdf"'
+
+    pisa.DEFAULT_FONT = "DejaVuSans"  # 🔥 BẮT BUỘC
+    pisa.CreatePDF(html, dest=response, encoding="UTF-8")
+
+    return response 
+
+
+def test_font(request):
+    return render(request, "test_font.html")
+
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+def test_pdf_font(request):
+    template = get_template("test_pdf.html")
+    html = template.render({})
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = "inline; filename=test.pdf"
+
+    pisa.DEFAULT_FONT = "DejaVuSans"
+
+    pisa.CreatePDF(
+        html,
+        dest=response,
+        encoding="UTF-8"
+    )
+    return response
+
+
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from django.shortcuts import get_object_or_404
+from .models import Applications  # nhớ import model
+
+def application_pdf_download(request, app_id):
+    application = get_object_or_404(Applications, id=app_id)
+
+    html_string = render_to_string(
+        "admin/application_detail.html",
+        {"application": application}
+    )
+
+    pdf_file = HTML(
+        string=html_string,
+        base_url=request.build_absolute_uri("/")
+    ).write_pdf()  # trả về bytes
+
+    response = HttpResponse(pdf_file, content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename=application_{app_id}.pdf'
+    return response
+=======
 # KIEU
 def detailPost(request, id):
     if request.method == 'GET':
@@ -758,3 +851,4 @@ def cv_list(request):
         'cv': cv
     })
 
+>>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e

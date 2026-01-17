@@ -73,6 +73,23 @@
           <aside class="application-form" id="application-form">
     <h3>Ứng Tuyển Công Việc</h3>
 
+<<<<<<< HEAD
+                {% if user_cvs %}
+                <div class="form-group" style="background: #f0f7ff; padding: 15px; border-radius: 8px; border: 1px dashed #0056b3; display: block !important;">
+                    <label style="color: #0056b3; font-weight: bold;"><i class="fas fa-magic"></i> AI Điền nhanh & Chấm điểm:</label>
+                    <select id="cv-selector" class="form-control" style="width: 100%; padding: 10px; border: 1px solid #0056b3;">
+                        <option value="">-- Chọn hồ sơ của bạn --</option>
+                        {% for cv in user_cvs %}
+                            <option value="{{ cv.id }}">{{ cv.full_name }} ({{ cv.uploaded_at|date:"d/m/Y" }})</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <div id="ai-score-box" style="display: none; margin-top: 10px; align-items: center; gap: 8px; background: #f9f9f9; padding: 8px 12px; border-radius: 20px; width: fit-content; border: 1px solid #eee;">
+                        <span id="ai-dot" style="height: 12px; width: 12px; border-radius: 50%; display: inline-block; box-shadow: 0 0 5px rgba(0,0,0,0.1);"></span>
+                        
+                        <span id="ai-level" style="font-size: 14px; font-weight: bold;"></span>
+                   </div>
+=======
     {% with user_cv=user_cvs.first %}
         {% if user_cv %}
             <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; border: 1px solid #0056b3; margin-bottom: 20px;">
@@ -89,6 +106,7 @@
                     <div style="width: 100%; background: #eee; height: 10px; border-radius: 5px; margin-top: 5px;">
                         <div id="ai-progress-bar" style="width: 0%; height: 100%; background: #28a745; border-radius: 5px; transition: width 1s;"></div>
                     </div>
+>>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
                 </div>
             </div>
 
@@ -169,6 +187,48 @@ document.addEventListener('DOMContentLoaded', function() {
                     const levelElement = document.getElementById('ai-level');
                     const progressBar = document.getElementById('ai-progress-bar');
 
+<<<<<<< HEAD
+                    if (data.score_data) {
+                const scoreBox = document.getElementById('ai-score-box');
+                const aiDot = document.getElementById('ai-dot');
+                const aiLevel = document.getElementById('ai-level');
+        
+                scoreBox.style.display = 'flex'; // Dùng flex để icon và chữ nằm hàng ngang
+                
+                // 1. Xác định màu sắc dựa trên điểm (nhưng không hiện số điểm ra ngoài)
+                let color = "";
+                if (data.score_data.total_score >= 75) {
+                    color = "#28a745"; // Xanh lá - Rất tốt
+                } else if (data.score_data.total_score >= 50) {
+                    color = "#ffc107"; // Vàng - Khá
+                } else {
+                    color = "#dc3545"; // Đỏ - Thấp
+                }
+                // 2. Gán màu và nội dung
+        aiDot.style.backgroundColor = color;
+        aiLevel.innerText = "Mức độ phù hợp: " + data.score_data.level;
+        aiLevel.style.color = color;
+    }
+                });
+        }
+
+        if (cvIdFromUrl && cvSelector) {
+            cvSelector.value = cvIdFromUrl;
+            loadCvToForm(cvIdFromUrl);
+            document.getElementById('application-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Nếu người dùng tự tay chọn trên Select
+        cvSelector?.addEventListener('change', function() {
+            if (!this.value) {
+                document.getElementById('apply-form').reset();
+                document.getElementById('ai-score-box').style.display = 'none';
+            } else {
+                loadCvToForm(this.value);
+            }
+        });
+    });
+=======
                     percentElement.innerText = data.score_data.total_score + "%";
                     levelElement.innerText = data.score_data.level;
                     progressBar.style.width = data.score_data.total_score + "%";
@@ -186,6 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 });
+>>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
 </script>
 </body>
 </html>
