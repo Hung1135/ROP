@@ -17,6 +17,7 @@
     />
     <link rel="stylesheet" href="{% static 'app/css/nav.css' %}" />
     <link rel="stylesheet" href="{% static 'app/css/managePostCV.css'%}" />
+        {% comment %} <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}" /> {% endcomment %}
   </head>
 
   <body>
@@ -34,9 +35,14 @@
           <p><strong>🗓 Ngày tạo:</strong> {{ cv.uploaded_at|date:"d/m/Y" }}</p>
 
           <div class="cv-actions mt-2">
-            <a href="{% url 'cv_detail' cv.id %}" class="btn btn-primary btn-sm" target="_blank">
+            {% comment %} <a href="{% url 'cv_detail' cv.id %}" class="btn btn-primary btn-sm" target="_blank">
+              <i class="bi bi-file-earmark-text"></i> Xem chi tiết CV
+            </a> {% endcomment %}
+
+            <a href="{% url 'cv_detail_form' cv.id %}" class="btn btn-primary btn-sm">
               <i class="bi bi-file-earmark-text"></i> Xem chi tiết CV
             </a>
+
           </div>
 
           
