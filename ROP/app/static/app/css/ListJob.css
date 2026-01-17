@@ -149,3 +149,48 @@ body {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+.job-title {
+    font-size: 22px;
+    font-weight: 600;
+    max-width: 100%;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;   /* số dòng muốn hiển thị */
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}
+
+.company {
+    font-size: 14px;
+    color: #666;
+     max-width: 100%;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+   word-break: break-word;
+}
+.location {
+
+    max-width: 100%;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;   /* chỉ 1 dòng cho địa chỉ */
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+
+}
+.job-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
