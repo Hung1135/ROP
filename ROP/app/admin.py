@@ -1,14 +1,6 @@
-<<<<<<< HEAD
-
-# Register your models here.
 from django.contrib import admin
 from .models import users, Cvs, Job, Applications
 
-=======
-from django.contrib import admin
-from .models import users, Cvs, Job, Applications
-
->>>>>>> ce105758d12ef7a1087e011981eb9d209d4736e8
 @admin.register(users)
 class UsersAdmin(admin.ModelAdmin):
     list_display = ('id', 'fullname', 'email', 'phone', 'role', 'created_at')

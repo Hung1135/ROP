@@ -153,6 +153,10 @@
                                             data-cv="{{ analysis.cv.id }}"
                                             data-job="{{ job.id }}">Chi tiết
                                     </button>
+                                   
+
+                                    <a href="{% url 'application_pdf_download' analysis.application.id %}" 
+                                        class="btn btn-sm btn-outline-primary"> Xuất PDF </a>
 
                                     {% if analysis.application.is_sent %}
                                     <button class="btn btn-sm btn-success" disabled>
