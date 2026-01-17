@@ -46,7 +46,14 @@ urlpatterns = [
     path('cv_form/<int:cv_id>/', views.cv_detail_form, name='cv_detail_form'),
     path('cv_form_user/<int:cv_id>/', views.cv_detail_form_user, name='cv_form_user'),
 
+    path("applications/<int:app_id>/download/", views.application_pdf_download, name="application_pdf_download"),
+    path("test-font/", views.test_font, name="test_font"),
+    path("test-pdf/", views.test_pdf_font, name="test_pdf_font"),
+
+
 
        ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
