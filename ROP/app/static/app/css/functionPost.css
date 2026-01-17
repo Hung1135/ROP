@@ -110,4 +110,12 @@ textarea {
 .submit-btn:hover {
     background: #2980b9;    /* hover giống nút list job */
 }
+.alert.error {
+    background: #ffe6e6;
+    color: #c62828;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-weight: 600;
+}
 

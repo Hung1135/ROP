@@ -194,3 +194,9 @@
         grid-template-columns: 1fr; /* Chuyển sang 1 cột */
     }
 }
+.btn-submit-cv,
+.btn-submit-cv:hover,
+.btn-submit-cv:focus {
+    text-decoration: none;
+    color: #fff;   /* hoặc màu bạn đang dùng */
+}
