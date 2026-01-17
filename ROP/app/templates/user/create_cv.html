@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Tạo hồ sơ - ROP</title>
+    <link rel="stylesheet" href="{% static 'app/css_user/detailPost.css' %}"/>
+    <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}"/>
+</head>
+<body>
+{% include "user/header.html" %}
+
+<main class="main-detail-content">
+    <div class="job-detail-container">
+        <section class="job-summary" style="text-align: center;">
+            <h1 style="color: #0056b3;">Hồ Sơ Cá Nhân</h1>
+            <p>Quản lý thông tin để ứng tuyển nhanh chóng</p>
+        </section>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+            {% if messages %}
+                {% for message in messages %}
+                    <div style="padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center;
+                        {% if message.tags == 'error' %} background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;
+                        {% else %} background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; {% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <aside class="application-form" style="width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+
+                {% if existing_cv %}
+                    <div style="text-align: center; padding: 30px;">
+                        <div style="font-size: 50px; color: #28a745; margin-bottom: 10px;">✅</div>
+                        <h3 style="color: #0056b3;">Bạn đã có hồ sơ!</h3>
+                        <p>Thông tin của bạn đã được lưu trên hệ thống ROP.</p>
+                        <p style="color: #666; font-size: 0.9em;">(Để thay đổi thông tin, vui lòng chuyển đến trang lưu trữ hồ sơ. Xin cảm ơn!)</p>
+                        <div style="margin-top: 25px;">
+                            <a href="{% url 'home' %}" class="btn-submit-cv" style="background-color: #6c757d; text-decoration: none; margin-right: 10px;">Quay lại Trang chủ</a>
+                            <a href="{% url 'appliedJobsList' %}" class="btn-submit-cv" style="background-color: #007bff; text-decoration: none;">Việc làm đã ứng tuyển</a>
+                        </div>
+                    </div>
+
+               {% else %}
+    <h3>Điền Thông Tin Hồ Sơ</h3>
+    <form action="{% url 'create_cv' %}" method="POST">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label>Họ và Tên (*)</label>
+            <input type="text" name="full_name" required placeholder="Nguyễn Văn A"/>
+        </div>
+
+        <div class="form-group">
+            <label>Email (*)</label>
+            <input type="email" name="email" required placeholder="example@gmail.com"/>
+        </div>
+
+        <div class="form-group">
+            <label>Số điện thoại (*)</label>
+            <input type="tel" name="phone" required placeholder="0123456789"/>
+        </div>
+
+        <div class="form-group">
+            <label>Địa chỉ</label>
+            <input type="text" name="address" required placeholder="Thành phố/ tỉnh nơi ở"/>
+        </div>
+
+        <div class="form-group">
+            <label>Mô tả bản thân</label>
+            <textarea name="description" rows="4"
+                      placeholder="Mô tả kinh nghiệm, bằng cấp..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Kỹ năng & Kinh nghiệm</label>
+            <textarea name="experience" rows="4"
+                      placeholder="Kỹ năng chuyên môn của bạn..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit-cv" style="width: 100%;">
+            Tạo hồ sơ
+        </button>
+    </form>
+{% endif %}
+
+
+            </aside>
+        </div>
+    </div>
+</main>
+<footer>
+    <p>&copy; 2025 JobFinder. All rights reserved.</p>
+  </footer>
+</body>
+</html>

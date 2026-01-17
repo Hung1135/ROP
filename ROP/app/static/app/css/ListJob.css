@@ -128,3 +128,69 @@ body {
     box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     animation: fadeIn 0.35s ease-in-out;
 }
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+.dropdown-content a {
+  color: black !important;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.job-title {
+    font-size: 22px;
+    font-weight: 600;
+    max-width: 100%;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;   /* số dòng muốn hiển thị */
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}
+
+.company {
+    font-size: 14px;
+    color: #666;
+     max-width: 100%;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+   word-break: break-word;
+}
+.location {
+
+    max-width: 100%;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;   /* chỉ 1 dòng cho địa chỉ */
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+
+}
+.job-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}

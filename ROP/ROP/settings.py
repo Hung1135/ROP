@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'app.context_processors.categories_processor',
             ],
         },
     },
@@ -134,6 +137,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+<<<<<<< HEAD
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -155,4 +159,40 @@ LOGGING = {
             "propagate": True,
         },
     },
+=======
+
+# Cấu hình gửi mail (Ví dụ dùng Gmail)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'tranthithuykieupm12005@gmail.com'  
+EMAIL_HOST_PASSWORD = 'evtg xmmh dwxq ztrn' 
+JAZZMIN_SETTINGS = {
+    "site_title": "ADMIN TUYỂN DỤNG",
+    "site_header": "Hệ thống quản lý tuyển dụng",
+    "site_brand": "Job Admin",
+
+    # ===== MENU TRÁI =====
+    "navigation_expanded": True,
+
+    "icons": {
+        "ROP.job": "fas fa-briefcase",
+        "ROP.applicant": "fas fa-user",
+        "ROP.employer": "fas fa-building",
+        "ROP.cvs": "fas fa-file",
+        "ROP.applications": "fas fa-list",
+    },
+
+    # ===== CHIA 3 NHÓM MENU =====
+    "order_with_respect_to": [
+        "ROP.job",
+        "ROP.applicant",
+        "ROP.employer",
+        "ROP.cvs",
+        "ROP.applications",
+    ],
+
+    "hide_apps": ["auth"],
+>>>>>>> ed43d9ff39add11f2b9531724ec144fd60f73e10
 }

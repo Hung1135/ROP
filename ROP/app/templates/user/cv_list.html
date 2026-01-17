@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Hồ sơ của bạn - ROP</title>
+
+    <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css_user/detailPost.css' %}">
+</head>
+<body>
+
+{% include "user/header.html" %}
+
+<<<<<<< HEAD
+<main class="container" style="padding: 50px 20px; min-height: 80vh;">
+    <section class="job-summary" style="text-align: center;">
+        <h1 style="color: #0056b3;">Hồ Sơ/ CV đã tạo</h1>
+    </section>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px;">
+        {% for cv in cvs %}
+        <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; background: #fff; border-left: 5px solid #28a745;">
+            <h3 style="margin: 0; color: #333;">{{ cv.full_name }}</h3>
+            <p style="font-size: 14px; color: #666;"><i class="fas fa-envelope"></i> {{ cv.email }}</p>
+            <p style="font-size: 14px; color: #666;"><i class="fas fa-calendar-alt"></i> Ngày tạo: {{ cv.uploaded_at|date:"d/m/Y" }}</p>
+            <hr>
+            <div style="margin: 10px 0; height: 60px; overflow: hidden; font-size: 13px; color: #777;">
+                <strong>Kỹ năng:</strong> {{ cv.skills|truncatechars:100 }}
+            </div>
+            <a href="{% url 'cv_form_user' cv.id %}" style="color: #0056b3; font-weight: bold; text-decoration: none;">Chi tiết hồ sơ →</a>
+=======
+<main class="main-detail-content">
+    <div class="job-detail-container">
+
+        <!-- TIÊU ĐỀ -->
+        <section class="job-summary" style="text-align: center;">
+            <h1 style="color: #0056b3;">Hồ sơ của bạn</h1>
+            <p>Quản lý và chỉnh sửa thông tin hồ sơ cá nhân</p>
+        </section>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+
+            <!-- MESSAGE -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div style="
+                        padding: 15px;
+                        margin-bottom: 20px;
+                        border-radius: 5px;
+                        text-align: center;
+                        {% if message.tags == 'error' %}
+                            background-color: #f8d7da;
+                            color: #721c24;
+                            border: 1px solid #f5c6cb;
+                        {% else %}
+                            background-color: #d4edda;
+                            color: #155724;
+                            border: 1px solid #c3e6cb;
+                        {% endif %}
+                    ">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if cv %}
+                <!-- FORM CHỈNH SỬA HỒ SƠ -->
+                <aside class="application-form"
+                       style="width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+
+                    <h3 style="text-align: center; margin-bottom: 20px;">
+                        Chỉnh sửa hồ sơ cá nhân
+                    </h3>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label>Họ và Tên (*)</label>
+                            <input type="text" name="full_name" required
+                                   value="{{ cv.full_name }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email (*)</label>
+                            <input type="email" value="{{ cv.email }}" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Số điện thoại (*)</label>
+                            <input type="text" name="phone" required
+                                   value="{{ cv.phone }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Địa chỉ</label>
+                            <input type="text" name="address"
+                                   value="{{ cv.address }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Mô tả bản thân</label>
+                            <textarea name="description" rows="4"
+                                      placeholder="Kinh nghiệm, mục tiêu nghề nghiệp...">{{ cv.description }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Kỹ năng & Kinh nghiệm</label>
+                            <textarea name="experience" rows="4"
+                                      placeholder="Kỹ năng chuyên môn, công nghệ, kinh nghiệm làm việc...">{{ cv.skills }}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn-submit-cv" style="width: 100%;">
+                            Cập nhật hồ sơ
+                        </button>
+                    </form>
+                </aside>
+
+            {% else %}
+                <!-- CHƯA CÓ HỒ SƠ -->
+                <div style="
+                    padding: 40px;
+                    background-color: #fff3cd;
+                    border: 1px solid #ffeeba;
+                    color: #856404;
+                    border-radius: 8px;
+                    text-align: center;
+                ">
+                    <h3>Bạn chưa có hồ sơ</h3>
+                    <p>Vui lòng tạo hồ sơ để có thể ứng tuyển công việc.</p>
+                    <a href="{% url 'create_cv' %}" class="btn-submit-cv">
+                        Tạo hồ sơ ngay
+                    </a>
+                </div>
+            {% endif %}
+
+>>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2025 ROP. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

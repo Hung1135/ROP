@@ -22,22 +22,23 @@
 </head>
 
 <body>
+    
 {% if messages %} {% for message in messages %}
-<div
+{% comment %} <div
         class="alert alert-success alert-dismissible fade show custom-alert"
         role="alert"
 >
-    <strong>{{ message }}</strong>
+    <strong >{{ message }}</strong>
     <button
             type="button"
             class="btn-close"
             data-bs-dismiss="alert"
             aria-label="Close"
     ></button>
-</div>
+</div> {% endcomment %}
 {% endfor %} {% endif %}
 
-{% include "admin\header.html" %}
+{% include "admin/header.html" %}
 
 <div class="page-header">
     <h1>Danh sách công việc đã đăng tuyển</h1>
@@ -56,9 +57,9 @@
                 </div>
             </div>
 
-            <div class="job-info">
-                <span>📍 {{ job.location }}</span>
-            </div>
+           <div class="job-info location" title="{{ job.location }}">
+    <span>📍 {{ job.location }}</span>
+</div>
 
             <div class="job-info">
                 <span>💰 {{ job.salary_min }} - {{ job.salary_max }} triệu VNĐ</span>
