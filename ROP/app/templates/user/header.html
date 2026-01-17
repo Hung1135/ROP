@@ -32,7 +32,7 @@
                   <a href="{% url 'company_list' %}">Danh sách công ty</a>
                 </div>
                 <div class="column">
-                  <h4>Việc làm theo ngành nghề (AI Phân loại)</h4>
+                  <h4>Việc làm theo ngành nghề</h4>
                   <ul class="category-list">
                     {% for cat in all_categories %}
                         <li><a href="{% url 'search' %}?category={{ cat }}">{{ cat }}</a></li>

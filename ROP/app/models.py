@@ -1,7 +1,10 @@
 from time import timezone
 from django.db import models
 from django.contrib.auth.hashers import make_password, check_password
-
+from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+from difflib import SequenceMatcher
 
 # Create your models here.
 class users(models.Model):
@@ -46,7 +49,8 @@ class Cvs(models.Model):
     class Meta: 
         db_table = 'cvs'
         managed = False
-
+def similarity(a, b):
+    return SequenceMatcher(None, a or "", b or "").ratio()
 class Job(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(
@@ -76,9 +80,80 @@ class Job(models.Model):
     def job_categories(request):
     # Lấy danh sách các ngành nghề không trùng lặp từ DB
         categories = Job.objects.values_list('category', flat=True).distinct()
-    
-from django.db import models
-from django.utils import timezone
+
+    def clean(self):
+        today = timezone.now().date()
+        if self.salary_min is not None and self.salary_min < 0:
+            raise ValidationError("❌ Lương tối thiểu không được là số âm.")
+
+        if self.salary_max is not None and self.salary_max < 0:
+            raise ValidationError("❌ Lương tối đa không được là số âm.")
+
+            # ====== 2️⃣ MIN < MAX ======
+        if self.salary_min is not None and self.salary_max is not None:
+            if self.salary_min >= self.salary_max:
+                raise ValidationError(
+                    "❌ Lương tối thiểu phải nhỏ hơn lương tối đa."
+                )
+        # 1️⃣ Tối đa 5 bài / ngày
+        if not self.pk:
+            count_today = Job.objects.filter(
+                user=self.user,
+                create_at=today
+            ).count()
+            if count_today >= 5:
+                raise ValidationError("❌ Mỗi ngày chỉ được đăng tối đa 5 bài.")
+
+        # 2️⃣ Độ dài nội dung
+        if not (10 <= len(self.title) <= 100):
+            raise ValidationError("❌ Tiêu đề phải từ 10–100 ký tự.")
+
+        if len(self.description) < 50:
+            raise ValidationError("❌ Mô tả phải ≥ 50 ký tự.")
+
+        if len(self.requirements) < 50:
+            raise ValidationError("❌ Yêu cầu phải ≥ 50 ký tự.")
+
+        # 3️⃣ Trùng title + company + location (chỉ khi bài cũ còn hạn)
+        qs = Job.objects.filter(
+            user=self.user,
+            title=self.title,
+            company=self.company,
+            location=self.location,
+            end_date__gte=today
+        )
+        if self.pk:
+            qs = qs.exclude(pk=self.pk)
+
+        if qs.exists():
+            raise ValidationError(
+                "❌ Bài trùng tiêu đề + công ty + địa điểm, chỉ được đăng khi bài cũ hết hạn."
+            )
+
+        # 4️⃣ Nội dung giống > 80%
+        active_jobs = Job.objects.filter(
+            user=self.user,
+            end_date__gte=today
+        )
+        if self.pk:
+            active_jobs = active_jobs.exclude(pk=self.pk)
+
+        for job in active_jobs:
+            if similarity(job.description, self.description) > 0.8:
+                raise ValidationError(
+                    "❌ Nội dung giống > 80% bài trước, chỉ được đăng khi bài cũ hết hạn."
+                )
+
+        # 5️⃣ Không cho sửa nếu đã có ứng viên
+        if self.pk:
+            old = Job.objects.get(pk=self.pk)
+            if Applications.objects.filter(job=old).exists():
+                fields = ['title', 'description', 'requirements', 'company', 'location']
+                for f in fields:
+                    if getattr(old, f) != getattr(self, f):
+                        raise ValidationError(
+                            "❌ Bài đăng đã có ứng viên, không được sửa nội dung chính."
+                        )
 
 class Applications(models.Model):
     id = models.AutoField(primary_key=True)
