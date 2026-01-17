@@ -8,6 +8,7 @@ from django.db.models import Q
 from xhtml2pdf import pisa
 
 from .AI.cv_matcher import match_cv_fields
+from .decorator import user_required, employer_required
 from .models import Applications, Job, Cvs
 from django.utils import timezone
 from django.shortcuts import render, redirect
@@ -36,7 +37,7 @@ def split_text(text):
         return []
     return [x.strip() for x in re.split(r'\n|\. ', text) if x.strip()]
 
-
+@employer_required
 def post_detail(request, id):
     job = Job.objects.get(id=id)
 
@@ -121,7 +122,7 @@ def cv_detail_json(request, id):
     })
 
 
-
+@employer_required
 def ListJob(request):
     user_id = request.session.get('user_id')
     # if request.method == 'GET':
@@ -139,6 +140,7 @@ def ListJob(request):
 #             return redirect('login')
 #     cvs = Cvs.objects.select_related('user').all()
 #     return render(request, 'admin/managePostCV.html', {'cvs': cvs})
+@employer_required
 def manaPostCV(request):
     user_id = request.session.get('user_id')
     if not user_id:
@@ -240,6 +242,7 @@ def login(request):
 
 
 # user
+@user_required
 def homeUser(request):
     # if request.method == 'GET':
     #     user_id = request.session.get('user_id')
@@ -259,7 +262,7 @@ def _is_django_hash(value: str) -> bool:
     algo = value.split("$", 1)[0]
     return algo in {"pbkdf2_sha256", "pbkdf2_sha1", "argon2", "bcrypt_sha256", "scrypt"}
 
-
+@user_required
 def ChangePassword(request):
     user_id = request.session.get('user_id')
     if not user_id:
@@ -299,7 +302,7 @@ def ChangePassword(request):
 
     return render(request, 'user/ChangePassword.html')
 
-
+@user_required
 def personalprofile(request):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
@@ -318,7 +321,7 @@ def personalprofile(request):
 
     return render(request, 'user/personalprofile.html', {"user": user})
 
-
+@user_required
 def appliedJobsList(request):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
@@ -328,6 +331,7 @@ def appliedJobsList(request):
 
 
 # cái này db
+@employer_required
 def functionPost(request):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
@@ -418,7 +422,7 @@ def upload_cv(request):
 #
 #         return redirect('appliedJobsList')
 #     return redirect('home')
-
+@user_required
 def appliedJobsList(request):
     custom_user = users.objects.get(id=request.session['user_id'])
 
@@ -428,6 +432,7 @@ def appliedJobsList(request):
 
 
 @xframe_options_sameorigin
+@employer_required
 def cv_detail(request, id):
     cv = get_object_or_404(Cvs, id=id)
     return render(request, 'admin/cv_detail.html', {'cv': cv})
@@ -491,16 +496,17 @@ def send_interview_email(request, app_id):
 
 from django.shortcuts import render, get_object_or_404
 from .models import Cvs
-
+@employer_required
 def cv_detail_form(request, cv_id):
     cv = get_object_or_404(Cvs, id=cv_id)
     return render(request, 'admin/detail.html', {'cv': cv})
-
+@user_required
 def cv_detail_form_user(request, cv_id):
     cv = get_object_or_404(Cvs, id=cv_id)
     return render(request, 'user/detail.html', {'cv': cv})
 
 # them
+@user_required
 def job_list_user(request):
     query = request.GET.get('boxsearch', '').strip()
     location = request.GET.get('location', '').strip()
@@ -535,11 +541,11 @@ def job_list_user(request):
     })
 
 from django.db.models import Q 
-
+@user_required
 def home_view(request):
     jobs = Job.objects.all().order_by('-create_at')[:10]
     return render(request, 'home.html', {'jobs': jobs})
-
+@user_required
 def search(request):
     boxSearch = request.GET.get('boxsearch', '').strip()
     location_filter = request.GET.get('location', '').strip()
@@ -603,7 +609,7 @@ def search(request):
         'current_cat': category_filter,
         'sort': sort
     })
-
+@user_required
 def company_list(request):
     all_companies = Job.objects.exclude(company__isnull=True).exclude(company='') \
         .values('company') \
@@ -614,7 +620,7 @@ def company_list(request):
         'companies': all_companies
     })
 
-
+@user_required
 def featured_companies(request):
     top_companies = Job.objects.exclude(company__isnull=True).exclude(company='') \
         .values('company') \
@@ -626,7 +632,7 @@ def featured_companies(request):
         'is_featured_page': True  
     })
 
-
+@user_required
 def matching_jobs_for_cv(request):
     user_id = request.session.get('user_id')
     if not user_id:
@@ -666,7 +672,7 @@ def matching_jobs_for_cv(request):
     })
 
 
-
+@employer_required
 def application_pdf_download(request, app_id):
     application = get_object_or_404(Applications, id=app_id)
     template = get_template("admin/application_detail.html")
@@ -708,7 +714,7 @@ from django.template.loader import render_to_string, get_template
 from weasyprint import HTML
 from django.shortcuts import get_object_or_404
 from .models import Applications  # nhớ import model
-
+@employer_required
 def application_pdf_download(request, app_id):
     application = get_object_or_404(Applications, id=app_id)
 
@@ -727,6 +733,7 @@ def application_pdf_download(request, app_id):
     return response
 
 # KIEU
+@user_required
 def detailPost(request, id):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
@@ -781,6 +788,7 @@ def apply_job(request, job_id):
 
     return redirect('home')
 # KIEU
+@user_required
 def create_cv(request):
     user_id = request.session.get('user_id')
     if not user_id:
@@ -814,6 +822,7 @@ def create_cv(request):
     return render(request, 'user/create_cv.html', {
         'existing_cv': existing_cv
     })
+@user_required
 def cv_list(request):
     user_id = request.session.get('user_id')
     if not user_id:
