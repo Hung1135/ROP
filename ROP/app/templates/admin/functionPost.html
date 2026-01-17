@@ -16,7 +16,13 @@
 <div class="page-container">
     <div class="form-container">
         <h1>Đăng Bài Tuyển Dụng</h1>
-
+           {% if messages %}
+      {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
         <form method="POST" action="functionPost">
             {% csrf_token %}
 

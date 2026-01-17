@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 from django.http import HttpResponse, JsonResponse
 from django.template.defaultfilters import title
 from django.db.models import Q
+from django.core.exceptions import ValidationError
 from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
 from .models import Applications, Job, Cvs
 from django.utils import timezone
@@ -347,36 +348,43 @@ def functionPost(request):
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
+
     if request.method == 'POST':
-        title = request.POST.get('title')
-        company_name = request.POST.get('company_name')
-        location = request.POST.get('location')
-        salary_min = request.POST.get('salary_min')
-        salary_max = request.POST.get('salary_max')
-        description = request.POST.get('description')
-        requirements = request.POST.get('requirements')
-        skills = request.POST.get('skills')
-        benefits = request.POST.get('benefits')
         user_id = request.session.get('user_id')
         user_obj = get_object_or_404(users, id=user_id)
-        end_date = request.POST.get('end_date')
-        category = classify_job_category(title, skills, description)
-        Job.objects.create(
-            title=title,
-            company=company_name,
-            location=location,
-            salary_min=int(salary_min) if salary_min else None,
-            salary_max=int(salary_max) if salary_max else None,
-            description=description,
-            requirements=requirements,
-            benefit=benefits,
-            skills=skills,
-            end_date=end_date,
-            category = classify_job_category(title, skills, description),
-            user=user_obj
-        )
-        messages.success(request, 'Đăng tin tuyển dụng thành công!')
-        return redirect('ListJob')
+
+        try:
+            job = Job(
+                title=request.POST.get('title'),
+                company=request.POST.get('company_name'),
+                location=request.POST.get('location'),
+                salary_min=int(request.POST.get('salary_min')) if request.POST.get('salary_min') else None,
+                salary_max=int(request.POST.get('salary_max')) if request.POST.get('salary_max') else None,
+                description=request.POST.get('description'),
+                requirements=request.POST.get('requirements'),
+                benefit=request.POST.get('benefits'),
+                skills=request.POST.get('skills'),
+                end_date=request.POST.get('end_date'),
+                category=classify_job_category(
+                    request.POST.get('title'),
+                    request.POST.get('skills'),
+                    request.POST.get('description')
+                ),
+                user=user_obj
+            )
+
+            # 🔥🔥🔥 DÒNG QUAN TRỌNG NHẤT
+            job.full_clean()   # CHẠY TOÀN BỘ LUẬT CHỐNG SPAM
+
+            job.save()
+
+            messages.success(request, 'Đăng tin tuyển dụng thành công!')
+            return redirect('ListJob')
+
+        except ValidationError as e:
+            messages.error(request, e.message if hasattr(e, 'message') else e.messages[0])
+            return render(request, 'admin/functionPost.html')
+
     return render(request, 'admin/functionPost.html')
 
 
