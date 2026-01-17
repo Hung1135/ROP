@@ -5,15 +5,15 @@ from django.shortcuts import redirect
 from django.http import HttpResponse, JsonResponse
 from django.template.defaultfilters import title
 from django.db.models import Q
-<<<<<<< HEAD
+
 from .AI.cv_matcher import extract_cv_text, match_cv_fields
 # from .AI.cv_matcher import  match_cv_with_job
-=======
 from django.core.exceptions import ValidationError
-from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
->>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
+# from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
 from .models import Applications, Job, Cvs
 from django.utils import timezone
+
+
 from django.shortcuts import render, redirect
 from django.conf import settings
 from .models import Cvs, Applications, Job, users
@@ -662,7 +662,6 @@ def matching_jobs_for_cv(request):
         'recommended_jobs': recommended_jobs,
         'selected_cv_id': int(selected_cv_id) if selected_cv_id else None
     })
-<<<<<<< HEAD
 
 from django.http import HttpResponse
 from django.template.loader import get_template
@@ -733,7 +732,6 @@ def application_pdf_download(request, app_id):
     response = HttpResponse(pdf_file, content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename=application_{app_id}.pdf'
     return response
-=======
 # KIEU
 def detailPost(request, id):
     if request.method == 'GET':
@@ -851,4 +849,3 @@ def cv_list(request):
         'cv': cv
     })
 
->>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
