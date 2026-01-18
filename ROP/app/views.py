@@ -5,15 +5,15 @@ from django.shortcuts import redirect
 from django.http import HttpResponse, JsonResponse
 from django.template.defaultfilters import title
 from django.db.models import Q
-<<<<<<< HEAD
+
 from .AI.cv_matcher import extract_cv_text, match_cv_fields
 # from .AI.cv_matcher import  match_cv_with_job
-=======
 from django.core.exceptions import ValidationError
-from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
->>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
+# from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
 from .models import Applications, Job, Cvs
 from django.utils import timezone
+
+
 from django.shortcuts import render, redirect
 from django.conf import settings
 from .models import Cvs, Applications, Job, users
@@ -662,7 +662,6 @@ def matching_jobs_for_cv(request):
         'recommended_jobs': recommended_jobs,
         'selected_cv_id': int(selected_cv_id) if selected_cv_id else None
     })
-<<<<<<< HEAD
 
 from django.http import HttpResponse
 from django.template.loader import get_template
@@ -733,7 +732,23 @@ def application_pdf_download(request, app_id):
     response = HttpResponse(pdf_file, content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename=application_{app_id}.pdf'
     return response
-=======
+
+def cv_pdf_download(request, cv_id):
+    cv = get_object_or_404(Cvs, id=cv_id)
+
+    html_string = render_to_string(
+        "user/application_detail.html",
+        {"Cvs": cv} 
+    )
+
+    pdf_file = HTML(
+        string=html_string,
+        base_url=request.build_absolute_uri("/")
+    ).write_pdf()  # trả về bytes
+
+    response = HttpResponse(pdf_file, content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename=cv_{cv_id}.pdf'
+    return response
 # KIEU
 def detailPost(request, id):
     if request.method == 'GET':
@@ -851,4 +866,45 @@ def cv_list(request):
         'cv': cv
     })
 
->>>>>>> 8f4d9d5c5f74bb781066df77f29d00e03881a06e
+
+
+
+# cái này update thêm cho AI
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
+
+@require_POST
+def update_job_and_reanalyze(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    
+    # Chỉ admin hoặc chủ job mới được chỉnh (tùy logic của bạn)
+    if not request.user.is_authenticated:  # hoặc kiểm tra role/admin
+        return JsonResponse({'status': 'error', 'message': 'Không có quyền'}, status=403)
+
+    try:
+        # Lấy dữ liệu từ form
+        job.description = request.POST.get('description', job.description).strip()
+        job.requirements = request.POST.get('requirements', job.requirements).strip()
+        job.skills = request.POST.get('skills', job.skills).strip()
+        
+        job.save(update_fields=['description', 'requirements', 'skills'])
+
+        # Tính lại điểm cho tất cả applications của job này
+        analyze_cvs_for_job(job)  # hàm bạn đã có sẵn
+
+        # Optional: lấy lại danh sách mới để trả về (nếu muốn cập nhật giao diện realtime)
+        updated_analyses = analyze_cvs_for_job(job)  # gọi lại để lấy data mới
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Đã cập nhật JD và tính lại điểm AI cho tất cả ứng viên!',
+            # Nếu muốn trả data mới để update giao diện mà không reload
+            # 'analyses': [...]  (tùy chọn)
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': f'Có lỗi xảy ra: {str(e)}'
+        }, status=500)

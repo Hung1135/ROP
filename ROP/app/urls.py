@@ -47,9 +47,12 @@ urlpatterns = [
     path('cv_form_user/<int:cv_id>/', views.cv_detail_form_user, name='cv_form_user'),
 
     path("applications/<int:app_id>/download/", views.application_pdf_download, name="application_pdf_download"),
+    path("cv_pdf_download/<int:cv_id>/", views.cv_pdf_download, name="cv_pdf_download"),
     path("test-font/", views.test_font, name="test_font"),
     path("test-pdf/", views.test_pdf_font, name="test_pdf_font"),
 
+    
+    path('job/<int:job_id>/update-and-reanalyze/', views.update_job_and_reanalyze, name='update_job_and_reanalyze'),
 
 
        ]
