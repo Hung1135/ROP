@@ -13,7 +13,6 @@ from django.core.exceptions import ValidationError
 from .models import Applications, Job, Cvs
 from django.utils import timezone
 
-
 from django.shortcuts import render, redirect
 from django.conf import settings
 from .models import Cvs, Applications, Job, users
@@ -31,7 +30,9 @@ from .AI.utils import classify_job_category
 from django.shortcuts import render
 from django.db.models import Q
 from .models import Job
-from django.db.models import Count  
+from django.db.models import Count
+
+
 # Create your views here.
 # admin
 
@@ -39,6 +40,7 @@ def split_text(text):
     if not text:
         return []
     return [x.strip() for x in re.split(r'\n|\. ', text) if x.strip()]
+
 
 @employer_required
 def post_detail(request, id):
@@ -223,7 +225,7 @@ def login(request):
             request.session['user_email'] = user.email
 
             if user.email == "admin@gmail.com":
-                return redirect('admin_manage_candidates') # Admin nên vào thẳng trang quản lý
+                return redirect('admin_manage_candidates')  # Admin nên vào thẳng trang quản lý
             elif user.role:
                 return redirect('ListJob')
             else:
@@ -254,6 +256,7 @@ def _is_django_hash(value: str) -> bool:
         return False
     algo = value.split("$", 1)[0]
     return algo in {"pbkdf2_sha256", "pbkdf2_sha1", "argon2", "bcrypt_sha256", "scrypt"}
+
 
 @user_required
 def ChangePassword(request):
@@ -295,6 +298,7 @@ def ChangePassword(request):
 
     return render(request, 'user/ChangePassword.html')
 
+
 @user_required
 def personalprofile(request):
     if request.method == 'GET':
@@ -313,6 +317,7 @@ def personalprofile(request):
         return render(request, 'user/personalprofile.html', {"user": user, "notify": "thành công"})
 
     return render(request, 'user/personalprofile.html', {"user": user})
+
 
 @user_required
 def appliedJobsList(request):
@@ -356,7 +361,7 @@ def functionPost(request):
             )
 
             # 🔥🔥🔥 DÒNG QUAN TRỌNG NHẤT
-            job.full_clean()   # CHẠY TOÀN BỘ LUẬT CHỐNG SPAM
+            job.full_clean()  # CHẠY TOÀN BỘ LUẬT CHỐNG SPAM
 
             job.save()
 
@@ -417,6 +422,7 @@ def appliedJobsList(request):
 
     return render(request, 'user/appliedJobsList.html', {'applications': applications})
 
+
 @employer_required
 @xframe_options_sameorigin
 def cv_detail(request, id):
@@ -435,6 +441,7 @@ def cv_pdf(request, id):
     response['X-Frame-Options'] = 'SAMEORIGIN'
     return response
 
+
 def send_interview_email(request, app_id):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         try:
@@ -445,10 +452,10 @@ def send_interview_email(request, app_id):
             itv_time = request.GET.get('time', 'Sẽ thông báo sau')
             itv_location = request.GET.get('location', 'Tại văn phòng công ty')
             itv_docs = request.GET.get('docs', 'Không yêu cầu')
-            itv_contact = request.GET.get('contact', 'Phòng nhân sự') 
+            itv_contact = request.GET.get('contact', 'Phòng nhân sự')
 
             subject = f"[Mời phỏng vấn] Vị trí {job.title} - {job.company}"
-            
+
             message = f"""
             Chào {user_candidate.fullname},
 
@@ -466,12 +473,12 @@ def send_interview_email(request, app_id):
             Trân trọng,
             Phòng nhân sự {job.company}.
             """
-            
+
             email_from = settings.EMAIL_HOST_USER
             recipient_list = [user_candidate.email]
 
             send_mail(subject, message, email_from, recipient_list)
-            
+
             application.is_sent = True
             application.save()
 
@@ -482,14 +489,19 @@ def send_interview_email(request, app_id):
 
 from django.shortcuts import render, get_object_or_404
 from .models import Cvs
+
+
 @employer_required
 def cv_detail_form(request, cv_id):
     cv = get_object_or_404(Cvs, id=cv_id)
     return render(request, 'admin/detail.html', {'cv': cv})
+
+
 @user_required
 def cv_detail_form_user(request, cv_id):
     cv = get_object_or_404(Cvs, id=cv_id)
     return render(request, 'user/detail.html', {'cv': cv})
+
 
 # them
 @user_required
@@ -526,11 +538,16 @@ def job_list_user(request):
         'bs': query
     })
 
-from django.db.models import Q 
+
+from django.db.models import Q
+
+
 @user_required
 def home_view(request):
     jobs = Job.objects.all().order_by('-create_at')[:10]
     return render(request, 'home.html', {'jobs': jobs})
+
+
 @user_required
 def search(request):
     boxSearch = request.GET.get('boxsearch', '').strip()
@@ -548,7 +565,7 @@ def search(request):
             salary_q = Q(salary_min__lte=salary_value) & Q(salary_max__gte=salary_value)
         except ValueError:
             pass
-        
+
         jobs = jobs.filter(
             Q(title__icontains=boxSearch) |
             Q(company__icontains=boxSearch) |
@@ -573,17 +590,18 @@ def search(request):
         jobs = jobs.order_by('-create_at')
 
     provinces = [
-        "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Định", 
-        "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Cao Bằng", "Đà Nẵng", "Đắk Lắk", 
-        "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội", 
-        "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang", 
-        "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An", 
-        "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh", 
-        "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế", 
+        "An Giang", "Bà Rịa - Vũng Tàu", "Bắc Giang", "Bắc Kạn", "Bạc Liêu", "Bắc Ninh", "Bến Tre", "Bình Định",
+        "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Cao Bằng", "Đà Nẵng", "Đắk Lắk",
+        "Đắk Nông", "Điện Biên", "Đồng Nai", "Đồng Tháp", "Gia Lai", "Hà Giang", "Hà Nam", "Hà Nội",
+        "Hà Tĩnh", "Hải Dương", "Hải Phòng", "Hậu Giang", "Hòa Bình", "Hưng Yên", "Khánh Hòa", "Kiên Giang",
+        "Kon Tum", "Lai Châu", "Lâm Đồng", "Lạng Sơn", "Lào Cai", "Long An", "Nam Định", "Nghệ An",
+        "Ninh Bình", "Ninh Thuận", "Phú Thọ", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Ninh",
+        "Quảng Trị", "Sóc Trăng", "Sơn La", "Tây Ninh", "Thái Bình", "Thái Nguyên", "Thanh Hóa", "Thừa Thiên Huế",
         "Tiền Giang", "TP.HCM", "Trà Vinh", "Tuyên Quang", "Vĩnh Long", "Vĩnh Phúc", "Yên Bái"
     ]
-    
-    categories = Job.objects.exclude(category__isnull=True).exclude(category='').values_list('category', flat=True).distinct()
+
+    categories = Job.objects.exclude(category__isnull=True).exclude(category='').values_list('category',
+                                                                                             flat=True).distinct()
 
     return render(request, 'user/job_list.html', {
         'jobs': jobs,
@@ -595,28 +613,32 @@ def search(request):
         'current_cat': category_filter,
         'sort': sort
     })
+
+
 @user_required
 def company_list(request):
     all_companies = Job.objects.exclude(company__isnull=True).exclude(company='') \
         .values('company') \
         .annotate(num_jobs=Count('id')) \
-        .order_by('company') # Sắp xếp A-Z
+        .order_by('company')  # Sắp xếp A-Z
 
     return render(request, 'user/company_list.html', {
         'companies': all_companies
     })
+
 
 @user_required
 def featured_companies(request):
     top_companies = Job.objects.exclude(company__isnull=True).exclude(company='') \
         .values('company') \
         .annotate(num_jobs=Count('id')) \
-        .order_by('-num_jobs') 
+        .order_by('-num_jobs')
 
     return render(request, 'user/company_list.html', {
         'companies': top_companies,
-        'is_featured_page': True  
+        'is_featured_page': True
     })
+
 
 @user_required
 def matching_jobs_for_cv(request):
@@ -625,7 +647,7 @@ def matching_jobs_for_cv(request):
         return redirect('login')
 
     user_cvs = Cvs.objects.filter(user_id=user_id)
-    
+
     selected_cv_id = request.GET.get('cv_id')
     recommended_jobs = []
 
@@ -637,11 +659,11 @@ def matching_jobs_for_cv(request):
             "address": cv.address
         }
 
-        all_jobs = Job.objects.all() 
+        all_jobs = Job.objects.all()
 
         for job in all_jobs:
             percent, level, details = match_cv_fields(cv_data, job)
-            
+
             recommended_jobs.append({
                 'job': job,
                 'percent': percent,
@@ -657,6 +679,7 @@ def matching_jobs_for_cv(request):
         'selected_cv_id': int(selected_cv_id) if selected_cv_id else None
     })
 
+
 from django.http import HttpResponse
 from django.template.loader import get_template
 from django.shortcuts import get_object_or_404
@@ -665,10 +688,12 @@ from .models import Applications
 from xhtml2pdf import pisa
 
 from xhtml2pdf import pisa
+
+
 @employer_required
 def application_pdf_download(request, app_id):
     application = get_object_or_404(Applications, id=app_id)
-    template = get_template("admin/application_detail.html")
+    template = get_template("admin/cv_pdf.html")
     html = template.render({"application": application})
 
     response = HttpResponse(content_type="application/pdf")
@@ -683,9 +708,11 @@ def application_pdf_download(request, app_id):
 def test_font(request):
     return render(request, "test_font.html")
 
+
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+
 
 def test_pdf_font(request):
     template = get_template("test_pdf.html")
@@ -709,12 +736,14 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 from django.shortcuts import get_object_or_404
 from .models import Applications  # nhớ import model
+
+
 @employer_required
 def application_pdf_download(request, app_id):
     application = get_object_or_404(Applications, id=app_id)
 
     html_string = render_to_string(
-        "admin/application_detail.html",
+        "admin/cv_pdf.html",
         {"application": application}
     )
 
@@ -727,22 +756,27 @@ def application_pdf_download(request, app_id):
     response["Content-Disposition"] = f'attachment; filename=application_{app_id}.pdf'
     return response
 
+
 def cv_pdf_download(request, cv_id):
     cv = get_object_or_404(Cvs, id=cv_id)
 
     html_string = render_to_string(
-        "user/application_detail.html",
-        {"Cvs": cv}
+        "user/cv_pdf.html",
+        {
+            "cv": cv
+        }
     )
 
     pdf_file = HTML(
         string=html_string,
         base_url=request.build_absolute_uri("/")
-    ).write_pdf()  # trả về bytes
+    ).write_pdf()
 
     response = HttpResponse(pdf_file, content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename=cv_{cv_id}.pdf'
     return response
+
+
 # KIEU
 @user_required
 def detailPost(request, id):
@@ -774,6 +808,8 @@ def detailPost(request, id):
     }
 
     return render(request, 'user/detailPost.html', context)
+
+
 # KIEU
 def apply_job(request, job_id):
     if request.method == 'POST':
@@ -789,7 +825,7 @@ def apply_job(request, job_id):
 
         Applications.objects.create(
             job_id=job_id,
-            cv=cv, # Dùng lại CV cũ
+            cv=cv,  # Dùng lại CV cũ
             user_id=user_id,
             applied_at=timezone.now(),
             status='new'
@@ -798,6 +834,8 @@ def apply_job(request, job_id):
         return redirect('appliedJobsList')
 
     return redirect('home')
+
+
 # KIEU
 @user_required
 def create_cv(request):
@@ -833,6 +871,8 @@ def create_cv(request):
     return render(request, 'user/create_cv.html', {
         'existing_cv': existing_cv
     })
+
+
 @user_required
 def cv_list(request):
     user_id = request.session.get('user_id')
@@ -864,12 +904,11 @@ def cv_list(request):
     })
 
 
-
-
 # cái này update thêm cho AI
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
+
 
 @require_POST
 def update_job_and_reanalyze(request, job_id):
