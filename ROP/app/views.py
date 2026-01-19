@@ -5,7 +5,6 @@ from django.shortcuts import redirect
 from django.http import HttpResponse, JsonResponse
 from django.template.defaultfilters import title
 from django.db.models import Q
-from django.core.exceptions import ValidationError
 from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
 from .models import Applications, Job, Cvs
 from django.utils import timezone
@@ -26,7 +25,7 @@ from .AI.utils import classify_job_category
 from django.shortcuts import render
 from django.db.models import Q
 from .models import Job
-from django.db.models import Count  
+from django.db.models import Count
 # Create your views here.
 # admin
 
@@ -54,7 +53,7 @@ def post_detail(request, id):
 
 # Lấy tất cả Applications của job, extract CV, tính score, lưu vào DB.
 # Lấy tất cả Applications của job, tính score dựa trên dữ liệu form (không cần file PDF)
-def analyze_cvs_for_job(job):
+def analyze_cvs_for_job(job, scoreDe, sc):
     applications = Applications.objects.filter(job=job).select_related('cv', 'user')
     results = []
 
@@ -294,7 +293,7 @@ def detailPost(request, id):
             return redirect('login')
     today = timezone.now().date()
     job = Job.objects.get(id=id)  # Giữ nguyên get()
-    user_cvs = Cvs.objects.filter(user=user_id) 
+    user_cvs = Cvs.objects.filter(user=user_id)
     user_cvs = Cvs.objects.filter(user_id=user_id)
     is_active = job.create_at <= today <= job.end_date
     jobDescript = split_text(job.description)
@@ -309,7 +308,7 @@ def detailPost(request, id):
         'jobSkill': jobSkill,
         'jobBenefit': jobBenefit,
         'is_active': is_active,
-        'user_cvs': user_cvs, 
+        'user_cvs': user_cvs,
     }
 
     return render(request, 'user/detailPost.html', context)
@@ -348,43 +347,50 @@ def functionPost(request):
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
-
     if request.method == 'POST':
+        reg_score = float(request.POST.get("reg_score"))
+        skill_score = float(request.POST.get("skill_score"))
+        location_score = float(request.POST.get("location_score"))
+
+        # 1️⃣ Tổng phải = 100
+        if reg_score + skill_score + location_score != 100:
+            messages.error(request, " Tổng 3 tiêu chí phải bằng 100%")
+            return redirect("functionPost")
+
+
+        title = request.POST.get('title')
+        company_name = request.POST.get('company_name')
+        location = request.POST.get('location')
+        salary_min = request.POST.get('salary_min')
+        salary_max = request.POST.get('salary_max')
+        description = request.POST.get('description')
+        requirements = request.POST.get('requirements')
+        skills = request.POST.get('skills')
+        benefits = request.POST.get('benefits')
         user_id = request.session.get('user_id')
         user_obj = get_object_or_404(users, id=user_id)
+        end_date = request.POST.get('end_date')
+        category = classify_job_category(title, skills, description)
+        Job.objects.create(
+            title=title,
+            company=company_name,
+            location=location,
+            salary_min=int(salary_min) if salary_min else None,
+            salary_max=int(salary_max) if salary_max else None,
+            description=description,
+            requirements=requirements,
+            benefit=benefits,
+            skills=skills,
+            end_date=end_date,
+            category = classify_job_category(title, skills, description),
+            user=user_obj,
+            skill_score=skill_score,
+            reg_score=reg_score,
+            location_score=location_score,
 
-        try:
-            job = Job(
-                title=request.POST.get('title'),
-                company=request.POST.get('company_name'),
-                location=request.POST.get('location'),
-                salary_min=int(request.POST.get('salary_min')) if request.POST.get('salary_min') else None,
-                salary_max=int(request.POST.get('salary_max')) if request.POST.get('salary_max') else None,
-                description=request.POST.get('description'),
-                requirements=request.POST.get('requirements'),
-                benefit=request.POST.get('benefits'),
-                skills=request.POST.get('skills'),
-                end_date=request.POST.get('end_date'),
-                category=classify_job_category(
-                    request.POST.get('title'),
-                    request.POST.get('skills'),
-                    request.POST.get('description')
-                ),
-                user=user_obj
-            )
-
-            # 🔥🔥🔥 DÒNG QUAN TRỌNG NHẤT
-            job.full_clean()   # CHẠY TOÀN BỘ LUẬT CHỐNG SPAM
-
-            job.save()
-
-            messages.success(request, 'Đăng tin tuyển dụng thành công!')
-            return redirect('ListJob')
-
-        except ValidationError as e:
-            messages.error(request, e.message if hasattr(e, 'message') else e.messages[0])
-            return render(request, 'admin/functionPost.html')
-
+        )
+        messages.success(request, 'Đăng tin tuyển dụng thành công!')
+        return redirect('ListJob')
     return render(request, 'admin/functionPost.html')
 
 
