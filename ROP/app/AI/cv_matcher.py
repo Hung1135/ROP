@@ -107,9 +107,9 @@ def match_cv_fields(cv_data, job):
         level = "Thấp"
 
     return percent, level, {
-        "requirements_score": round(score_req * 100, 2),
-        "skills_score": round(score_skills * 100, 2),
-        "location_score": round(score_location * 100, 2)
+        "requirements_score": round(score_req * 100 *0.5, 2),
+        "skills_score": round(score_skills * 100*0.4, 2),
+        "location_score": round(score_location * 100*0.1, 2)
     }
 
 
