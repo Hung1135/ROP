@@ -81,7 +81,8 @@
             <!-- NÚT MỞ MODAL CV -->
             <div class="filter-btn-container my-4 text-center">
                 {% if total_cvs > 0 %}
-                <button class="btn btn-lg btn-success shadow recommend-btn" data-bs-toggle="modal" data-bs-target="#cvModal">
+                <button class="btn btn-lg btn-success shadow recommend-btn" data-bs-toggle="modal"
+                        data-bs-target="#cvModal">
                     <i class="fas fa-file-alt me-2"></i>Danh sách CV ứng tuyển & Đánh giá AI ({{ total_cvs }} CV)
                 </button>
                 {% else %}
@@ -123,22 +124,26 @@
 
                 <!-- TÙY CHỈNH TRỌNG SỐ -->
                 <div class="score-controls mb-4 p-3 border rounded bg-light">
-                    <h6 class="mb-3 text-primary fw-bold">Tùy chỉnh trọng số tính điểm AI (chỉ ảnh hưởng hiển thị trong popup)</h6>
-                    
+                    <h6 class="mb-3 text-primary fw-bold">Tùy chỉnh trọng số tính điểm AI (chỉ ảnh hưởng hiển thị trong
+                        popup)</h6>
+
                     <div class="row g-3 align-items-end">
                         <div class="col-md-4">
                             <label class="form-label">Mô tả / Yêu cầu (%)</label>
-                            <input type="number" id="req-weight" class="form-control" value="50" min="0" max="100" step="5">
+                            <input type="number" id="req-weight" class="form-control" value="50" min="0" max="100"
+                                   step="5">
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">Kỹ năng (%)</label>
-                            <input type="number" id="skill-weight" class="form-control" value="40" min="0" max="100" step="5">
+                            <input type="number" id="skill-weight" class="form-control" value="40" min="0" max="100"
+                                   step="5">
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label">Địa điểm (%)</label>
-                            <input type="number" id="loc-weight" class="form-control" value="10" min="0" max="100" step="5">
+                            <input type="number" id="loc-weight" class="form-control" value="10" min="0" max="100"
+                                   step="5">
                         </div>
 
                         <div class="col-12 mt-3">
@@ -169,9 +174,13 @@
                             data-date="{{ analysis.application.applied_at|date:'c' }}"
                             data-req-score="{{ analysis.field_scores.requirements_score|default:0 }}"
                             data-skill-score="{{ analysis.field_scores.skills_score|default:0 }}"
-                            data-loc-score="{{ analysis.field_scores.location_score|default:0 }}">
+                            data-loc-score="{{ analysis.field_scores.location_score|default:0 }}"
+                            data-req-origin="{{ analysis.field_scores.requirements_score }}"
+                            data-skill-origin="{{ analysis.field_scores.skills_score }}"
+                            data-loc-origin="{{ analysis.field_scores.location_score }}"
+                        >
                             <td>
-                                <strong class="fs-5 score-display">{{ analysis.score|floatformat:1|default:"0" }}</strong><br/>
+                                <strong class="fs-5 score-display">0.0</strong><br/>
                                 <span class="badge match-level-badge {% if analysis.score > 80 %}bg-success{% elif analysis.score > 60 %}bg-warning text-dark{% else %}bg-danger{% endif %}">
                                     {{ analysis.match_level|default:"Thấp" }}
                                 </span>
@@ -185,9 +194,10 @@
                                 <div class="btn-group" role="group">
                                     <button class="btn btn-sm btn-outline-primary view-cv-btn"
                                             data-cv="{{ analysis.cv.id }}"
-                                            data-job="{{ job.id }}">Chi tiết</button>
+                                            data-job="{{ job.id }}">Chi tiết
+                                    </button>
 
-                                    <a href="{% url 'application_pdf_download' analysis.application.id %}" 
+                                    <a href="{% url 'application_pdf_download' analysis.application.id %}"
                                        class="btn btn-sm btn-outline-primary">Xuất PDF</a>
 
                                     {% if analysis.application.is_sent %}
@@ -237,13 +247,35 @@
                 <p><strong>Họ và tên:</strong> <span id="cv-fullname"></span></p>
                 <p><strong>Email:</strong> <span id="cv-email"></span></p>
                 <p><strong>Phone:</strong> <span id="cv-phone"></span></p>
-                <p><strong>Địa chỉ:</strong> <span id="cv-address"></span></p>
-                <p><strong>Kỹ năng / kinh nghiệm:</strong></p>
+
+                <!-- ĐỊA CHỈ + ĐIỂM -->
+                <p>
+                    <strong>Địa chỉ:</strong>
+                    <span id="cv-address"></span>
+                    <span id="cv-loc-score" class="badge bg-info text-dark ms-2"></span>
+                </p>
+
+                <!-- KỸ NĂNG + ĐIỂM -->
+                <p class="d-flex align-items-center gap-2">
+                    <strong>Kỹ năng:</strong>
+                    <span id="cv-skill-score" class="badge bg-warning text-dark"></span>
+                </p>
                 <pre id="cv-skills"></pre>
-                <p><strong>Mô tả:</strong></p>
+
+                <!-- MÔ TẢ / YÊU CẦU + ĐIỂM -->
+                <p class="d-flex align-items-center gap-2">
+                    <strong>Mô tả / Yêu cầu:</strong>
+                    <span id="cv-req-score" class="badge bg-primary"></span>
+                </p>
                 <pre id="cv-description"></pre>
-                <p><strong>Điểm AI:</strong> <span id="cv-score"></span></p>
+
+                <!-- ĐIỂM TỔNG -->
+                <p>
+                    <strong>Điểm AI:</strong>
+                    <span id="cv-score" class="fw-bold"></span>
+                </p>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
             </div>
@@ -296,210 +328,223 @@
 
 <!-- Sắp xếp bảng CV -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const table = document.getElementById("cv-table");
-    if (!table) return;
+    let currentDetailRow = null;
+    document.addEventListener("DOMContentLoaded", function () {
+        const table = document.getElementById("cv-table");
+        if (!table) return;
 
-    const tbody = table.querySelector("tbody");
-    const sortSelect = document.getElementById("sort-by");
-    if (!sortSelect) return;
+        const tbody = table.querySelector("tbody");
+        const sortSelect = document.getElementById("sort-by");
+        if (!sortSelect) return;
 
-    function sortTable() {
-        const sortValue = sortSelect.value;
-        const rows = Array.from(tbody.querySelectorAll("tr"));
+        function sortTable() {
+            const sortValue = sortSelect.value;
+            const rows = Array.from(tbody.querySelectorAll("tr"));
 
-        rows.sort((a, b) => {
-            const scoreA = Number(a.dataset.score || 0);
-            const scoreB = Number(b.dataset.score || 0);
-            const dateA = new Date(a.dataset.date || "1970-01-01");
-            const dateB = new Date(b.dataset.date || "1970-01-01");
+            rows.sort((a, b) => {
+                const scoreA = Number(a.dataset.score || 0);
+                const scoreB = Number(b.dataset.score || 0);
+                const dateA = new Date(a.dataset.date || "1970-01-01");
+                const dateB = new Date(b.dataset.date || "1970-01-01");
 
-            switch (sortValue) {
-                case "score_desc": return scoreB - scoreA;
-                case "score_asc": return scoreA - scoreB;
-                case "date_desc": return dateB - dateA;
-                default: return 0;
-            }
-        });
+                switch (sortValue) {
+                    case "score_desc": return scoreB - scoreA;
+                    case "score_asc": return scoreA - scoreB;
+                    case "date_desc": return dateB - dateA;
+                    default: return 0;
+                }
+            });
 
-        rows.forEach(row => tbody.appendChild(row));
-    }
+            rows.forEach(row => tbody.appendChild(row));
+        }
 
-    sortSelect.addEventListener("change", sortTable);
-    sortTable(); // Sắp xếp mặc định
-});
-</script>
+        sortSelect.addEventListener("change", sortTable);
+        sortTable(); // Sắp xếp mặc định
+    });
 
 <!-- Xem chi tiết CV -->
-<script>
-document.querySelectorAll(".view-cv-btn").forEach(btn => {
-    btn.addEventListener("click", function () {
-        const cvId = this.dataset.cv;
-        const jobId = this.dataset.job;
 
-        fetch(`/cv/json/${cvId}/?job_id=${jobId}`)
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById("cv-fullname").textContent = data.full_name || "Chưa xác định";
-                document.getElementById("cv-email").textContent = data.email || "—";
-                document.getElementById("cv-phone").textContent = data.phone || "—";
-                document.getElementById("cv-address").textContent = data.address || "—";
-                document.getElementById("cv-skills").textContent = data.skills || "—";
-                document.getElementById("cv-description").textContent = data.description || "—";
-                document.getElementById("cv-score").textContent = data.score_data
-                    ? `${data.score_data.total_score} (${data.score_data.level})`
-                    : "—";
+    document.querySelectorAll(".view-cv-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+           const row = this.closest("tr");
 
-                new bootstrap.Modal(document.getElementById("cvDetailModal")).show();
-            })
-            .catch(err => console.error("Lỗi tải chi tiết CV:", err));
+            const calc = row._calc;
+
+            document.getElementById("cv-score").textContent =
+                calc?.newScore ?? row.dataset.score;
+
+            document.getElementById("cv-req-score").textContent =
+                calc?.newReq ?? row.dataset.reqScore;
+
+            document.getElementById("cv-skill-score").textContent =
+                calc?.newSkill ?? row.dataset.skillScore;
+
+            document.getElementById("cv-loc-score").textContent =
+                calc?.newLoc ?? row.dataset.locScore;
+
+            // FETCH THÔNG TIN CV (CHỈ TEXT)
+            const cvId = this.dataset.cv;
+            const jobId = this.dataset.job;
+
+            fetch(`/cv/json/${cvId}/?job_id=${jobId}`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("cv-fullname").textContent = data.full_name || "—";
+                    document.getElementById("cv-email").textContent = data.email || "—";
+                    document.getElementById("cv-phone").textContent = data.phone || "—";
+                    document.getElementById("cv-address").textContent = data.address || "—";
+                    document.getElementById("cv-skills").textContent = data.skills || "—";
+                    document.getElementById("cv-description").textContent = data.description || "—";
+
+                    new bootstrap.Modal(
+                        document.getElementById("cvDetailModal")
+                    ).show();
+                });
+        });
     });
-});
-</script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("#cv-table tbody tr").forEach(row => {
+            const score = row.dataset.score || "0";
+            const scoreEl = row.querySelector(".score-display");
+            if (scoreEl) {
+                scoreEl.textContent = Number(score).toFixed(2);
+            }
+        });
+    });
+
 
 <!-- Gửi mail phỏng vấn -->
-<script>
-document.querySelectorAll(".btn-send-email").forEach(button => {
-    button.addEventListener("click", function () {
-        const url = this.getAttribute("data-url");
-        const appId = url.split('/').filter(Boolean).pop();
-        document.getElementById("pending_app_id").value = appId;
 
-        new bootstrap.Modal(document.getElementById('interviewDetailsModal')).show();
-    });
-});
+    document.querySelectorAll(".btn-send-email").forEach(button => {
+        button.addEventListener("click", function () {
+            const url = this.getAttribute("data-url");
+            const appId = url.split('/').filter(Boolean).pop();
+            document.getElementById("pending_app_id").value = appId;
 
-document.getElementById("confirmSendMail")?.addEventListener("click", function () {
-    const appId = document.getElementById("pending_app_id").value;
-    const time = document.getElementById("interview_time").value;
-    const location = document.getElementById("interview_location").value;
-    const docs = document.getElementById("interview_docs").value;
-    const contact = document.getElementById("interview_contact").value;
-
-    if (!time || !location) {
-        alert("Vui lòng nhập thời gian và địa điểm!");
-        return;
-    }
-
-    const btn = document.querySelector(`[data-url*="/${appId}/"]`);
-    const originalHTML = btn.innerHTML;
-
-    bootstrap.Modal.getInstance(document.getElementById('interviewDetailsModal')).hide();
-
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang gửi...';
-
-    const params = new URLSearchParams({
-        time: time,
-        location: location,
-        docs: docs,
-        contact: contact
+            new bootstrap.Modal(document.getElementById('interviewDetailsModal')).show();
+        });
     });
 
-    fetch(`${btn.getAttribute("data-url")}?${params}`, {
-        method: "GET",
-        headers: { "X-Requested-With": "XMLHttpRequest" }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.status === "success") {
-            btn.classList.replace("btn-outline-success", "btn-success");
-            btn.innerHTML = '<i class="bi bi-check-circle"></i> Đã gửi';
-            btn.disabled = true;
-        } else {
-            alert("Lỗi: " + (data.message || "Không thể gửi email"));
-            btn.innerHTML = originalHTML;
-            btn.disabled = false;
-        }
-    })
-    .catch(err => {
-        console.error(err);
-        btn.innerHTML = originalHTML;
-        btn.disabled = false;
-        alert("Có lỗi xảy ra khi gửi email");
-    });
-});
-</script>
+    document.getElementById("confirmSendMail")?.addEventListener("click", function () {
+        const appId = document.getElementById("pending_app_id").value;
+        const time = document.getElementById("interview_time").value;
+        const location = document.getElementById("interview_location").value;
+        const docs = document.getElementById("interview_docs").value;
+        const contact = document.getElementById("interview_contact").value;
 
-<!-- TÍNH LẠI ĐIỂM THEO TRỌNG SỐ MỚI -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const recalcBtn = document.getElementById("recalculateScore");
-    if (!recalcBtn) return;
-
-    recalcBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-
-        const reqWeight = parseFloat(document.getElementById("req-weight").value) || 0;
-        const skillWeight = parseFloat(document.getElementById("skill-weight").value) || 0;
-        const locWeight = parseFloat(document.getElementById("loc-weight").value) || 0;
-
-        const totalWeight = reqWeight + skillWeight + locWeight;
-        if (totalWeight === 0) {
-            alert("Tổng trọng số phải lớn hơn 0!");
-            return;
-        }
-        if (totalWeight > 100 || totalWeight < 100) {
-            alert("Tổng trọng số phải bằng 100!");
+        if (!time || !location) {
+            alert("Vui lòng nhập thời gian và địa điểm!");
             return;
         }
 
-        const rows = document.querySelectorAll("#cv-table tbody tr[data-req-score]");
+        const btn = document.querySelector(`[data-url*="/${appId}/"]`);
+        const originalHTML = btn.innerHTML;
 
-        rows.forEach(row => {
-            const reqScore   = parseFloat(row.dataset.reqScore)   || 0;
-            const skillScore = parseFloat(row.dataset.skillScore) || 0;
-            const locScore   = parseFloat(row.dataset.locScore)   || 0;
+        bootstrap.Modal.getInstance(document.getElementById('interviewDetailsModal')).hide();
 
-            const newTotal = 
-                (reqScore   * (reqWeight / 100)) +
-                (skillScore * (skillWeight / 100)) +
-                (locScore   * (locWeight / 100));
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Đang gửi...';
 
-            const newScore = newTotal.toFixed(1);
-
-            let newLevel = "Thấp";
-            let badgeClass = "bg-danger";
-
-            if (newScore >= 80) {
-                newLevel = "Rất phù hợp";
-                badgeClass = "bg-success";
-            } else if (newScore >= 60) {
-                newLevel = "Phù hợp";
-                badgeClass = "bg-warning text-dark";
-            } else if (newScore >= 40) {
-                newLevel = "Trung bình";
-                badgeClass = "bg-info text-dark";
-            }
-
-            row.querySelector(".score-display").textContent = newScore;
-            const badge = row.querySelector(".match-level-badge");
-            if (badge) {
-                badge.textContent = newLevel;
-                badge.className = `badge match-level-badge ${badgeClass}`;
-            }
-
-            row.dataset.score = newScore;
+        const params = new URLSearchParams({
+            time: time,
+            location: location,
+            docs: docs,
+            contact: contact
         });
 
-        // Tự động sắp xếp lại nếu đang sort theo điểm
-        const sortSelect = document.getElementById("sort-by");
-        if (sortSelect && sortSelect.value.includes("score")) {
-            if (typeof sortTable === "function") {
-                sortTable();
+        fetch(`${btn.getAttribute("data-url")}?${params}`, {
+            method: "GET",
+            headers: { "X-Requested-With": "XMLHttpRequest" }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+                btn.classList.replace("btn-outline-success", "btn-success");
+                btn.innerHTML = '<i class="bi bi-check-circle"></i> Đã gửi';
+                btn.disabled = true;
+            } else {
+                alert("Lỗi: " + (data.message || "Không thể gửi email"));
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
             }
-        }
-
-        // Hiệu ứng nút
-        const originalText = recalcBtn.innerHTML;
-        recalcBtn.innerHTML = '<i class="fas fa-check me-2"></i>Đã tính lại!';
-        recalcBtn.classList.add("btn-outline-success");
-        setTimeout(() => {
-            recalcBtn.innerHTML = originalText;
-            recalcBtn.classList.remove("btn-outline-success");
-        }, 2500);
+        })
+        .catch(err => {
+            console.error(err);
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+            alert("Có lỗi xảy ra khi gửi email");
+        });
     });
-});
+
+<!-- TÍNH LẠI ĐIỂM THEO TRỌNG SỐ MỚI -->
+    document.addEventListener("DOMContentLoaded", function () {
+        const recalcBtn = document.getElementById("recalculateScore");
+        if (!recalcBtn) return;
+
+        recalcBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const reqWeight = parseFloat(document.getElementById("req-weight").value) || 0;
+            const skillWeight = parseFloat(document.getElementById("skill-weight").value) || 0;
+            const locWeight = parseFloat(document.getElementById("loc-weight").value) || 0;
+
+            const totalWeight = reqWeight + skillWeight + locWeight;
+            if (totalWeight === 0) {
+                alert("Tổng trọng số phải lớn hơn 0!");
+                return;
+            }
+            if (totalWeight > 100 || totalWeight < 100) {
+                alert("Tổng trọng số phải bằng 100!");
+                return;
+            }
+
+            const rows = document.querySelectorAll("#cv-table tbody tr[data-req-score]");
+
+            rows.forEach(row => {
+                const reqWeighted   = parseFloat(row.dataset.reqOrigin) || 0;
+                const skillWeighted = parseFloat(row.dataset.skillOrigin) || 0;
+                const locWeighted   = parseFloat(row.dataset.locOrigin) || 0;
+
+                // GỠ TRỌNG SỐ MẶC ĐỊNH 50–40–10
+                const reqRaw   = reqWeighted   / 0.5;
+                const skillRaw = skillWeighted / 0.4;
+                const locRaw   = locWeighted   / 0.1;
+
+                // TÍNH LẠI THEO TRỌNG SỐ MỚI
+                const newReq   = +(reqRaw   * reqWeight   / 100).toFixed(2);
+                const newSkill = +(skillRaw * skillWeight / 100).toFixed(2);
+                const newLoc   = +(locRaw   * locWeight   / 100).toFixed(2);
+
+                const newTotal = newReq + newSkill + newLoc;
+                const newScore = newTotal.toFixed(2);
+
+                // lưu tạm
+                row._calc = { newReq, newSkill, newLoc, newScore };
+
+                row.dataset.score = newScore;
+                row.querySelector(".score-display").textContent = newScore;
+            });
+
+
+            // Tự động sắp xếp lại nếu đang sort theo điểm
+            const sortSelect = document.getElementById("sort-by");
+            if (sortSelect && sortSelect.value.includes("score")) {
+                if (typeof sortTable === "function") {
+                    sortTable();
+                }
+            }
+
+            // Hiệu ứng nút
+            const originalText = recalcBtn.innerHTML;
+            recalcBtn.innerHTML = '<i class="fas fa-check me-2"></i>Đã tính lại!';
+            recalcBtn.classList.add("btn-outline-success");
+            setTimeout(() => {
+                recalcBtn.innerHTML = originalText;
+                recalcBtn.classList.remove("btn-outline-success");
+            }, 2500);
+        });
+    });
 </script>
 
 </body>
