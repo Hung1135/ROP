@@ -5,9 +5,15 @@ from django.shortcuts import redirect
 from django.http import HttpResponse, JsonResponse
 from django.template.defaultfilters import title
 from django.db.models import Q
-from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
+from .decorator import user_required, employer_required
+from .AI.cv_matcher import extract_cv_text, match_cv_fields
+# from .AI.cv_matcher import  match_cv_with_job
+from django.core.exceptions import ValidationError
+# from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
 from .models import Applications, Job, Cvs
 from django.utils import timezone
+
+
 from django.shortcuts import render, redirect
 from django.conf import settings
 from .models import Cvs, Applications, Job, users
@@ -25,7 +31,7 @@ from .AI.utils import classify_job_category
 from django.shortcuts import render
 from django.db.models import Q
 from .models import Job
-from django.db.models import Count
+from django.db.models import Count  
 # Create your views here.
 # admin
 
@@ -34,7 +40,7 @@ def split_text(text):
         return []
     return [x.strip() for x in re.split(r'\n|\. ', text) if x.strip()]
 
-
+@employer_required
 def post_detail(request, id):
     job = Job.objects.get(id=id)
 
@@ -53,7 +59,7 @@ def post_detail(request, id):
 
 # Lấy tất cả Applications của job, extract CV, tính score, lưu vào DB.
 # Lấy tất cả Applications của job, tính score dựa trên dữ liệu form (không cần file PDF)
-def analyze_cvs_for_job(job, scoreDe, sc):
+def analyze_cvs_for_job(job):
     applications = Applications.objects.filter(job=job).select_related('cv', 'user')
     results = []
 
@@ -119,7 +125,7 @@ def cv_detail_json(request, id):
     })
 
 
-
+@employer_required
 def ListJob(request):
     user_id = request.session.get('user_id')
     # if request.method == 'GET':
@@ -131,11 +137,15 @@ def ListJob(request):
 
 
 def manaPostCV(request):
-    if request.method == 'GET':
-        user_id = request.session.get('user_id')
-        if not user_id:
-            return redirect('login')
-    cvs = Cvs.objects.select_related('user').all()
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
+
+    # Lấy tất cả CV ứng tuyển vào các job do user này đăng
+    cvs = Cvs.objects.filter(
+        applications__job__user_id=user_id
+    ).select_related('user').distinct()
+
     return render(request, 'admin/managePostCV.html', {'cvs': cvs})
 
 
@@ -245,7 +255,7 @@ def _is_django_hash(value: str) -> bool:
     algo = value.split("$", 1)[0]
     return algo in {"pbkdf2_sha256", "pbkdf2_sha1", "argon2", "bcrypt_sha256", "scrypt"}
 
-
+@user_required
 def ChangePassword(request):
     user_id = request.session.get('user_id')
     if not user_id:
@@ -285,35 +295,7 @@ def ChangePassword(request):
 
     return render(request, 'user/ChangePassword.html')
 
-
-def detailPost(request, id):
-    if request.method == 'GET':
-        user_id = request.session.get('user_id')
-        if not user_id:
-            return redirect('login')
-    today = timezone.now().date()
-    job = Job.objects.get(id=id)  # Giữ nguyên get()
-    user_cvs = Cvs.objects.filter(user=user_id)
-    user_cvs = Cvs.objects.filter(user_id=user_id)
-    is_active = job.create_at <= today <= job.end_date
-    jobDescript = split_text(job.description)
-    jobRequire = split_text(job.requirements)
-    jobSkill = split_text(job.skills)
-    jobBenefit = split_text(job.benefit)
-
-    context = {
-        'job': job,
-        'jobDescript': jobDescript,
-        'jobRequire': jobRequire,
-        'jobSkill': jobSkill,
-        'jobBenefit': jobBenefit,
-        'is_active': is_active,
-        'user_cvs': user_cvs,
-    }
-
-    return render(request, 'user/detailPost.html', context)
-
-
+@user_required
 def personalprofile(request):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
@@ -332,7 +314,7 @@ def personalprofile(request):
 
     return render(request, 'user/personalprofile.html', {"user": user})
 
-
+@user_required
 def appliedJobsList(request):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
@@ -342,55 +324,49 @@ def appliedJobsList(request):
 
 
 # cái này db
+@employer_required
 def functionPost(request):
     if request.method == 'GET':
         user_id = request.session.get('user_id')
         if not user_id:
             return redirect('login')
+
     if request.method == 'POST':
-        reg_score = float(request.POST.get("reg_score"))
-        skill_score = float(request.POST.get("skill_score"))
-        location_score = float(request.POST.get("location_score"))
-
-        # 1️⃣ Tổng phải = 100
-        if reg_score + skill_score + location_score != 100:
-            messages.error(request, " Tổng 3 tiêu chí phải bằng 100%")
-            return redirect("functionPost")
-
-
-        title = request.POST.get('title')
-        company_name = request.POST.get('company_name')
-        location = request.POST.get('location')
-        salary_min = request.POST.get('salary_min')
-        salary_max = request.POST.get('salary_max')
-        description = request.POST.get('description')
-        requirements = request.POST.get('requirements')
-        skills = request.POST.get('skills')
-        benefits = request.POST.get('benefits')
         user_id = request.session.get('user_id')
         user_obj = get_object_or_404(users, id=user_id)
-        end_date = request.POST.get('end_date')
-        category = classify_job_category(title, skills, description)
-        Job.objects.create(
-            title=title,
-            company=company_name,
-            location=location,
-            salary_min=int(salary_min) if salary_min else None,
-            salary_max=int(salary_max) if salary_max else None,
-            description=description,
-            requirements=requirements,
-            benefit=benefits,
-            skills=skills,
-            end_date=end_date,
-            category = classify_job_category(title, skills, description),
-            user=user_obj,
-            skill_score=skill_score,
-            reg_score=reg_score,
-            location_score=location_score,
 
-        )
-        messages.success(request, 'Đăng tin tuyển dụng thành công!')
-        return redirect('ListJob')
+        try:
+            job = Job(
+                title=request.POST.get('title'),
+                company=request.POST.get('company_name'),
+                location=request.POST.get('location'),
+                salary_min=int(request.POST.get('salary_min')) if request.POST.get('salary_min') else None,
+                salary_max=int(request.POST.get('salary_max')) if request.POST.get('salary_max') else None,
+                description=request.POST.get('description'),
+                requirements=request.POST.get('requirements'),
+                benefit=request.POST.get('benefits'),
+                skills=request.POST.get('skills'),
+                end_date=request.POST.get('end_date'),
+                category=classify_job_category(
+                    request.POST.get('title'),
+                    request.POST.get('skills'),
+                    request.POST.get('description')
+                ),
+                user=user_obj
+            )
+
+            # 🔥🔥🔥 DÒNG QUAN TRỌNG NHẤT
+            job.full_clean()   # CHẠY TOÀN BỘ LUẬT CHỐNG SPAM
+
+            job.save()
+
+            messages.success(request, 'Đăng tin tuyển dụng thành công!')
+            return redirect('ListJob')
+
+        except ValidationError as e:
+            messages.error(request, e.message if hasattr(e, 'message') else e.messages[0])
+            return render(request, 'admin/functionPost.html')
+
     return render(request, 'admin/functionPost.html')
 
 
@@ -433,48 +409,7 @@ def upload_cv(request):
 #
 #         return redirect('appliedJobsList')
 #     return redirect('home')
-
-def apply_job(request, job_id):
-    if request.method == 'POST':
-        user_id = request.session.get('user_id')
-        if not user_id:
-            return redirect('login')
-
-        custom_user = users.objects.get(id=user_id)
-
-        # Lấy dữ liệu từ form
-        fullname = request.POST.get('full_name', '').strip()
-        email = request.POST.get('email', '').strip()
-        phone = request.POST.get('phone', '').strip()
-        address = request.POST.get('address', '').strip()
-        description = request.POST.get('description', '').strip()
-        skills = request.POST.get('experience', '').strip()  # form field "Kỹ năng" mapping vào skills
-
-        # Lưu thông tin vào Cvs
-        cv = Cvs.objects.create(
-            user=custom_user,
-            full_name=fullname,
-            email=email,
-            phone=phone,
-            address=address,
-            description=description,
-            skills=skills,
-            uploaded_at=timezone.now()
-        )
-
-        Applications.objects.create(
-            job_id=job_id,
-            cv=cv,
-            user=custom_user,
-            applied_at=timezone.now(),
-            status='new'
-        )
-
-        return redirect('appliedJobsList')
-
-    return redirect('home')
-
-
+@user_required
 def appliedJobsList(request):
     custom_user = users.objects.get(id=request.session['user_id'])
 
@@ -482,7 +417,7 @@ def appliedJobsList(request):
 
     return render(request, 'user/appliedJobsList.html', {'applications': applications})
 
-
+@employer_required
 @xframe_options_sameorigin
 def cv_detail(request, id):
     cv = get_object_or_404(Cvs, id=id)
@@ -547,12 +482,17 @@ def send_interview_email(request, app_id):
 
 from django.shortcuts import render, get_object_or_404
 from .models import Cvs
-
+@employer_required
 def cv_detail_form(request, cv_id):
     cv = get_object_or_404(Cvs, id=cv_id)
     return render(request, 'admin/detail.html', {'cv': cv})
+@user_required
+def cv_detail_form_user(request, cv_id):
+    cv = get_object_or_404(Cvs, id=cv_id)
+    return render(request, 'user/detail.html', {'cv': cv})
 
 # them
+@user_required
 def job_list_user(request):
     query = request.GET.get('boxsearch', '').strip()
     location = request.GET.get('location', '').strip()
@@ -587,11 +527,11 @@ def job_list_user(request):
     })
 
 from django.db.models import Q 
-
+@user_required
 def home_view(request):
     jobs = Job.objects.all().order_by('-create_at')[:10]
     return render(request, 'home.html', {'jobs': jobs})
-
+@user_required
 def search(request):
     boxSearch = request.GET.get('boxsearch', '').strip()
     location_filter = request.GET.get('location', '').strip()
@@ -655,7 +595,7 @@ def search(request):
         'current_cat': category_filter,
         'sort': sort
     })
-
+@user_required
 def company_list(request):
     all_companies = Job.objects.exclude(company__isnull=True).exclude(company='') \
         .values('company') \
@@ -666,7 +606,7 @@ def company_list(request):
         'companies': all_companies
     })
 
-
+@user_required
 def featured_companies(request):
     top_companies = Job.objects.exclude(company__isnull=True).exclude(company='') \
         .values('company') \
@@ -677,37 +617,8 @@ def featured_companies(request):
         'companies': top_companies,
         'is_featured_page': True  
     })
-def create_cv(request):
-    user_id = request.session.get('user_id')
-    if not user_id:
-        return redirect('login')
-    
-    if request.method == 'POST':
-        custom_user = users.objects.get(id=user_id)
-        Cvs.objects.create(
-            user=custom_user,
-            full_name=request.POST.get('full_name'),
-            email=request.POST.get('email'),
-            phone=request.POST.get('phone'),
-            address=request.POST.get('address'),
-            description=request.POST.get('description'),
-            skills=request.POST.get('experience'), 
-            uploaded_at=timezone.now()
-        )
-        messages.success(request, "Tạo hồ sơ thành công!")
-        return redirect('cv_list') 
 
-    return render(request, 'user/create_cv.html')
-
-def cv_list(request):
-    user_id = request.session.get('user_id')
-    if not user_id:
-        return redirect('login')
-    
-    user_cvs = Cvs.objects.filter(user_id=user_id).order_by('-uploaded_at')
-    return render(request, 'user/cv_list.html', {'cvs': user_cvs})
-
-
+@user_required
 def matching_jobs_for_cv(request):
     user_id = request.session.get('user_id')
     if not user_id:
@@ -745,3 +656,252 @@ def matching_jobs_for_cv(request):
         'recommended_jobs': recommended_jobs,
         'selected_cv_id': int(selected_cv_id) if selected_cv_id else None
     })
+
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.shortcuts import get_object_or_404
+from xhtml2pdf import pisa
+from .models import Applications
+from xhtml2pdf import pisa
+
+from xhtml2pdf import pisa
+@employer_required
+def application_pdf_download(request, app_id):
+    application = get_object_or_404(Applications, id=app_id)
+    template = get_template("admin/application_detail.html")
+    html = template.render({"application": application})
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename="application_{app_id}.pdf"'
+
+    pisa.DEFAULT_FONT = "DejaVuSans"  # 🔥 BẮT BUỘC
+    pisa.CreatePDF(html, dest=response, encoding="UTF-8")
+
+    return response
+
+
+def test_font(request):
+    return render(request, "test_font.html")
+
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+def test_pdf_font(request):
+    template = get_template("test_pdf.html")
+    html = template.render({})
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = "inline; filename=test.pdf"
+
+    pisa.DEFAULT_FONT = "DejaVuSans"
+
+    pisa.CreatePDF(
+        html,
+        dest=response,
+        encoding="UTF-8"
+    )
+    return response
+
+
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from django.shortcuts import get_object_or_404
+from .models import Applications  # nhớ import model
+@employer_required
+def application_pdf_download(request, app_id):
+    application = get_object_or_404(Applications, id=app_id)
+
+    html_string = render_to_string(
+        "admin/application_detail.html",
+        {"application": application}
+    )
+
+    pdf_file = HTML(
+        string=html_string,
+        base_url=request.build_absolute_uri("/")
+    ).write_pdf()  # trả về bytes
+
+    response = HttpResponse(pdf_file, content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename=application_{app_id}.pdf'
+    return response
+
+def cv_pdf_download(request, cv_id):
+    cv = get_object_or_404(Cvs, id=cv_id)
+
+    html_string = render_to_string(
+        "user/application_detail.html",
+        {"Cvs": cv}
+    )
+
+    pdf_file = HTML(
+        string=html_string,
+        base_url=request.build_absolute_uri("/")
+    ).write_pdf()  # trả về bytes
+
+    response = HttpResponse(pdf_file, content_type="application/pdf")
+    response["Content-Disposition"] = f'attachment; filename=cv_{cv_id}.pdf'
+    return response
+# KIEU
+@user_required
+def detailPost(request, id):
+    if request.method == 'GET':
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('login')
+    job = Job.objects.get(id=id)
+    # Kiểm tra xem user đã có hồ sơ chưa
+    has_cv = Cvs.objects.filter(user_id=user_id).exists()
+    today = timezone.now().date()
+    user_cvs = Cvs.objects.filter(user=user_id)
+    user_cvs = Cvs.objects.filter(user_id=user_id)
+    is_active = job.create_at <= today <= job.end_date
+    jobDescript = split_text(job.description)
+    jobRequire = split_text(job.requirements)
+    jobSkill = split_text(job.skills)
+    jobBenefit = split_text(job.benefit)
+
+    context = {
+        'job': job,
+        'has_cv': has_cv,
+        'jobDescript': jobDescript,
+        'jobRequire': jobRequire,
+        'jobSkill': jobSkill,
+        'jobBenefit': jobBenefit,
+        'is_active': is_active,
+        'user_cvs': user_cvs,
+    }
+
+    return render(request, 'user/detailPost.html', context)
+# KIEU
+def apply_job(request, job_id):
+    if request.method == 'POST':
+        user_id = request.session.get('user_id')
+        if not user_id:
+            return redirect('login')
+
+        cv = Cvs.objects.filter(user_id=user_id).first()
+
+        if not cv:
+            messages.error(request, "Vui lòng tạo hồ sơ trước khi ứng tuyển!")
+            return redirect('create_cv')
+
+        Applications.objects.create(
+            job_id=job_id,
+            cv=cv, # Dùng lại CV cũ
+            user_id=user_id,
+            applied_at=timezone.now(),
+            status='new'
+        )
+        messages.success(request, "Ứng tuyển thành công!")
+        return redirect('appliedJobsList')
+
+    return redirect('home')
+# KIEU
+@user_required
+def create_cv(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
+
+    existing_cv = Cvs.objects.filter(user_id=user_id).first()
+
+    if request.method == 'POST':
+        # 🔴 Nếu đã có CV → báo lỗi & render lại
+        if existing_cv:
+            messages.error(request, "Bạn đã có hồ sơ trên hệ thống!")
+            return render(request, 'user/create_cv.html', {
+                'existing_cv': existing_cv
+            })
+
+        custom_user = users.objects.get(id=user_id)
+        Cvs.objects.create(
+            user=custom_user,
+            full_name=request.POST.get('full_name'),
+            email=request.POST.get('email'),
+            phone=request.POST.get('phone'),
+            address=request.POST.get('address'),
+            description=request.POST.get('description'),
+            skills=request.POST.get('experience'),
+            uploaded_at=timezone.now()
+        )
+        messages.success(request, "Tạo hồ sơ thành công!")
+        return redirect('cv_list')  # ✅ ĐÚNG
+
+    # GET request
+    return render(request, 'user/create_cv.html', {
+        'existing_cv': existing_cv
+    })
+@user_required
+def cv_list(request):
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
+
+    cv = Cvs.objects.filter(user_id=user_id).first()
+
+    # ===== CHƯA CÓ CV =====
+    if not cv:
+        return render(request, 'user/cv_list.html', {
+            'cv': None
+        })
+
+    # ===== CÓ CV → UPDATE =====
+    if request.method == 'POST':
+        cv.full_name = request.POST.get('full_name')
+        cv.phone = request.POST.get('phone')
+        cv.address = request.POST.get('address')
+        cv.description = request.POST.get('description')
+        cv.skills = request.POST.get('experience')
+        cv.save()
+
+        messages.success(request, "Cập nhật hồ sơ thành công!")
+        return redirect('cv_list')
+
+    return render(request, 'user/cv_list.html', {
+        'cv': cv
+    })
+
+
+
+
+# cái này update thêm cho AI
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
+
+@require_POST
+def update_job_and_reanalyze(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    # Chỉ admin hoặc chủ job mới được chỉnh (tùy logic của bạn)
+    if not request.user.is_authenticated:  # hoặc kiểm tra role/admin
+        return JsonResponse({'status': 'error', 'message': 'Không có quyền'}, status=403)
+
+    try:
+        # Lấy dữ liệu từ form
+        job.description = request.POST.get('description', job.description).strip()
+        job.requirements = request.POST.get('requirements', job.requirements).strip()
+        job.skills = request.POST.get('skills', job.skills).strip()
+
+        job.save(update_fields=['description', 'requirements', 'skills'])
+
+        # Tính lại điểm cho tất cả applications của job này
+        analyze_cvs_for_job(job)  # hàm bạn đã có sẵn
+
+        # Optional: lấy lại danh sách mới để trả về (nếu muốn cập nhật giao diện realtime)
+        updated_analyses = analyze_cvs_for_job(job)  # gọi lại để lấy data mới
+
+        return JsonResponse({
+            'status': 'success',
+            'message': 'Đã cập nhật JD và tính lại điểm AI cho tất cả ứng viên!',
+            # Nếu muốn trả data mới để update giao diện mà không reload
+            # 'analyses': [...]  (tùy chọn)
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': f'Có lỗi xảy ra: {str(e)}'
+        }, status=500)
