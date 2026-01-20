@@ -174,6 +174,8 @@ class Applications(models.Model):
     ai_score = models.CharField(max_length=255, null=True, blank=True)
     manual_rank = models.CharField(max_length=255, null=True, blank=True)
     is_sent = models.BooleanField(default=False) # Thêm dòng này
+    is_rejected = models.BooleanField(default=False)  # đã từ chối hay chưa
+
 
 
     class Meta:
