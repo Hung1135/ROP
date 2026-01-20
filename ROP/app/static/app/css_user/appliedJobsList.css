@@ -159,3 +159,33 @@
     margin-right: 0;
   }
 }
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 2px solid transparent;
+}
+
+/* Đang xét duyệt */
+.badge-new {
+    color: #f39c12;
+    background-color: #fff6e5;
+    border-color: #f39c12;
+}
+
+/* Đã từ chối */
+.badge-rejected {
+    color: #e74c3c;
+    background-color: #fdecea;
+    border-color: #e74c3c;
+}
+
+/* Mời phỏng vấn */
+.badge-passed {
+    color: #27ae60;
+    background-color: #eafaf1;
+    border-color: #27ae60;
+}
+

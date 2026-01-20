@@ -503,17 +503,7 @@
     </script>
  
 
-   
 
-    <script>
-      document.querySelectorAll(".view-cv-btn").forEach((btn) => {
-        btn.addEventListener("click", function () {
-          const cvId = this.dataset.cv;
-          const jobId = this.dataset.job;
-          window.location.href = `/cv_form/${cvId}/?job_id=${jobId}`;
-        });
-      });
-    </script>
     <script>
 document.querySelectorAll(".btn-reject").forEach(btn => {
   btn.addEventListener("click", function () {

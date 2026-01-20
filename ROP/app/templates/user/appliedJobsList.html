@@ -1,74 +1,80 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8"/>
     <title>Title</title>
-    <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}" />
+    <link rel="stylesheet" href="{% static 'app/css_user/home.css' %}"/>
     <link
-      rel="stylesheet"
-      href="{% static 'app/css_user/appliedJobsList.css' %}"
+            rel="stylesheet"
+            href="{% static 'app/css_user/appliedJobsList.css' %}"
     />
-  </head>
-  <body>
-    {% include "user/header.html" %}
+</head>
+<body>
+{% include "user/header.html" %}
 
-    <main class="main-content">
-      <div class="applied-jobs-container">
+<main class="main-content">
+    <div class="applied-jobs-container">
         <h2 class="section-title-applied">
-          DANH SÁCH VIỆC LÀM ĐÃ ỨNG TUYỂN 
-          {% comment %} ({{ applications.count }}) {% endcomment %}
+            DANH SÁCH VIỆC LÀM ĐÃ ỨNG TUYỂN
+            {% comment %} ({{ applications.count }}) {% endcomment %}
         </h2>
 
         {% for app in applications %}
         <div
-          class="job-card applied {% if app.status == 'new' %}pending{% elif app.status == 'rejected' %}rejected{% elif app.status == 'passed' %}interview{% endif %}"
+                class="job-card applied {% if app.status == 'new' %}pending{% elif app.status == 'rejected' %}rejected{% elif app.status == 'passed' %}interview{% endif %}"
         >
-          <div class="job-header">
-            <img
-              src="data:image/webp;base64,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"
-              alt="Logo công ty"
-              class="company-logo"
-            />
-            <div class="job-info">
-              <h3 class="job-title">{{ app.job.title }}</h3>
-              <p class="company-name">{{ app.job.company_name }}</p>
+            <div class="job-header">
+                <img
+                        src="data:image/webp;base64,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"
+                        alt="Logo công ty"
+                        class="company-logo"
+                />
+                <div class="job-info">
+                    <h3 class="job-title">{{ app.job.title }}</h3>
+                    <p class="company-name">{{ app.job.company_name }}</p>
+                </div>
+                <div class="status-badge">
+                    {% if app.status == 'new' %}
+                    <span class="badge badge-new">Đang xét duyệt</span>
+                    {% elif app.status == 'rejected' %}
+                    <span class="badge badge-rejected">Đã từ chối</span>
+                    {% elif app.status == 'passed' %}
+                    <span class="badge badge-passed">Mời phỏng vấn</span>
+                    {% endif %}
+                </div>
+
             </div>
-            <div class="status-badge"> {% if app.status == 'new' %} Đang xét duyệt 
-                {% elif app.status == 'rejected' %} Đã từ chối 
-                {% elif app.status == 'passed' %} Mời phỏng vấn 
-                {% endif %} </div>
-          </div>
 
-          <div class="job-details">
-            <p class="detail-item">
-              <i class="fas fa-map-marker-alt"></i>
-              <span>{{ app.job.location }}</span>
-            </p>
-            <p class="detail-item">
-              <i class="fas fa-money-bill-wave"></i>
-              <span>{{ app.job.salary_range }}</span>
-            </p>
-            <p class="detail-item">
-              <i class="fas fa-clock"></i>
-              <span>Ứng tuyển ngày: {{ app.applied_at|date:"d/m/Y" }}</span>
-            </p>
-          </div>
+            <div class="job-details">
+                <p class="detail-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ app.job.location }}</span>
+                </p>
+                <p class="detail-item">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>{{ app.job.salary_range }}</span>
+                </p>
+                <p class="detail-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Ứng tuyển ngày: {{ app.applied_at|date:"d/m/Y" }}</span>
+                </p>
+            </div>
 
-          <div class="job-actions">
-            <a href="{% url 'detailPost' app.job.id %}" class="btn-detail"
-              >Xem chi tiết bài đăng</a
-            >
-          </div>
+            <div class="job-actions">
+                <a href="{% url 'detailPost' app.job.id %}" class="btn-detail"
+                >Xem chi tiết bài đăng</a
+                >
+            </div>
         </div>
         {% empty %}
         <p>Bạn chưa ứng tuyển công việc nào.</p>
         {% endfor %}
-      </div>
-    </main>
+    </div>
+</main>
 
-    <footer>
-      <p>&copy; 2025 JobFinder. All rights reserved.</p>
-    </footer>
-  </body>
+<footer>
+    <p>&copy; 2025 JobFinder. All rights reserved.</p>
+</footer>
+</body>
 </html>

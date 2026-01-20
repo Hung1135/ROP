@@ -745,19 +745,19 @@ from xhtml2pdf import pisa
 from xhtml2pdf import pisa
 
 
-@employer_required
-def application_pdf_download(request, app_id):
-    application = get_object_or_404(Applications, id=app_id)
-    template = get_template("admin/cv_pdf.html")
-    html = template.render({"application": application})
-
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = f'attachment; filename="application_{app_id}.pdf"'
-
-    pisa.DEFAULT_FONT = "DejaVuSans"  # 🔥 BẮT BUỘC
-    pisa.CreatePDF(html, dest=response, encoding="UTF-8")
-
-    return response
+# @employer_required
+# def application_pdf_download(request, app_id):
+#     application = get_object_or_404(Applications, id=app_id)
+#     template = get_template("admin/cv_pdf.html")
+#     html = template.render({"application": application})
+#
+#     response = HttpResponse(content_type="application/pdf")
+#     response["Content-Disposition"] = f'attachment; filename="application_{app_id}.pdf"'
+#
+#     pisa.DEFAULT_FONT = "DejaVuSans"  # 🔥 BẮT BUỘC
+#     pisa.CreatePDF(html, dest=response, encoding="UTF-8")
+#
+#     return response
 
 
 def test_font(request):
@@ -798,7 +798,7 @@ def application_pdf_download(request, app_id):
     application = get_object_or_404(Applications, id=app_id)
 
     html_string = render_to_string(
-        "admin/cv_pdf.html",
+        "admin/application_detail.html",
         {"application": application}
     )
 
