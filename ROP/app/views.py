@@ -6,7 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template.defaultfilters import title
 from django.db.models import Q
 from .decorator import user_required, employer_required
-from .AI.cv_matcher import extract_cv_text, match_cv_fields
+from .AI.cv_matcher import match_cv_fields
 # from .AI.cv_matcher import  match_cv_with_job
 from django.core.exceptions import ValidationError
 # from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
@@ -136,10 +136,10 @@ def cv_detail_json(request, id):
 @employer_required
 def ListJob(request):
     user_id = request.session.get('user_id')
-    # if request.method == 'GET':
-    #     if not user_id:
-    #         return redirect('login')
-    jobs = Job.objects.all().filter(user=user_id)
+    if request.method == 'GET':
+        if not user_id:
+            return redirect('login')
+    jobs = Job.objects.all().filter(user=user_id).order_by("-create_at")
     # jobs = Job.objects.all()
     return render(request, 'admin/ListJob.html', {'jobs': jobs})
 
@@ -169,78 +169,194 @@ def logout_user(request):
 
 
 # login
+def is_strong_password(password):
+    """
+    Ít nhất 8 ký tự
+    Có ít nhất 1 chữ viết hoa
+    Có ít nhất 1 ký tự đặc biệt
+    """
+    if len(password) < 8:
+        return False
+    if not re.search(r'[A-Z]', password):
+        return False
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>_\-+=/\\[\]]', password):
+        return False
+    return True
+
+# login
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.db import IntegrityError
+from django.contrib.auth.hashers import make_password, check_password
+
 def login(request):
     if 'user_id' in request.session:
-        user_role = request.session.get('user_role')
-
-        if user_role:
+        if request.session.get('user_role'):
             return redirect('ListJob')
-        else:
-            return redirect('home')
-    if request.method == 'POST' and 'full_name' in request.POST:
+        return redirect('home')
 
-        full_name = request.POST.get('full_name')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
+    context = {}
+
+    # ================= ĐĂNG KÝ =================
+    if request.method == 'POST' and 'full_name' in request.POST:
+        full_name = request.POST.get('full_name', '').strip()
+        email = request.POST.get('email', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        password = request.POST.get('password', '').strip()
+        confirm_password = request.POST.get('confirm_password', '').strip()
         selected_role = request.POST.get('role', 'candidate')
-        if selected_role == 'employer':
-            is_admin = True
-        else:
-            is_admin = False
+
+        is_admin = True if selected_role == 'employer' else False
+        context['show_register'] = True  # ⭐ giữ tab đăng ký
+
+        if not all([full_name, email, phone, password, confirm_password]):
+            messages.error(request, "Vui lòng nhập đầy đủ thông tin.", extra_tags="register")
+            return render(request, 'login/login.html', context)
 
         if password != confirm_password:
-            messages.error(request, "Mật khẩu và xác nhận mật khẩu không khớp!")
-            return render(request, 'login/login.html')
+            messages.error(request, "Mật khẩu và xác nhận mật khẩu không khớp.", extra_tags="register")
+            return render(request, 'login/login.html', context)
 
-        hashed_password = make_password(password)
+        if not is_strong_password(password):
+            messages.error(
+                request,
+                "Mật khẩu phải có ít nhất 8 ký tự, 1 chữ viết hoa và 1 ký tự đặc biệt.",
+                extra_tags="register"
+            )
+            return render(request, 'login/login.html', context)
 
         try:
             users.objects.create(
                 fullname=full_name,
                 email=email,
                 phone=phone,
-                password_hash=hashed_password,
+                password_hash=make_password(password),
                 role=is_admin
             )
-            messages.success(request, "Đăng ký thành công! Vui lòng Đăng nhập.")
+            messages.success(request, "Đăng ký thành công! Vui lòng đăng nhập.", extra_tags="login")
             return redirect('login')
-        except IntegrityError:
-            messages.error(request, "Email hoặc Số điện thoại đã tồn tại\nVui lòng thử lại.")
-            return render(request, 'login/login.html')
-        except Exception as e:
-            messages.error(request, f"Đã có lỗi xảy ra trong quá trình đăng ký: {e}")
-            return render(request, 'login/login.html')
 
+        except IntegrityError:
+            messages.error(request, "Email hoặc số điện thoại đã tồn tại.", extra_tags="register")
+            return render(request, 'login/login.html', context)
+
+        except Exception:
+            messages.error(request, "Có lỗi xảy ra, vui lòng thử lại.", extra_tags="register")
+            return render(request, 'login/login.html', context)
+
+    # ================= ĐĂNG NHẬP =================
     elif request.method == 'POST' and 'email_login' in request.POST:
-        email = request.POST.get('email_login')
-        password = request.POST.get('password_login')
+        email = request.POST.get('email_login', '').strip()
+        password = request.POST.get('password_login', '').strip()
 
         try:
             user = users.objects.get(email=email)
         except users.DoesNotExist:
-            messages.error(request, "Email hoặc mật khẩu không đúng.")
+            messages.error(request, "Email hoặc mật khẩu không đúng.", extra_tags="login")
             return render(request, 'login/login.html')
 
-        if check_password(password, user.password_hash):
-
-            request.session['user_id'] = user.id
-            request.session['user_full_name'] = user.fullname
-            request.session['user_role'] = user.role
-            request.session['user_email'] = user.email
-
-            if user.email == "admin@gmail.com":
-                return redirect('admin_manage_candidates')  # Admin nên vào thẳng trang quản lý
-            elif user.role:
-                return redirect('ListJob')
-            else:
-                return redirect('home')
-        else:
-            messages.error(request, "Email hoặc mật khẩu không đúng.")
+        if not check_password(password, user.password_hash):
+            messages.error(request, "Email hoặc mật khẩu không đúng.", extra_tags="login")
             return render(request, 'login/login.html')
+
+        request.session['user_id'] = user.id
+        request.session['user_full_name'] = user.fullname
+        request.session['user_role'] = user.role
+        request.session['user_email'] = user.email
+
+        if user.email == "admin@gmail.com":
+            return redirect('admin_manage_candidates')
+        elif user.role:
+            return redirect('ListJob')
+        return redirect('home')
 
     return render(request, 'login/login.html')
+
+# def login(request):
+#     if 'user_id' in request.session:
+#         user_role = request.session.get('user_role')
+#         if user_role:
+#             return redirect('ListJob')
+#         else:
+#             return redirect('home')
+#
+#     # ====== ĐĂNG KÝ ======
+#     if request.method == 'POST' and 'full_name' in request.POST:
+#         full_name = request.POST.get('full_name', '').strip()
+#         email = request.POST.get('email', '').strip()
+#         phone = request.POST.get('phone', '').strip()
+#         password = request.POST.get('password', '').strip()
+#         confirm_password = request.POST.get('confirm_password', '').strip()
+#         selected_role = request.POST.get('role', 'candidate')
+#
+#         is_admin = True if selected_role == 'employer' else False
+#
+#         if not full_name or not email or not phone or not password or not confirm_password:
+#             messages.error(request, "Vui lòng nhập đầy đủ thông tin.")
+#             return render(request, 'login/login.html')
+#
+#         if password != confirm_password:
+#             messages.error(request, "Mật khẩu và xác nhận mật khẩu không khớp!")
+#             return render(request, 'login/login.html')
+#
+#         # 🔐 KIỂM TRA ĐỘ MẠNH MẬT KHẨU
+#         if not is_strong_password(password):
+#             messages.error(
+#                 request,
+#                 "Mật khẩu phải có ít nhất 8 ký tự, 1 chữ viết hoa và 1 ký tự đặc biệt."
+#             )
+#             return render(request, 'login/login.html')
+#
+#         hashed_password = make_password(password)
+#
+#         try:
+#             users.objects.create(
+#                 fullname=full_name,
+#                 email=email,
+#                 phone=phone,
+#                 password_hash=hashed_password,
+#                 role=is_admin
+#             )
+#             messages.success(request, "Đăng ký thành công! Vui lòng đăng nhập.")
+#             return redirect('login')
+#
+#         except IntegrityError:
+#             messages.error(request, "Email hoặc Số điện thoại đã tồn tại. Vui lòng thử lại.")
+#             return render(request, 'login/login.html')
+#
+#         except Exception as e:
+#             messages.error(request, "Đã có lỗi xảy ra trong quá trình đăng ký.")
+#             return render(request, 'login/login.html')
+#
+#     # ====== ĐĂNG NHẬP ======
+#     elif request.method == 'POST' and 'email_login' in request.POST:
+#         email = request.POST.get('email_login')
+#         password = request.POST.get('password_login')
+#
+#         try:
+#             user = users.objects.get(email=email)
+#         except users.DoesNotExist:
+#             messages.error(request, "Email hoặc mật khẩu không đúng.")
+#             return render(request, 'login/login.html')
+#
+#         if check_password(password, user.password_hash):
+#             request.session['user_id'] = user.id
+#             request.session['user_full_name'] = user.fullname
+#             request.session['user_role'] = user.role
+#             request.session['user_email'] = user.email
+#
+#             if user.email == "admin@gmail.com":
+#                 return redirect('admin_manage_candidates')
+#             elif user.role:
+#                 return redirect('ListJob')
+#             else:
+#                 return redirect('home')
+#         else:
+#             messages.error(request, "Email hoặc mật khẩu không đúng.")
+#             return render(request, 'login/login.html')
+#
+#     return render(request, 'login/login.html')
+
 
 
 # user
@@ -262,6 +378,13 @@ def _is_django_hash(value: str) -> bool:
         return False
     algo = value.split("$", 1)[0]
     return algo in {"pbkdf2_sha256", "pbkdf2_sha1", "argon2", "bcrypt_sha256", "scrypt"}
+
+
+import re
+from django.contrib import messages
+from django.contrib.auth.hashers import check_password, make_password
+from django.shortcuts import render, redirect
+
 
 
 @user_required
@@ -296,6 +419,15 @@ def ChangePassword(request):
         if new_password != confirm_password:
             messages.error(request, "Mật khẩu mới và nhập lại mật khẩu không khớp.")
             return render(request, 'user/ChangePassword.html')
+
+        # 🔐 KIỂM TRA ĐỘ MẠNH MẬT KHẨU
+        if not is_strong_password(new_password):
+            messages.error(
+                request,
+                "Mật khẩu phải có ít nhất 8 ký tự, 1 chữ viết hoa và 1 ký tự đặc biệt."
+            )
+            return render(request, 'user/ChangePassword.html')
+
         user.password_hash = make_password(new_password)
         user.save(update_fields=['password_hash'])
 
@@ -303,7 +435,6 @@ def ChangePassword(request):
         return redirect('home')
 
     return render(request, 'user/ChangePassword.html')
-
 
 @user_required
 def personalprofile(request):
@@ -1023,3 +1154,17 @@ def update_job_and_reanalyze(request, job_id):
             'status': 'error',
             'message': f'Có lỗi xảy ra: {str(e)}'
         }, status=500)
+
+
+@require_POST
+@employer_required
+def delete_job(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+
+    if Applications.objects.filter(job=job).exists():
+        messages.error(request, "Không thể xóa bài đăng vì đã có ứng viên.")
+        return redirect('ListJob')
+
+    job.delete()
+    messages.success(request, "Đã xóa bài đăng thành công!")
+    return redirect('ListJob')

@@ -22,7 +22,7 @@
             <form method="get" action="{% url 'search' %}" class="filter-form">
                 <div class="filter-group">
                     <input type="text" name="boxsearch" placeholder="Tên công việc, vị trí..." value="{{ bs }}">
-                    
+
                     <select name="location">
                         <option value="">Tất cả địa điểm</option>
                         {% for p in provinces %}
@@ -45,7 +45,7 @@
             <h2>Kết Quả Tuyển Dụng</h2>
             <div class="sort-box">
                  <span>Sắp xếp:</span>
-                 <a href="?sort=newest&boxsearch={{bs}}&location={{current_loc}}" class="{% if sort == 'newest' %}active{% endif %}">Mới nhất</a> | 
+                 <a href="?sort=newest&boxsearch={{bs}}&location={{current_loc}}" class="{% if sort == 'newest' %}active{% endif %}">Mới nhất</a> |
                  <a href="?sort=oldest&boxsearch={{bs}}&location={{current_loc}}" class="{% if sort == 'oldest' %}active{% endif %}">Cũ nhất</a>
             </div>
         </div>
@@ -61,7 +61,7 @@
                 </div>
                 <p class="job-company"><strong>{{ job.company }}</strong></p>
                 <p class="job-location">{{ job.location }}</p>
-                
+
                 <div class="job-footer">
                     <p class="job-date">Hạn: {{ job.end_date|date:"d/m/Y" }}</p>
                     <a href="{% url 'detailPost' job.id %}" class="btn-detail">Xem Chi Tiết</a>
