@@ -39,7 +39,7 @@
           <p class="job-company">{{ job.company }}</p>
 
           <p class="job-location">{{ job.location }}</p>
-          <p class="job-date">{{ job.create_at }} - {{job.end_date}}</p>
+          <p class="job-date">{{ job.create_at |date:"d/m/Y"}} - {{job.end_date|date:"d/m/Y"}}</p>
 
           <ul class="job-tags">
             {% if job.skills %}

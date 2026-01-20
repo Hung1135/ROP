@@ -65,7 +65,7 @@
                 <span>💰 {{ job.salary_min }} - {{ job.salary_max }} triệu VNĐ</span>
             </div>
             <div class="job-info">
-                <span>{{ job.create_at }} - {{ job.end_date }}</span>
+                <span>{{ job.create_at|date:"d/m/Y" }} - {{ job.end_date |date:"d/m/Y"}}</span>
             </div>
 
             <div class="btn_detail">
