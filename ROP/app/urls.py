@@ -5,13 +5,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    #path('', views.filter, name='admin_filter'),
+    # path('', views.filter, name='admin_filter'),
 
     path('ListJob', views.ListJob, name='ListJob'),
 
-
     path('admin_post_detail/<int:id>/', views.post_detail, name='admin_post_detail'),
-
 
     path('functionPost', views.functionPost, name='functionPost'),
     path('manaPostCV', views.manaPostCV, name='manaPostCV'),
@@ -24,22 +22,20 @@ urlpatterns = [
     path('user_detailPost/<int:id>/', views.detailPost, name='detailPost'),
     path('user_personalprofile', views.personalprofile, name='user_personalprofile'),
     path('appliedJobsList', views.appliedJobsList, name='appliedJobsList'),
-    path('search',views.search,name='search'),
+    path('search', views.search, name='search'),
 
     path('upload_cv/', views.upload_cv, name='upload_cv'),
     path('apply_job/<int:job_id>/', views.apply_job, name='apply_job'),
-
 
     path('cv/<int:id>/', views.cv_detail, name='cv_detail'),
     path('cv/pdf/<int:id>/', views.cv_pdf, name='cv_pdf'),
     path('cv/json/<int:id>/', views.cv_detail_json, name='cv_detail_json'),
 
     # path('cv_form/<int:cv_id>/', views.cv_detail_form, name='cv_detail_form'),
-    path('search/', views.search, name='search'),
     path('cv/create/', views.create_cv, name='create_cv'),
     path('cv/list/', views.cv_list, name='cv_list'),
     path('companies/', views.company_list, name='company_list'),
-    path('companies/featured/', views.featured_companies, name='featured_companies'), 
+    path('companies/featured/', views.featured_companies, name='featured_companies'),
     path('matching-jobs/', views.matching_jobs_for_cv, name='matching_jobs'),
     path('cv/<int:id>/', views.cv_detail, name='cv_detail'),
     path('cv_form/<int:cv_id>/', views.cv_detail_form, name='cv_detail_form'),
@@ -50,13 +46,11 @@ urlpatterns = [
     path("test-font/", views.test_font, name="test_font"),
     path("test-pdf/", views.test_pdf_font, name="test_pdf_font"),
     path('application/<int:app_id>/reject/', views.reject_application, name='reject_application'),
-    
-    path('application/<int:app_id>/send-interview/',views.send_interview_email,name='send_interview_email'),
+
+    path('application/<int:app_id>/send-interview/', views.send_interview_email, name='send_interview_email'),
     path('job/<int:job_id>/update-and-reanalyze/', views.update_job_and_reanalyze, name='update_job_and_reanalyze'),
+    path('job/<int:job_id>/delete/', views.delete_job, name='delete_job'),
 
-
-       ]
+]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-

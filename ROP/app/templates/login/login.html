@@ -15,8 +15,8 @@
     />
     <link rel="stylesheet" href="{% static 'app/css/login.css' %}" />
   </head>
-  <body>
-    <div class="container" id="container">
+  <body data-show-register="{% if show_register %}true{% else %}false{% endif %}">
+    <div class="container " id="container">
       <div class="form-container sign-up-container">
         <form action="{% url 'login' %}" method="POST">
           {% csrf_token %}
@@ -47,7 +47,7 @@
             />
             <label></label>
             <small class="password-note"
-              >Mật khẩu phải chứa ít nhất 8 ký tự...</small
+              >  Mật khẩu ≥ 8 ký tự, có chữ hoa và ký tự đặc biệt</small
             >
           </div>
           <div class="infield">
@@ -65,6 +65,15 @@
               <option value="employer">Nhà tuyển dụng</option>
             </select>
           </div>
+{% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    {% if "register" in message.tags %}
+                        <li class="{{ message.tags }}">{{ message }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+            {% endif %}
           <button type="submit">Đăng ký</button>
         </form>
       </div>
@@ -97,16 +106,18 @@
             >
           </div>
           {% endcomment %}
+
           <button type="submit">Đăng nhập</button>
          {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                {{ message }}
-            </li>
-        {% endfor %}
-    </ul>
+<ul class="messages">
+    {% for message in messages %}
+        {% if "login" in message.tags %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
 {% endif %}
+
         </form>
       </div>
       <div class="overlay-container" id="overlayCon">

@@ -465,4 +465,7 @@ footer {
 .nav-box-item:hover .nav-box-sub {
   display: block;
 }
-
+a{
+text-decoration:none;
+color:gray;
+}

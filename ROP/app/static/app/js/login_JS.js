@@ -22,3 +22,11 @@ document.querySelector('.overlay-left button').addEventListener('click', () => {
     container.classList.remove('right-panel-active');
     overlayCon.style.transform = 'translateX(0)';
 });
+document.addEventListener("DOMContentLoaded", function () {
+    const showRegister = document.body.dataset.showRegister;
+    const overlayBtn = document.getElementById("overlayBtn");
+
+    if (showRegister === "true" && overlayBtn) {
+        overlayBtn.click(); // bật tab đăng ký
+    }
+});

@@ -30,7 +30,6 @@
         {% for cv in cvs %}
         <div class="cv-card mb-3 p-3 border rounded shadow-sm">
           <h5 class="cv-name">{{ cv.user.fullname }}</h5>
-          <p><strong>📄 Tên file:</strong> {{ cv.file_name }}</p>
           <p><strong>📧 Email:</strong> {{ cv.user.email }}</p>
           <p><strong>🗓 Ngày tạo:</strong> {{ cv.uploaded_at|date:"d/m/Y" }}</p>
 

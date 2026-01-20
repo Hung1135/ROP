@@ -12,30 +12,33 @@
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     />
-    {% comment %} <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    {% comment %}
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
     />
-     {% endcomment %}
+    {% endcomment %}
     <link rel="stylesheet" href="{% static 'app/css/ListJob.css'%}"/>
     <link rel="stylesheet" href="{% static 'app/css/nav.css' %}"/>
 </head>
 
 <body>
-    
+
 {% if messages %} {% for message in messages %}
-{% comment %} <div
+{% comment %}
+<div
         class="alert alert-success alert-dismissible fade show custom-alert"
         role="alert"
 >
-    <strong >{{ message }}</strong>
+    <strong>{{ message }}</strong>
     <button
             type="button"
             class="btn-close"
             data-bs-dismiss="alert"
             aria-label="Close"
     ></button>
-</div> {% endcomment %}
+</div>
+{% endcomment %}
 {% endfor %} {% endif %}
 
 {% include "admin/header.html" %}
@@ -57,9 +60,9 @@
                 </div>
             </div>
 
-           <div class="job-info location" title="{{ job.location }}">
-    <span>📍 {{ job.location }}</span>
-</div>
+            <div class="job-info location" title="{{ job.location }}">
+                <span>📍 {{ job.location }}</span>
+            </div>
 
             <div class="job-info">
                 <span>💰 {{ job.salary_min }} - {{ job.salary_max }} triệu VNĐ</span>
@@ -72,6 +75,10 @@
                 <a href="{% url 'admin_post_detail' job.id %}">
                     <button>Xem chi tiết</button>
                 </a>
+                <button class="btn-delete"
+                        onclick="confirmDelete({{ job.id }}, '{{ job.title|escapejs }}')">
+                    Xóa
+                </button>
             </div>
         </div>
         {% endfor %}
@@ -95,5 +102,27 @@
       });
     });
 </script>
+
+
+<form id="deleteForm" method="POST" style="display:none;">
+    {% csrf_token %}
+</form>
+
+<script>
+    function confirmDelete(jobId, jobTitle) {
+        const ok = confirm(
+            "Bạn có chắc chắn muốn xóa bài đăng:\n\n" +
+            jobTitle +
+            "\n\nHành động này KHÔNG THỂ hoàn tác!"
+        );
+
+        if (ok) {
+            const form = document.getElementById("deleteForm");
+            form.action = `/job/${jobId}/delete/`;
+            form.submit();
+        }
+    }
+</script>
+
 </body>
 </html>

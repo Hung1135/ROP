@@ -349,7 +349,6 @@
     .filter-controls {
       display: flex;
       gap: 20px;
-      align-items: flex-end;
       margin-bottom: 20px;
       padding: 15px;
       border: 1px dashed #007bff;
@@ -407,5 +406,10 @@
     .sort-select {
         width: 240px;
         min-height: 42px;
+
+    }
+    .col-md-6{
+    display:flex;
+        flex-direction: row;
 
     }
