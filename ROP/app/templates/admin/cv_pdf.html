@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        font-family: "DejaVu Sans", sans-serif;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      h1 {
+        text-align: center;
+        color: #0d6efd;
+      }
+      .section {
+        margin-top: 18px;
+      }
+      .label {
+        font-weight: bold;
+      }
+      .box {
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-top: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>HỒ SƠ ỨNG VIÊN</h1>
+
+    <div class="section">
+      <p><span class="label">Họ và tên:</span> {{ cv.full_name }}</p>
+      <p><span class="label">Email:</span> {{ cv.email }}</p>
+      <p><span class="label">Số điện thoại:</span> {{ cv.phone }}</p>
+      <p><span class="label">Địa chỉ:</span> {{ cv.address }}</p>
+    </div>
+
+    <div class="section">
+      <div class="label">Mô tả bản thân</div>
+      <div class="box">{{ cv.description|linebreaks }}</div>
+    </div>
+
+    <div class="section">
+      <div class="label">Kỹ năng & Kinh nghiệm</div>
+      <div class="box">{{ cv.skills|linebreaks }}</div>
+    </div>
+  </body>
+</html>

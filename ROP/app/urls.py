@@ -34,7 +34,6 @@ urlpatterns = [
     path('cv/pdf/<int:id>/', views.cv_pdf, name='cv_pdf'),
     path('cv/json/<int:id>/', views.cv_detail_json, name='cv_detail_json'),
 
-    path('send_interview_email/<int:app_id>/', views.send_interview_email, name='send_interview_email'),
     # path('cv_form/<int:cv_id>/', views.cv_detail_form, name='cv_detail_form'),
     path('search/', views.search, name='search'),
     path('cv/create/', views.create_cv, name='create_cv'),
@@ -50,8 +49,9 @@ urlpatterns = [
     path("cv_pdf_download/<int:cv_id>/", views.cv_pdf_download, name="cv_pdf_download"),
     path("test-font/", views.test_font, name="test_font"),
     path("test-pdf/", views.test_pdf_font, name="test_pdf_font"),
-
+    path('application/<int:app_id>/reject/', views.reject_application, name='reject_application'),
     
+    path('application/<int:app_id>/send-interview/',views.send_interview_email,name='send_interview_email'),
     path('job/<int:job_id>/update-and-reanalyze/', views.update_job_and_reanalyze, name='update_job_and_reanalyze'),
 
 

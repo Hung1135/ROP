@@ -12,6 +12,12 @@ from django.core.exceptions import ValidationError
 # from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
 from .models import Applications, Job, Cvs
 from django.utils import timezone
+from django.views.decorators.http import require_POST
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
+from django.contrib import messages
+from django.utils import timezone
+from django.views.decorators.http import require_POST
 
 from django.shortcuts import render, redirect
 from django.conf import settings
@@ -441,54 +447,103 @@ def cv_pdf(request, id):
     response['X-Frame-Options'] = 'SAMEORIGIN'
     return response
 
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+from django.conf import settings
+import json
+@require_POST
+def reject_application(request, app_id):
+    # 🔒 Chỉ cho AJAX
+    if request.headers.get('x-requested-with') != 'XMLHttpRequest':
+        return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
+    application = get_object_or_404(Applications, id=app_id)
+
+    if application.status != 'new':
+        return JsonResponse({'status': 'error', 'message': 'Hồ sơ đã được xử lý'})
+
+    try:
+        data = json.loads(request.body)
+        note = data.get('note', '')
+    except:
+        note = ''
+
+    # ✅ CẬP NHẬT DB
+    application.status = 'rejected'
+    application.is_rejected = True
+    application.is_sent = False
+    application.employer_note = note
+    application.save()
+
+    return JsonResponse({'status': 'success'})
+import json
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_POST
+from django.conf import settings
+from django.core.mail import send_mail
+
+@require_POST
 def send_interview_email(request, app_id):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        try:
-            application = get_object_or_404(Applications, id=app_id)
-            user_candidate = application.user
-            job = application.job
+    if request.headers.get('x-requested-with') != 'XMLHttpRequest':
+        return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
-            itv_time = request.GET.get('time', 'Sẽ thông báo sau')
-            itv_location = request.GET.get('location', 'Tại văn phòng công ty')
-            itv_docs = request.GET.get('docs', 'Không yêu cầu')
-            itv_contact = request.GET.get('contact', 'Phòng nhân sự')
+    application = get_object_or_404(Applications, id=app_id)
 
-            subject = f"[Mời phỏng vấn] Vị trí {job.title} - {job.company}"
+    if application.status != 'new':
+        return JsonResponse({'status': 'error', 'message': 'Hồ sơ đã được xử lý'}, status=400)
 
-            message = f"""
-            Chào {user_candidate.fullname},
+    cv = application.cv
+    job = application.job
 
-            Chúng tôi đã nhận được hồ sơ của bạn cho vị trí {job.title}. 
-            Dựa trên đánh giá chuyên môn, chúng tôi trân trọng mời bạn tham gia buổi phỏng vấn.
+    try:
+        data = json.loads(request.body)
+    except:
+        data = {}
 
-            CHI TIẾT BUỔI PHỎNG VẤN:
-            - Thời gian: {itv_time}
-            - Địa điểm: {itv_location}
-            - Tài liệu cần chuẩn bị: {itv_docs}
-            - Thông tin liên hệ nếu có thắc mắc: {itv_contact}
+    itv_time = data.get('time', 'Sẽ thông báo sau')
+    itv_location = data.get('location', 'Tại văn phòng công ty')
+    itv_docs = data.get('docs', 'Không yêu cầu')
+    itv_contact = data.get('contact', 'Phòng nhân sự')
 
-            Vui lòng phản hồi email này để xác nhận sự tham gia của bạn.
-            
-            Trân trọng,
-            Phòng nhân sự {job.company}.
-            """
+    subject = f"[Mời phỏng vấn] Vị trí {job.title}"
 
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [user_candidate.email]
+    message = f"""
+Chào {cv.full_name},
 
-            send_mail(subject, message, email_from, recipient_list)
+Chúng tôi đã xem xét hồ sơ của bạn cho vị trí {job.title}.
+Chúng tôi trân trọng mời bạn tham gia buổi phỏng vấn.
 
-            application.is_sent = True
-            application.save()
+CHI TIẾT BUỔI PHỎNG VẤN:
+- Thời gian: {itv_time}
+- Địa điểm: {itv_location}
+- Tài liệu cần chuẩn bị: {itv_docs}
+- Liên hệ: {itv_contact}
 
-            return JsonResponse({'status': 'success'})
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+Vui lòng phản hồi email này để xác nhận tham gia.
 
+Trân trọng,
+Phòng nhân sự {job.company}
+"""
 
-from django.shortcuts import render, get_object_or_404
-from .models import Cvs
+    try:
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [cv.email],   # ✅ EMAIL TRONG HỒ SƠ
+            fail_silently=False
+        )
+    except:
+        return JsonResponse({'status': 'error', 'message': 'Gửi email thất bại'}, status=500)
+
+    application.status = 'passed'
+    application.is_sent = True
+    application.save()
+
+    return JsonResponse({'status': 'success'})
 
 
 @employer_required
@@ -780,61 +835,85 @@ def cv_pdf_download(request, cv_id):
 # KIEU
 @user_required
 def detailPost(request, id):
-    if request.method == 'GET':
-        user_id = request.session.get('user_id')
-        if not user_id:
-            return redirect('login')
-    job = Job.objects.get(id=id)
-    # Kiểm tra xem user đã có hồ sơ chưa
-    has_cv = Cvs.objects.filter(user_id=user_id).exists()
-    today = timezone.now().date()
-    user_cvs = Cvs.objects.filter(user=user_id)
+    user_id = request.session.get('user_id')
+
+    job = get_object_or_404(Job, id=id)
+
     user_cvs = Cvs.objects.filter(user_id=user_id)
+    has_cv = user_cvs.exists()
+
+    # 🔴 CHECK ĐÃ ỨNG TUYỂN CHƯA
+    has_applied = Applications.objects.filter(
+        job_id=id,
+        user_id=user_id
+    ).exists()
+
+    today = timezone.now().date()
     is_active = job.create_at <= today <= job.end_date
-    jobDescript = split_text(job.description)
-    jobRequire = split_text(job.requirements)
-    jobSkill = split_text(job.skills)
-    jobBenefit = split_text(job.benefit)
 
     context = {
         'job': job,
-        'has_cv': has_cv,
-        'jobDescript': jobDescript,
-        'jobRequire': jobRequire,
-        'jobSkill': jobSkill,
-        'jobBenefit': jobBenefit,
-        'is_active': is_active,
         'user_cvs': user_cvs,
+        'has_cv': has_cv,
+        'has_applied': has_applied,  # ✅ QUAN TRỌNG
+        'jobDescript': split_text(job.description),
+        'jobRequire': split_text(job.requirements),
+        'jobSkill': split_text(job.skills),
+        'jobBenefit': split_text(job.benefit),
+        'is_active': is_active,
     }
 
     return render(request, 'user/detailPost.html', context)
 
+from django.contrib import messages
+from django.shortcuts import redirect, get_object_or_404
+from django.utils import timezone
 
-# KIEU
+@user_required
 def apply_job(request, job_id):
-    if request.method == 'POST':
-        user_id = request.session.get('user_id')
-        if not user_id:
-            return redirect('login')
+    if request.method != 'POST':
+        return redirect('home')
 
-        cv = Cvs.objects.filter(user_id=user_id).first()
+    user_id = request.session.get('user_id')
 
-        if not cv:
-            messages.error(request, "Vui lòng tạo hồ sơ trước khi ứng tuyển!")
-            return redirect('create_cv')
+    # 🔴 Đã apply job này chưa
+    if Applications.objects.filter(job_id=job_id, user_id=user_id).exists():
+        messages.warning(request, "Bạn đã ứng tuyển công việc này rồi!")
+        return redirect('detailPost', id=job_id)
 
-        Applications.objects.create(
-            job_id=job_id,
-            cv=cv,  # Dùng lại CV cũ
-            user_id=user_id,
-            applied_at=timezone.now(),
-            status='new'
+    # 🔹 Lấy CV hiện có (nếu có)
+    cv = Cvs.objects.filter(user_id=user_id).first()
+
+    # ==================================================
+    # 🔥 CHƯA CÓ CV → TẠO GIỐNG create_cv
+    # ==================================================
+    if not cv:
+        custom_user = users.objects.get(id=user_id)
+
+        cv = Cvs.objects.create(
+            user=custom_user,
+            full_name=request.POST.get('full_name'),
+            email=request.POST.get('email'),
+            phone=request.POST.get('phone'),
+            address=request.POST.get('address'),
+            description=request.POST.get('description'),
+            skills=request.POST.get('experience'),
+            uploaded_at=timezone.now()
         )
-        messages.success(request, "Ứng tuyển thành công!")
-        return redirect('appliedJobsList')
 
-    return redirect('home')
+    # ==================================================
+    # ✅ TẠO APPLICATION
+    # ==================================================
+    Applications.objects.create(
+        job_id=job_id,
+        cv=cv,
+        user_id=user_id,
+        applied_at=timezone.now(),
+        status='new'
+    )
 
+    messages.success(request, "Ứng tuyển thành công! Hồ sơ đã được lưu.")
+    return redirect('appliedJobsList')
 
 # KIEU
 @user_required
