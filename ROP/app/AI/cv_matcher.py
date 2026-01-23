@@ -75,22 +75,22 @@ def match_cv_fields(cv_data, job):
         "location": 0.1
     }
 
-    # 1. Description ↔ Requirements
+
     cv_desc = clean_text(cv_data.get("description", ""))
     job_req = clean_text(job.requirements or "")
     score_req = cosine_score(text_to_vector(cv_desc), text_to_vector(job_req))
 
-    # 2. Skills ↔ Skills
+
     cv_skills = clean_text(cv_data.get("skills", ""))
     job_skills = clean_text(job.skills or "")
     score_skills = cosine_score(text_to_vector(cv_skills), text_to_vector(job_skills))
 
-    # 3. Address ↔ Location
+
     cv_address = clean_text(cv_data.get("address", ""))
     job_location = clean_text(job.location or "")
     score_location = cosine_score(text_to_vector(cv_address), text_to_vector(job_location))
 
-    # Tổng weighted score
+
     total_score = score_req * weights["requirements"] + \
                   score_skills * weights["skills"] + \
                   score_location * weights["location"]
