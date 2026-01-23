@@ -1,4 +1,4 @@
-# app/context_processors.py
+
 from .models import Job
 
 def categories_processor(request):

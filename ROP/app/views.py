@@ -7,9 +7,7 @@ from django.template.defaultfilters import title
 from django.db.models import Q
 from .decorator import user_required, employer_required
 from .AI.cv_matcher import match_cv_fields
-# from .AI.cv_matcher import  match_cv_with_job
 from django.core.exceptions import ValidationError
-# from .AI.cv_matcher import extract_cv_text, match_cv_with_job, match_cv_fields
 from .models import Applications, Job, Cvs
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -39,9 +37,6 @@ from .models import Job
 from django.db.models import Count
 
 
-# Create your views here.
-# admin
-
 def split_text(text):
     if not text:
         return []
@@ -64,9 +59,7 @@ def post_detail(request, id):
         'total_cvs': len(cv_analyses),
     })
 
-
-# Lấy tất cả Applications của job, extract CV, tính score, lưu vào DB.
-# Lấy tất cả Applications của job, tính score dựa trên dữ liệu form (không cần file PDF)
+# Lấy tất cả Applications của job, tính score dựa trên dữ liệu form 
 def analyze_cvs_for_job(job):
     applications = Applications.objects.filter(job=job).select_related('cv', 'user')
     results = []
@@ -272,99 +265,8 @@ def login(request):
 
     return render(request, 'login/login.html')
 
-# def login(request):
-#     if 'user_id' in request.session:
-#         user_role = request.session.get('user_role')
-#         if user_role:
-#             return redirect('ListJob')
-#         else:
-#             return redirect('home')
-#
-#     # ====== ĐĂNG KÝ ======
-#     if request.method == 'POST' and 'full_name' in request.POST:
-#         full_name = request.POST.get('full_name', '').strip()
-#         email = request.POST.get('email', '').strip()
-#         phone = request.POST.get('phone', '').strip()
-#         password = request.POST.get('password', '').strip()
-#         confirm_password = request.POST.get('confirm_password', '').strip()
-#         selected_role = request.POST.get('role', 'candidate')
-#
-#         is_admin = True if selected_role == 'employer' else False
-#
-#         if not full_name or not email or not phone or not password or not confirm_password:
-#             messages.error(request, "Vui lòng nhập đầy đủ thông tin.")
-#             return render(request, 'login/login.html')
-#
-#         if password != confirm_password:
-#             messages.error(request, "Mật khẩu và xác nhận mật khẩu không khớp!")
-#             return render(request, 'login/login.html')
-#
-#         # 🔐 KIỂM TRA ĐỘ MẠNH MẬT KHẨU
-#         if not is_strong_password(password):
-#             messages.error(
-#                 request,
-#                 "Mật khẩu phải có ít nhất 8 ký tự, 1 chữ viết hoa và 1 ký tự đặc biệt."
-#             )
-#             return render(request, 'login/login.html')
-#
-#         hashed_password = make_password(password)
-#
-#         try:
-#             users.objects.create(
-#                 fullname=full_name,
-#                 email=email,
-#                 phone=phone,
-#                 password_hash=hashed_password,
-#                 role=is_admin
-#             )
-#             messages.success(request, "Đăng ký thành công! Vui lòng đăng nhập.")
-#             return redirect('login')
-#
-#         except IntegrityError:
-#             messages.error(request, "Email hoặc Số điện thoại đã tồn tại. Vui lòng thử lại.")
-#             return render(request, 'login/login.html')
-#
-#         except Exception as e:
-#             messages.error(request, "Đã có lỗi xảy ra trong quá trình đăng ký.")
-#             return render(request, 'login/login.html')
-#
-#     # ====== ĐĂNG NHẬP ======
-#     elif request.method == 'POST' and 'email_login' in request.POST:
-#         email = request.POST.get('email_login')
-#         password = request.POST.get('password_login')
-#
-#         try:
-#             user = users.objects.get(email=email)
-#         except users.DoesNotExist:
-#             messages.error(request, "Email hoặc mật khẩu không đúng.")
-#             return render(request, 'login/login.html')
-#
-#         if check_password(password, user.password_hash):
-#             request.session['user_id'] = user.id
-#             request.session['user_full_name'] = user.fullname
-#             request.session['user_role'] = user.role
-#             request.session['user_email'] = user.email
-#
-#             if user.email == "admin@gmail.com":
-#                 return redirect('admin_manage_candidates')
-#             elif user.role:
-#                 return redirect('ListJob')
-#             else:
-#                 return redirect('home')
-#         else:
-#             messages.error(request, "Email hoặc mật khẩu không đúng.")
-#             return render(request, 'login/login.html')
-#
-#     return render(request, 'login/login.html')
-
-
-
 # user
 def homeUser(request):
-    # if request.method == 'GET':
-    #     user_id = request.session.get('user_id')
-    #     if not user_id:
-    #         return redirect('login')
     sort = request.GET.get('sort', 'newest')
     order_by = 'create_at' if sort == 'oldest' else '-create_at'
     jobs = Job.objects.all().order_by(order_by)
@@ -420,7 +322,7 @@ def ChangePassword(request):
             messages.error(request, "Mật khẩu mới và nhập lại mật khẩu không khớp.")
             return render(request, 'user/ChangePassword.html')
 
-        # 🔐 KIỂM TRA ĐỘ MẠNH MẬT KHẨU
+        # KIỂM TRA ĐỘ MẠNH MẬT KHẨU
         if not is_strong_password(new_password):
             messages.error(
                 request,
@@ -525,32 +427,6 @@ def upload_cv(request):
         return redirect('appliedJobsList')
     return redirect('home')
 
-
-# def apply_job(request, job_id):
-#     if request.method == 'POST':
-#         file = request.FILES['file']
-#
-#         custom_user = users.objects.get(id=request.session['user_id'])
-#
-#         # Lưu CV
-#         cv = Cvs.objects.create(
-#             user=custom_user,
-#             file=file,
-#             file_name=file.name,
-#             uploaded_at=timezone.now()
-#         )
-#
-#         # Tạo record ứng tuyển
-#         Applications.objects.create(
-#             job_id=job_id,
-#             cv=cv,
-#             user=custom_user,
-#             applied_at=timezone.now(),
-#             status='new'
-#         )
-#
-#         return redirect('appliedJobsList')
-#     return redirect('home')
 @user_required
 def appliedJobsList(request):
     custom_user = users.objects.get(id=request.session['user_id'])
@@ -586,7 +462,7 @@ from django.conf import settings
 import json
 @require_POST
 def reject_application(request, app_id):
-    # 🔒 Chỉ cho AJAX
+    #Chỉ cho AJAX
     if request.headers.get('x-requested-with') != 'XMLHttpRequest':
         return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
@@ -601,7 +477,7 @@ def reject_application(request, app_id):
     except:
         note = ''
 
-    # ✅ CẬP NHẬT DB
+    #CẬP NHẬT DB
     application.status = 'rejected'
     application.is_rejected = True
     application.is_sent = False
@@ -872,49 +748,10 @@ from django.shortcuts import get_object_or_404
 from xhtml2pdf import pisa
 from .models import Applications
 from xhtml2pdf import pisa
-
 from xhtml2pdf import pisa
-
-
-# @employer_required
-# def application_pdf_download(request, app_id):
-#     application = get_object_or_404(Applications, id=app_id)
-#     template = get_template("admin/cv_pdf.html")
-#     html = template.render({"application": application})
-#
-#     response = HttpResponse(content_type="application/pdf")
-#     response["Content-Disposition"] = f'attachment; filename="application_{app_id}.pdf"'
-#
-#     pisa.DEFAULT_FONT = "DejaVuSans"  # 🔥 BẮT BUỘC
-#     pisa.CreatePDF(html, dest=response, encoding="UTF-8")
-#
-#     return response
-
-
-def test_font(request):
-    return render(request, "test_font.html")
-
-
 from django.http import HttpResponse
 from django.template.loader import get_template
 from xhtml2pdf import pisa
-
-
-def test_pdf_font(request):
-    template = get_template("test_pdf.html")
-    html = template.render({})
-
-    response = HttpResponse(content_type="application/pdf")
-    response["Content-Disposition"] = "inline; filename=test.pdf"
-
-    pisa.DEFAULT_FONT = "DejaVuSans"
-
-    pisa.CreatePDF(
-        html,
-        dest=response,
-        encoding="UTF-8"
-    )
-    return response
 
 
 from django.http import HttpResponse
@@ -963,7 +800,6 @@ def cv_pdf_download(request, cv_id):
     return response
 
 
-# KIEU
 @user_required
 def detailPost(request, id):
     user_id = request.session.get('user_id')
@@ -973,7 +809,7 @@ def detailPost(request, id):
     user_cvs = Cvs.objects.filter(user_id=user_id)
     has_cv = user_cvs.exists()
 
-    # 🔴 CHECK ĐÃ ỨNG TUYỂN CHƯA
+    #CHECK ĐÃ ỨNG TUYỂN CHƯA
     has_applied = Applications.objects.filter(
         job_id=id,
         user_id=user_id
@@ -986,7 +822,7 @@ def detailPost(request, id):
         'job': job,
         'user_cvs': user_cvs,
         'has_cv': has_cv,
-        'has_applied': has_applied,  # ✅ QUAN TRỌNG
+        'has_applied': has_applied,  
         'jobDescript': split_text(job.description),
         'jobRequire': split_text(job.requirements),
         'jobSkill': split_text(job.skills),
@@ -1012,12 +848,10 @@ def apply_job(request, job_id):
         messages.warning(request, "Bạn đã ứng tuyển công việc này rồi!")
         return redirect('detailPost', id=job_id)
 
-    # 🔹 Lấy CV hiện có (nếu có)
+    #Lấy CV hiện có
     cv = Cvs.objects.filter(user_id=user_id).first()
 
-    # ==================================================
-    # 🔥 CHƯA CÓ CV → TẠO GIỐNG create_cv
-    # ==================================================
+    #Nếu chưa có CV, tạo mới từ form
     if not cv:
         custom_user = users.objects.get(id=user_id)
 
@@ -1032,9 +866,7 @@ def apply_job(request, job_id):
             uploaded_at=timezone.now()
         )
 
-    # ==================================================
-    # ✅ TẠO APPLICATION
-    # ==================================================
+  
     Applications.objects.create(
         job_id=job_id,
         cv=cv,
@@ -1046,7 +878,7 @@ def apply_job(request, job_id):
     messages.success(request, "Ứng tuyển thành công! Hồ sơ đã được lưu.")
     return redirect('appliedJobsList')
 
-# KIEU
+
 @user_required
 def create_cv(request):
     user_id = request.session.get('user_id')
@@ -1056,7 +888,6 @@ def create_cv(request):
     existing_cv = Cvs.objects.filter(user_id=user_id).first()
 
     if request.method == 'POST':
-        # 🔴 Nếu đã có CV → báo lỗi & render lại
         if existing_cv:
             messages.error(request, "Bạn đã có hồ sơ trên hệ thống!")
             return render(request, 'user/create_cv.html', {
@@ -1075,7 +906,7 @@ def create_cv(request):
             uploaded_at=timezone.now()
         )
         messages.success(request, "Tạo hồ sơ thành công!")
-        return redirect('cv_list')  # ✅ ĐÚNG
+        return redirect('cv_list') 
 
     # GET request
     return render(request, 'user/create_cv.html', {
@@ -1091,13 +922,11 @@ def cv_list(request):
 
     cv = Cvs.objects.filter(user_id=user_id).first()
 
-    # ===== CHƯA CÓ CV =====
     if not cv:
         return render(request, 'user/cv_list.html', {
             'cv': None
         })
 
-    # ===== CÓ CV → UPDATE =====
     if request.method == 'POST':
         cv.full_name = request.POST.get('full_name')
         cv.phone = request.POST.get('phone')
@@ -1114,7 +943,6 @@ def cv_list(request):
     })
 
 
-# cái này update thêm cho AI
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
@@ -1124,7 +952,7 @@ from django.shortcuts import get_object_or_404
 def update_job_and_reanalyze(request, job_id):
     job = get_object_or_404(Job, id=job_id)
 
-    # Chỉ admin hoặc chủ job mới được chỉnh (tùy logic của bạn)
+    # Chỉ admin hoặc chủ job mới được chỉnh
     if not request.user.is_authenticated:  # hoặc kiểm tra role/admin
         return JsonResponse({'status': 'error', 'message': 'Không có quyền'}, status=403)
 
@@ -1139,14 +967,13 @@ def update_job_and_reanalyze(request, job_id):
         # Tính lại điểm cho tất cả applications của job này
         analyze_cvs_for_job(job)  # hàm bạn đã có sẵn
 
-        # Optional: lấy lại danh sách mới để trả về (nếu muốn cập nhật giao diện realtime)
+        # Optional: lấy lại danh sách mới để trả về 
         updated_analyses = analyze_cvs_for_job(job)  # gọi lại để lấy data mới
 
         return JsonResponse({
             'status': 'success',
             'message': 'Đã cập nhật JD và tính lại điểm AI cho tất cả ứng viên!',
-            # Nếu muốn trả data mới để update giao diện mà không reload
-            # 'analyses': [...]  (tùy chọn)
+
         })
 
     except Exception as e:
