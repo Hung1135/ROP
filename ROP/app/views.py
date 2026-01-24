@@ -268,7 +268,7 @@ def login(request):
 #             messages.error(request, "Mật khẩu và xác nhận mật khẩu không khớp!")
 #             return render(request, 'login/login.html')
 #
-#         # 🔐 KIỂM TRA ĐỘ MẠNH MẬT KHẨU
+#         # KIỂM TRA ĐỘ MẠNH MẬT KHẨU
 #         if not is_strong_password(password):
 #             messages.error(
 #                 request,
@@ -389,7 +389,7 @@ def ChangePassword(request):
             messages.error(request, "Mật khẩu mới và nhập lại mật khẩu không khớp.")
             return render(request, 'user/ChangePassword.html')
 
-        # 🔐 KIỂM TRA ĐỘ MẠNH MẬT KHẨU
+        #  KIỂM TRA ĐỘ MẠNH MẬT KHẨU
         if not is_strong_password(new_password):
             messages.error(
                 request,
@@ -466,7 +466,7 @@ def functionPost(request):
                 user=user_obj
             )
 
-            # 🔥🔥🔥 DÒNG QUAN TRỌNG NHẤT
+            #  DÒNG QUAN TRỌNG NHẤT
             job.full_clean()  # CHẠY TOÀN BỘ LUẬT CHỐNG SPAM
 
             job.save()
@@ -527,7 +527,7 @@ from django.views.decorators.http import require_POST
 
 @require_POST
 def reject_application(request, app_id):
-    # 🔒 Chỉ cho AJAX
+    #  Chỉ cho AJAX
     if request.headers.get('x-requested-with') != 'XMLHttpRequest':
         return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
 
@@ -605,7 +605,7 @@ Phòng nhân sự {job.company}
             subject,
             message,
             settings.EMAIL_HOST_USER,
-            [cv.email],   # ✅ EMAIL TRONG HỒ SƠ
+            [cv.email],   # EMAIL TRONG HỒ SƠ
             fail_silently=False
         )
     except:
@@ -904,7 +904,7 @@ def detailPost(request, id):
         'job': job,
         'user_cvs': user_cvs,
         'has_cv': has_cv,
-        'has_applied': has_applied,  # ✅ QUAN TRỌNG
+        'has_applied': has_applied,  # QUAN TRỌNG
         'jobDescript': split_text(job.description),
         'jobRequire': split_text(job.requirements),
         'jobSkill': split_text(job.skills),
@@ -989,7 +989,7 @@ def create_cv(request):
             uploaded_at=timezone.now()
         )
         messages.success(request, "Tạo hồ sơ thành công!")
-        return redirect('cv_list')  # ✅ ĐÚNG
+        return redirect('cv_list')  #  ĐÚNG
 
     # GET request
     return render(request, 'user/create_cv.html', {
